@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.AccountMapper">
+
+	<sql id="queryCommon">
+		<if test="id != null">
+			AND id = #{id} 
+		</if>
+		<if test="nid != null">
+			AND nid = #{nid} 
+		</if>
+		<if test="sid != null">
+			AND sid = #{sid} 
+		</if>
+		<if test="username != null">
+			AND username = #{username} 
+		</if>
+		<if test="password != null">
+			AND password = #{password} 
+		</if>
+		<if test="mailbox != null">
+			AND mailbox = #{mailbox} 
+		</if>
+		<if test="wxOpenId != null">
+			AND wx_openid = #{wxOpenId} 
+		</if>
+		<if test="wx_sessionkey != null">
+			AND wx_sessionkey = #{wxSessionKey} 
+		</if>
+		<if test="wxUnionId != null">
+			AND wx_unionid = #{wxUnionId} 
+		</if>
+		<if test="wxNickname != null">
+			AND wx_nickname LIKE "%"#{wxNickname}"%" 
+		</if>
+		<if test="wxAvatar != null">
+			AND wx_avatar = #{wxAvatar} 
+		</if>
+		<if test="wxGender != null">
+			AND wx_gender = #{$wxGender} 
+		</if>
+		<if test="wxCity != null">
+			AND wx_city LIKE "%"#{wxCity}"%" 
+		</if>
+		<if test="wxProvince != null">
+			AND wx_province = #{wxProvince} 
+		</if>
+		<if test="wxCountry != null">
+			AND wx_country = #{wxCountry} 
+		</if>
+		<if test="wxLanguage != null">
+			AND wx_language = #{wxLanguage} 
+		</if>
+		<if test="type != null">
+			AND type = #{type} 
+		</if>
+		<if test="grade != null">
+			AND grade = #{grade} 
+		</if>
+		<if test="phone != null">
+			AND phone = #{phone} 
+		</if>
+		<if test="score != null">
+			AND score = #{score} 
+		</if>
+		<if test="score_min != null">
+			<![CDATA[				
+			AND score >= #{score_min} 
+			]]> 
+		</if>
+		<if test="score_max != null">
+			<![CDATA[				
+			AND score < #{score_max} 
+			]]> 
+		</if>
+		<if test="level != null">
+			AND level = #{level} 
+		</if>
+		<if test="level_min != null">
+			<![CDATA[				
+			AND level >= #{level_min} 
+			]]> 
+		</if>
+		<if test="level_max != null">
+			<![CDATA[				
+			AND level < #{level_max} 
+			]]> 
+		</if>
+		<if test="status != null">
+			AND status = #{status} 
+		</if>
+		<if test="status_min != null">
+			<![CDATA[				
+			AND status >= #{status_min} 
+			]]> 
+		</if>
+		<if test="status_max != null">
+			<![CDATA[				
+			AND status < #{status_max} 
+			]]> 
+		</if>
+	</sql>
+	
+	
+	
+	<sql id="updateFields">
+		<if test="password != null">
+			password = #{password},
+		</if>
+		<if test="phone != null">
+			phone = #{phone},
+		</if>
+		<if test="score != null">
+			score = #{score},
+		</if>
+		<if test="grade != null">
+			grade = #{grade},
+		</if>
+		<if test="level != null">
+			level = #{level},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+	</sql>
+	
+
+
+
+	<insert id="regist" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Account">
+		INSERT INTO account(
+			nid, 
+			sid,
+			username,
+			password,
+			mailbox,			
+			type,
+			grade,
+			phone,
+			score,
+			level,
+			createTime,
+			status
+		) VALUES (
+			#{aid},
+			#{serialId},
+			#{username},
+			#{password},
+			#{mailbox},
+			#{type},
+			#{grade},
+			#{phone},
+			#{score},
+			#{level},
+			#{createTime},
+			#{status}
+		)
+	</insert>
+	
+
+
+
+	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Account">
+		INSERT INTO account(
+			nid, 
+			sid,
+			wx_openid, 
+			wx_sessionkey,
+			wx_unionid,
+			wx_nickname,
+			wx_avatar,
+			wx_gender,
+			wx_city,
+			wx_country,
+			wx_province,
+			wx_language,
+			type,
+			grade,
+			phone,
+			score,
+			level,
+			createTime,
+			status
+		) VALUES (
+			#{nid},
+			#{sid},
+			#{wxOpenId},
+			#{wxSessionKey},
+			#{wxUnionId},
+			#{wxNickname},
+			#{wxAvatarUrl},
+			#{wxGender},
+			#{wxCity},
+			#{wxCountry},
+			#{wxProvince},
+			#{wxLanguage},
+			#{type},
+			#{grade},
+			#{phone},
+			#{score},
+			#{level},
+			#{createTime},
+			#{status}
+		)
+	</insert>
+	
+	
+	
+	<delete id="removeById" parameterType="long">
+		DELETE 
+		FROM 
+			account 
+		WHERE 
+			id = #{id}
+	</delete>
+	
+	
+	
+	<delete id="removeBySid" parameterType="string">
+		DELETE 
+		FROM 
+			account 
+		WHERE 
+			sid = #{sid}
+	</delete>
+	
+	
+	
+	<delete id="remove" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			account 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</delete>
+	
+	
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE 
+			account
+		<set>
+			<include refid="updateFields"/>
+		</set>
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</update>
+	
+	
+	
+	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			${fields} 
+		FROM 
+			account 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	
+	
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
+		SELECT 
+			count(id)
+		FROM 
+			account 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	
+	
+	<!-- <select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Account"> -->
+	<select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Account">
+		SELECT 
+			${fields}
+		FROM
+			account
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	
+	
+	
+	<select id="getOnLogin" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Account">
+		SELECT 
+			* 
+		FROM 
+			account 
+		WHERE
+			username = #{username}
+			AND
+			type = #{type}
+	</select>
+	
+	
+	
+</mapper>

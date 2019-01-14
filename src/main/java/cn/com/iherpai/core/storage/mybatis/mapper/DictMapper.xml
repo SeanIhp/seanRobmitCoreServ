@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.DictMapper">
+
+	<sql id="queryCommon">
+		<if test="id != null">
+			AND id = #{id} 
+		</if>
+		<if test="did != null">
+			AND did = #{did} 
+		</if>
+		<if test="serialId != null">
+			AND serialId = #{serialId} 
+		</if>
+		<if test="dictGroup_id != null">
+			AND dictGroup_id = #{dictGroupId} 
+		</if>
+		<if test="dictGroup_id != null">
+			AND dictGroup_dgid = #{dictGroupDgid} 
+		</if>
+		<if test="name != null">
+			AND name = #{name} 
+		</if>
+		<if test="code != null">
+			AND code = #{code} 
+		</if>
+		<if test="constCode != null">
+			AND constCode = #{constCode} 
+		</if>
+		<if test="constType != null">
+			AND constType = #{constType} 
+		</if>
+		<if test="constValue != null">
+			AND constValue = #{constValue} 
+		</if>
+		<if test="constText != null">
+			AND constText = #{constText} 
+		</if>
+		<if test="sortNo != null">
+			AND sortNo = #{sortNo} 
+		</if>
+		<if test="description != null">
+			AND description LIKE "%"#{description}"%" 
+		</if>
+		<if test="status != null">
+			AND status = #{status} 
+		</if>
+		<if test="status_min != null">
+			<![CDATA[				
+			AND status >= #{status_min} 
+			]]> 
+		</if>
+		<if test="status_max != null">
+			<![CDATA[				
+			AND status < #{status_max} 
+			]]> 
+		</if>
+	</sql>
+	
+	
+	
+	<sql id="updateFields">
+		<if test="name != null">
+			name = #{name} ,
+		</if>
+		<if test="code != null">
+			code = #{code} ,
+		</if>
+		<if test="constCode != null">
+			constCode = #{constCode} ,
+		</if>
+		<if test="constType != null">
+			constType = #{constType} ,
+		</if>
+		<if test="constValue != null">
+			constValue = #{constValue} ,
+		</if>
+		<if test="constText != null">
+			constText = #{constText} ,
+		</if>
+		<if test="sortNo != null">
+			sortNo = #{sortNo} ,
+		</if>
+		<if test="description != null">
+			description = #{description} ,
+		</if>
+		<if test="status != null">
+			status = #{status} , 
+		</if>
+	</sql>
+	
+
+
+
+	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Dict">
+		INSERT INTO account(
+			did,
+			serialId,
+			dictGroup_id,
+			dictGroup_dgid,
+			name,
+			code, 
+			constCode,
+			constType, 
+			constValue,
+			constText,
+			sortNo,
+			description,
+			createTime,
+			status
+		) VALUES (
+			#{did},
+			#{serialId},
+			#{dictGroupId},
+			#{dictGroupDgid},
+			#{name},
+			#{code},
+			#{constCode},
+			#{constType},
+			#{constValue},
+			#{constText},
+			#{sortNo},
+			#{description},
+			#{createTime},
+			#{status}
+		)
+	</insert>
+	
+	
+	
+	<delete id="removeById" parameterType="string">
+		DELETE 
+		FROM 
+			dict 
+		WHERE 
+			id = #{id}
+	</delete>
+	
+	
+	
+	<delete id="removeByCode" parameterType="string">
+		DELETE 
+		FROM 
+			dict 
+		WHERE 
+			code = #{code}
+	</delete>
+	
+	
+	
+	<delete id="remove" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			dict 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</delete>
+	
+	
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE 
+			dict
+		<set>
+			<include refid="updateFields"/>
+		</set>
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</update>
+	
+	
+	
+	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			${fields} 
+		FROM 
+			dict 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	
+	
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
+		SELECT 
+			count(id)
+		FROM 
+			dict 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Dict">
+		SELECT 
+			${fields}
+		FROM
+			dict
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	
+	
+	
+	<select id="listByDictGroupId" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Dict">
+		SELECT 
+			* 
+		FROM 
+			dict 
+		WHERE
+			dictGroup_id = #{dictGroupId}
+	</select>
+	
+	
+	
+</mapper>

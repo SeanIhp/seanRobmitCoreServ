@@ -1,0 +1,70 @@
+# UI开发指南
+
+本文档将带你使用Omni库快速创建UI页面
+
+
+## 文件结构
+
+标准的UI存放于位于*/pages/模块名*中，它包含一个描述整体页面的HTML文件和两个实现具体功能的Javascript文件，如下：
+| 文件                      | 作用                                 |
+| :------------------------ | :------------------------------------|
+| somepage.html             | 整体页面描述                          |
+| somepage-view.js          | 页面布局，数据和交互行为绑定           | 
+| somepage.js               | 业务和交互逻辑实现                    |
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+___
+
+## 标准查询
+
+### 页面描述
+
+Just start typing in the left panel.
+
+### 页面布局
+
+- **Quick Reference**: that's a reminder of the most basic rules of Markdown
+- **HTML | Preview**: *HTML* to see the markup generated from your Markdown text, *Preview* to see how it looks like
+
+### 交互及业务实现
+
+- `CTRL + O` to open files
+- `CTRL + T` to open a new tab
+- `CTRL + S` to save the current file or tab
+
+
+### Privacy
+
+- No data is sent to any server – everything you type stays inside your application
+- The editor automatically saves what you write locally for future use.  
+  If using a public computer, close all tabs before leaving the editor
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+___
+
+## 标准单据
+
+### 页面描述
+
+Just start typing in the left panel.
+
+### 页面布局
+
+- **Quick Reference**: that's a reminder of the most basic rules of Markdown
+- **HTML | Preview**: *HTML* to see the markup generated from your Markdown text, *Preview* to see how it looks like
+
+### 交互及业务实现
+
+- `CTRL + O` to open files
+- `CTRL + T` to open a new tab
+- `CTRL + S` to save the current file or tab
+
+### Privacy
+
+- No data is sent to any server – everything you type stays inside your application
+- The editor automatically saves what you write locally for future use.  
+  If using a public computer, close all tabs before leaving the editor

@@ -1,0 +1,88 @@
+.banner { position: relative; overflow: auto; }
+.banner li { list-style: none; }
+    .banner ul li { float: left; }
+    
+/*--banner中的圆点部分 --*/
+.banner .dot {
+    -webkit-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+    -moz-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+    -ms-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+    -o-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+}
+
+.banner .dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+.banner .dots li {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    margin: 0 4px;
+
+    text-indent: -999em;
+    *text-indent: 0;
+
+    border: 2px solid #4fd2c2;
+    border-radius: 6px;
+
+    cursor: pointer;
+    opacity: .4;
+    color: #4fd2c2;
+
+    -webkit-transition: background .5s, opacity .5s;
+    -moz-transition: background .5s, opacity .5s;
+    transition: background .5s, opacity .5s;
+}
+.banner .dots li.active {
+    border: 1px solid #88FDEF;
+    background: #fff;
+    opacity: 1;
+}
+.unslider-nav ol li{
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    color: #4fd2c2;
+    background: #4fd2c2;
+    border: 2px solid #4fd2c2;
+}
+.unslider-nav ol li.active{
+    border: 1px solid #88FDEF;
+    background: #fff;
+    opacity: 1;
+}
+
+/*用到了houweb.css里的网络字体,让左右箭头显示出来，注意下！*/
+.banner .unslider-arrow {
+    font-family:"lanren2016";
+    font-size:26px;     /* font-size:50px; */
+    font-style:normal;
+    position: absolute;
+    width: 60px; height: 60px;
+    top:50%;
+    margin-top: -30px;
+    text-decoration: none;
+}
+.banner .prev {
+    left: 15px;
+}
+.banner .next {
+    right: 15px;
+}
+
+.companies li {
+    color: #333;
+    line-height: 35px;
+    font-size: 16px;
+    font-weight: bold;
+}
