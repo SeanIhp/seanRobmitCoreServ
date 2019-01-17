@@ -3,26 +3,24 @@ package cn.com.iherpai.core.storage.mybatis.orm;
 import java.io.Serializable;
 import java.util.Date;
 
-public class DictGroup implements Serializable {
-	private static final long serialVersionUID = -638152134086808122L;
-	
-	private Long			id;
-	private Integer			nid;
-	private String			sid;
-	private String			code;
-	private String			name;
-	private String 			scode;
-	private String			sname;
-	private Integer			type;
-	private Boolean			hasChild;
-	private Integer			level;
-	private Long			parentId;
-	private Integer			parentNid;
-	private String			parentSid;
-	private String			description;
-	private Date			createTime;
-	private Integer			status;
-	
+public class Menu extends Entity implements Serializable {
+	private static final long serialVersionUID = -8037574860884689941L;
+	private Long		id;
+	private Integer		nid;
+	private String		sid;
+	private String		name;
+	private String		code;
+	private String		url;
+	private Integer		sortno;
+	private Boolean		asParent;
+	private Boolean		hasChild;
+	private Integer		level;
+	private	Long		parentId;
+	private Integer		parentNid;
+	private String		parentSid;
+	private Date		createTime;
+	private Integer		status;
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -44,35 +42,35 @@ public class DictGroup implements Serializable {
 	public void setSid(String sid) {
 		this.sid = sid;
 	}
-	public String getCode() {
-		return code;
-	}
-	public void setCode(String code) {
-		this.code = code;
-	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getScode() {
-		return scode;
+	public String getCode() {
+		return code;
 	}
-	public void setScode(String scode) {
-		this.scode = scode;
+	public void setCode(String code) {
+		this.code = code;
 	}
-	public String getSname() {
-		return sname;
+	public String getUrl() {
+		return url;
 	}
-	public void setSname(String sname) {
-		this.sname = sname;
+	public void setUrl(String url) {
+		this.url = url;
 	}
-	public Integer getType() {
-		return type;
+	public Integer getSortno() {
+		return sortno;
 	}
-	public void setType(Integer type) {
-		this.type = type;
+	public void setSortno(Integer sortno) {
+		this.sortno = sortno;
+	}
+	public Boolean getAsParent() {
+		return asParent;
+	}
+	public void setAsParent(Boolean asParent) {
+		this.asParent = asParent;
 	}
 	public Boolean getHasChild() {
 		return hasChild;
@@ -103,12 +101,6 @@ public class DictGroup implements Serializable {
 	}
 	public void setParentSid(String parentSid) {
 		this.parentSid = parentSid;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	public Date getCreateTime() {
 		return createTime;

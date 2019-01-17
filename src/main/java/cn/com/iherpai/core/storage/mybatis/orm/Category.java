@@ -3,16 +3,12 @@ package cn.com.iherpai.core.storage.mybatis.orm;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Category implements Serializable {
-	private static final long serialVersionUID = -602934776952939772L;
-	public static String DEFAULT_ALL_FIELDS = "id, cid, serialId, "
-			+ "name, code, icon, intro, level, asRoot, hasChild, "
-			+ "sequenceNumber, rootId, rootCid, parentId, parentCid, "
-			+ "createTime, status";
+public class Category extends Entity implements Serializable {
+	private static final long serialVersionUID = -602934776952939772L;	
 	
 	private Long			id;
-	private String			cid;
-	private String			serialId;
+	private Integer			nid;
+	private String			sid;
 	private String			name;
 	private String			code;
 	private String			icon;
@@ -22,29 +18,34 @@ public class Category implements Serializable {
 	private Boolean			hasChild;
 	private String			sequenceNumber;
 	private Long			rootId;
-	private String			rootCid;
+	private Integer			rootNid;
+	private String			rootSid;
 	private Long			parentId;
-	private String			parentCid;
+	private Integer			parentNid;
+	private String			parentSid;
 	private Date			createTime;
 	private Integer			status;
-	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getCid() {
-		return cid;
+	public Integer getNid() {
+		return nid;
 	}
-	public void setCid(String cid) {
-		this.cid = cid;
+	public void setNid(Integer nid) {
+		this.nid = nid;
 	}
-	public String getSerialId() {
-		return serialId;
+	public String getSid() {
+		return sid;
 	}
-	public void setSerialId(String serialId) {
-		this.serialId = serialId;
+	public void setSid(String sid) {
+		this.sid = sid;
 	}
 	public String getName() {
 		return name;
@@ -100,11 +101,17 @@ public class Category implements Serializable {
 	public void setRootId(Long rootId) {
 		this.rootId = rootId;
 	}
-	public String getRootCid() {
-		return rootCid;
+	public Integer getRootNid() {
+		return rootNid;
 	}
-	public void setRootCid(String rootCid) {
-		this.rootCid = rootCid;
+	public void setRootNid(Integer rootNid) {
+		this.rootNid = rootNid;
+	}
+	public String getRootSid() {
+		return rootSid;
+	}
+	public void setRootSid(String rootSid) {
+		this.rootSid = rootSid;
 	}
 	public Long getParentId() {
 		return parentId;
@@ -112,11 +119,17 @@ public class Category implements Serializable {
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
-	public String getParentCid() {
-		return parentCid;
+	public Integer getParentNid() {
+		return parentNid;
 	}
-	public void setParentCid(String parentCid) {
-		this.parentCid = parentCid;
+	public void setParentNid(Integer parentNid) {
+		this.parentNid = parentNid;
+	}
+	public String getParentSid() {
+		return parentSid;
+	}
+	public void setParentSid(String parentSid) {
+		this.parentSid = parentSid;
 	}
 	public Date getCreateTime() {
 		return createTime;

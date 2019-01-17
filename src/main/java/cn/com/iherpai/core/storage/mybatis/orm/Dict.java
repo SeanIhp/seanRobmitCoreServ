@@ -3,59 +3,64 @@ package cn.com.iherpai.core.storage.mybatis.orm;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Dict implements Serializable {
+public class Dict extends Entity implements Serializable {
 	private static final long serialVersionUID = -602934776952939772L;
-	public static String DEFAULT_ALL_FIELDS = "id, did, serialId, "
-			+ "dictGroup_id, dictGroup_dgid, "
-			+ "name, code, constCode, constType, "
-			+ "constValue, constText, sortNo, level, "
-			+ "description, createTime, status";
 	
 	private Long			id;
-	private String			did;
-	private String			serialId;
-	private	Long			dictGroup_id;
-	private String			dictGroup_dgid;
-	private String			name;
+	private Integer			nid;
+	private String			sid;
+	private	Long			dictGroupId;
+	private Integer			dictGroupNid;
+	private String			dictGroupSid;
 	private String			code;
+	private String			name;
 	private String			constCode;
 	private String			constType;
 	private String			constValue;
 	private String			constText;
-	private String			sortNo;
+	private Integer			sortNo;
 	private String			description;
 	private Date			createTime;
 	private Integer			status;
-	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDid() {
-		return did;
+	public Integer getNid() {
+		return nid;
 	}
-	public void setDid(String did) {
-		this.did = did;
+	public void setNid(Integer nid) {
+		this.nid = nid;
 	}
-	public String getSerialId() {
-		return serialId;
+	public String getSid() {
+		return sid;
 	}
-	public void setSerialId(String serialId) {
-		this.serialId = serialId;
+	public void setSid(String sid) {
+		this.sid = sid;
 	}
-	public Long getDictGroup_id() {
-		return dictGroup_id;
+	public Long getDictGroupId() {
+		return dictGroupId;
 	}
-	public void setDictGroup_id(Long dictGroup_id) {
-		this.dictGroup_id = dictGroup_id;
+	public void setDictGroupId(Long dictGroupId) {
+		this.dictGroupId = dictGroupId;
 	}
-	public String getDictGroup_dgid() {
-		return dictGroup_dgid;
+	public Integer getDictGroupNid() {
+		return dictGroupNid;
 	}
-	public void setDictGroup_dgid(String dictGroup_dgid) {
-		this.dictGroup_dgid = dictGroup_dgid;
+	public void setDictGroupNid(Integer dictGroupNid) {
+		this.dictGroupNid = dictGroupNid;
+	}
+	public String getDictGroupSid() {
+		return dictGroupSid;
+	}
+	public void setDictGroupSid(String dictGroupSid) {
+		this.dictGroupSid = dictGroupSid;
 	}
 	public String getCode() {
 		return code;
@@ -93,10 +98,10 @@ public class Dict implements Serializable {
 	public void setConstText(String constText) {
 		this.constText = constText;
 	}
-	public String getSortNo() {
+	public Integer getSortNo() {
 		return sortNo;
 	}
-	public void setSortNo(String sortNo) {
+	public void setSortNo(Integer sortNo) {
 		this.sortNo = sortNo;
 	}
 	public String getDescription() {
@@ -116,7 +121,5 @@ public class Dict implements Serializable {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-	
-
+	}	
 }

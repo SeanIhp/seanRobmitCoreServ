@@ -9,12 +9,6 @@ import java.sql.Timestamp;
 
 public class Account extends Entity implements Serializable {
 	private static final long serialVersionUID = -7450117829974407869L;
-	public static final String DEFAULT_ALL_FIELDS = "id, nid, sid, username, password, "
-			+ "wx_openid, wx_sessionkey, "
-			+ "wx_unionid, wx_nickname, "
-			+ "wx_avatar, wx_gender, wx_city, "
-			+ "wx_country, wx_province, wx_language, "
-			+ "type, grade, phone, score, level, status";
 	public static final Integer 	STATUS_DEFAULT = 1;					//正常
 	public static final Integer 	STATUS_LOCK = 2;					//交互锁
 	public static final Integer 	STATUS_DENY = 3;					//拒绝服务
@@ -25,6 +19,8 @@ public class Account extends Entity implements Serializable {
 	private String			sid;				//
 	private String			username;				//
 	private String			password;				//
+	private String			question;
+	private String			answer;
 	private String			mailbox;
 	private String			wx_openid;				//
 	private String			wx_sessionkey;			//
@@ -76,6 +72,18 @@ public class Account extends Entity implements Serializable {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getQuestion() {
+		return question;
+	}
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+	public String getAnswer() {
+		return answer;
+	}
+	public void setAnswer(String answer) {
+		this.answer = answer;
 	}
 	public String getMailbox() {
 		return mailbox;
@@ -185,5 +193,4 @@ public class Account extends Entity implements Serializable {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
 }
