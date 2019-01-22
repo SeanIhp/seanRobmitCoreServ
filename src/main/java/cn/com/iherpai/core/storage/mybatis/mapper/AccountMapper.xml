@@ -8,6 +8,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 -->
 <mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.AccountMapper">
 
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.Account" id="AccountFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="user" />
+	    <result property="username" 		column="username" />
+	    <result property="password" 		column="password" />
+	    <result property="question" 		column="question" />
+	    <result property="answer" 			column="answer" />
+	    <result property="mailbox" 			column="mailbox" />
+	    <result property="wxOpenid" 		column="wx_openid" />
+	    <result property="wxSessionkey" 	column="wx_sessionkey" />
+	    <result property="wxUnionid" 		column="wx_unionid" />
+	    <result property="wxNickname" 		column="wx_nickname" />
+	    <result property="wxAvatar" 		column="wx_avatar" />
+	    <result property="wxGender" 		column="wx_gender" />
+	    <result property="wxCity" 			column="wx_city" />
+	    <result property="wxCountry" 		column="wx_country" />
+	    <result property="wxProvince" 		column="wx_province" />
+	    <result property="wxLanguage" 		column="wx_language" />
+	    <result property="type" 			column="type" />
+	    <result property="grade" 			column="grade" />
+	    <result property="phone" 			column="phone" />
+	    <result property="score" 			column="score" />
+	    <result property="level" 			column="level" />
+	    <result property="createTime" 		column="create_time" />
+	    <result property="status" 			column="status" />
+	</resultMap>
+
+
 	<sql id="queryCommon">
 		<if test="id != null">
 			AND id = #{id} 
@@ -24,13 +53,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="password != null">
 			AND password = #{password} 
 		</if>
+		<if test="question != null">
+			AND question = #{question} 
+		</if>
+		<if test="answer != null">
+			AND answer = #{answer} 
+		</if>
 		<if test="mailbox != null">
 			AND mailbox = #{mailbox} 
 		</if>
 		<if test="wxOpenId != null">
 			AND wx_openid = #{wxOpenId} 
 		</if>
-		<if test="wx_sessionkey != null">
+		<if test="wxSessionkey != null">
 			AND wx_sessionkey = #{wxSessionKey} 
 		</if>
 		<if test="wxUnionId != null">
@@ -107,8 +142,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 	</sql>
 	
+		
+	<sql id="modifyFields">
+		<if test="password != null">
+			password = #{password},
+		</if>
+		<if test="question != null">
+			question = #{question},
+		</if>
+		<if test="answer != null">
+			answer = #{answer},
+		</if>
+		<if test="mailbox != null">
+			mailbox = #{mailbox},
+		</if>
+		<if test="grade != null">
+			grade = #{grade},
+		</if>
+		<if test="phone != null">
+			phone = #{phone},
+		</if>
+		<if test="score != null">
+			score = #{score},
+		</if>
+		<if test="level != null">
+			level = #{level},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+	</sql>
 	
-	
+		
 	<sql id="updateFields">
 		<if test="password != null">
 			password = #{password},
@@ -131,118 +196,104 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</sql>
 	
 
+	<!-- 
+	1. 注册 [regist]
+	2. 添加 [add] <M>
+	3. 删除  by id [remove] <M>
+	4. 删除  by sid [remove] <M>
+	5. 删除  by condi [remove] <M>
+	6. 修改 [modify] 
+	7. 更新 [update] <M>
+	-->
 
 
+	<!-- START: [1] 注册 -->
 	<insert id="regist" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Account">
 		INSERT INTO account(
-			nid, 
-			sid,
-			username,
-			password,
-			mailbox,			
-			type,
-			grade,
-			phone,
-			score,
-			level,
-			createTime,
-			status
+			nid, sid, 
+			username, password, question, answer, mailbox, 
+			wx_openid, wx_sessionkey, wx_unionid, wx_nickname, wx_avatar, wx_gender,
+			wx_city, wx_country, wx_province, wx_language, 
+			type, grade, phone, score, level, create_time, status
 		) VALUES (
-			#{aid},
-			#{serialId},
-			#{username},
-			#{password},
-			#{mailbox},
-			#{type},
-			#{grade},
-			#{phone},
-			#{score},
-			#{level},
-			#{createTime},
-			#{status}
+			#{nid}, #{sid}, 
+			#{username}, #{password}, #{question}, #{answer}, #{mailbox}, 
+			#{wxOpenid}, #{wxSessionkey}, #{wxUnionid}, #{wxNickname}, #{wxAvatar}, #{wxGender}, 
+			#{wxCity}, #{wxCountry}, #{wxProvince}, #{wxLanguage}, 
+			#{type}, #{grade}, #{phone}, #{score}, #{level}, #{createTime}, #{status}
 		)
 	</insert>
-	
+	<!-- END: [1] 注册 -->
 
 
-
+	<!-- START: [2] 添加 <M> -->
 	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Account">
 		INSERT INTO account(
-			nid, 
-			sid,
-			wx_openid, 
-			wx_sessionkey,
-			wx_unionid,
-			wx_nickname,
-			wx_avatar,
-			wx_gender,
-			wx_city,
-			wx_country,
-			wx_province,
-			wx_language,
-			type,
-			grade,
-			phone,
-			score,
-			level,
-			createTime,
-			status
+			nid, sid,
+			username, password, question, answer, mailbox, 
+			wx_openid, wx_sessionkey, wx_unionid, wx_nickname, wx_avatar, wx_gender,
+			wx_city, wx_country, wx_province, wx_language, 
+			type, grade, phone, score, level, create_time, status
 		) VALUES (
-			#{nid},
-			#{sid},
-			#{wxOpenId},
-			#{wxSessionKey},
-			#{wxUnionId},
-			#{wxNickname},
-			#{wxAvatarUrl},
-			#{wxGender},
-			#{wxCity},
-			#{wxCountry},
-			#{wxProvince},
-			#{wxLanguage},
-			#{type},
-			#{grade},
-			#{phone},
-			#{score},
-			#{level},
-			#{createTime},
-			#{status}
+			#{nid}, #{sid}, 
+			#{username}, #{password}, #{question}, #{answer}, #{mailbox}, 
+			#{wxOpenid}, #{wxSessionkey}, #{wxUnionid}, #{wxNickname}, #{wxAvatar}, #{wxGender}, 
+			#{wxCity}, #{wxCountry}, #{wxProvince}, #{wxLanguage}, 
+			#{type}, #{grade}, #{phone}, #{score}, #{level}, #{createTime}, #{status}
 		)
 	</insert>
+	<!-- END: [2] 添加 <M> -->	
+
 	
-	
-	
+	<!-- START: [3] 删除  by id <M> -->
 	<delete id="removeById" parameterType="long">
-		DELETE 
+		DELETE * 
 		FROM 
 			account 
 		WHERE 
 			id = #{id}
 	</delete>
+	<!-- END: [3] 删除 by id <M> -->	
 	
 	
-	
+	<!-- START: [4] 删除 by sid <M> -->
 	<delete id="removeBySid" parameterType="string">
-		DELETE 
+		DELETE * 
 		FROM 
 			account 
 		WHERE 
 			sid = #{sid}
 	</delete>
+	<!-- END: [4] 删除 by sid  <M> -->	
 	
 	
-	
+	<!-- START: [5] 删除 by condi <M> -->
 	<delete id="remove" parameterType="java.util.HashMap">
-		DELETE 
+		DELETE * 
 		FROM 
 			account 
 		<where>
 			<include refid="queryCommon"/>
 		</where>
 	</delete>
+	<!-- END: [5] 删除 by condi <M> -->	
 	
 	
+	<!-- START: [6] 修改 -->
+	<update id="modify" parameterType="java.util.HashMap">
+		UPDATE 
+			account
+		<set>
+			<include refid="modifyFields"/>
+		</set>
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</update>
+	<!-- END: [6] 修改 -->
 	
+	
+	<!-- START: [7] 更新 <M> -->
 	<update id="update" parameterType="java.util.HashMap">
 		UPDATE 
 			account
@@ -253,9 +304,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<include refid="queryCommon"/>
 		</where>
 	</update>
-	
-	
-	
+	<!-- END: [7] 更新 <M> -->
+
+
+	<!-- START: [8] 查询 -->
 	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		SELECT 
 			${fields} 
@@ -265,7 +317,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<include refid="queryCommon"/>
 		</where>
 	</select>
-	
+	<!-- END: [8] 查询 -->
 	
 	
 	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
@@ -280,9 +332,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	<!-- <select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Account"> -->
-	<select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Account">
+	<select id="list" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
 		SELECT 
 			${fields}
+		FROM
+			account
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	
+	<select id="listAll" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
+		SELECT 
+			*
 		FROM
 			account
 		<where>

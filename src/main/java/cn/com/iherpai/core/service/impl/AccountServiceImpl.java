@@ -57,23 +57,23 @@ public class AccountServiceImpl implements AccountService {
 //		System.out.println("AccountServiceImpl!!!! sfsffseff_________list: " + accountMapper);
 
 		System.out.println("AccountMapper!!!! ----------list!!!!-------"+ accountMapper );
-		Map param = new HashMap();
-		param.put("fields", Account.DEFAULT_ALL_FIELDS);
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("fields", "id, nid, sid, username, mailbox, wxOpenid, wxNickname, wxAvatar, type, grade, phone, score, level, createTime, status");
+//		List<Account> accoutList = null;
 		List<Account> accoutList = null;
 		try {
-			accoutList = accountMapper.list(param);
+			accoutList = accountMapper.listAll();
 		} catch (DaoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("AccountMapper!!!! " + e);
 		}
 		System.out.println("AccountMapper!!!!LIST LIST LIST LIST~~~ " + accoutList);
 		for(int i=0; i<accoutList.size(); i++){
 			Account act = accoutList.get(i);
-			System.out.println("account: " + act.getWx_nickname() + "   " + act.getWx_sessionkey() );
+			System.out.println("account: " + act.getUsername() + "   " + act.getMailbox() + "   " + act.getCreateTime() );
 		}
-		Map res = new HashMap();
-		Map p1 = new HashMap();
+		Map<String, Map> res = new HashMap<String, Map>();
+		Map<String, String> p1 = new HashMap<String, String>();
 		p1.put("cat", "tom");
 		p1.put("whattime", "5.12");
 		res.put("result", p1);

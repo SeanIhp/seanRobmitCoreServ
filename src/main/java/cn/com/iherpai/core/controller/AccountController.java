@@ -26,21 +26,29 @@ import cn.com.iherpai.core.storage.mybatis.orm.Account;
 
 @Controller
 @RequestMapping("/account")
+/*
+ * 1. 用户注册 [regist]
+ * 2. 用户登录 [login]
+ * 3. 用户修改密码 [modifyPassword]
+ * 4. 用户信息更新 [update]
+ * 5. 
+ */
 public class AccountController {
 	
 	@Autowired
 	private AccountService accountService;
 	
+	
 	@RequestMapping(value="regist", method=RequestMethod.POST)
 	public @ResponseBody ResultObject regist(@RequestBody Account account){
 		ResultObject ro = new ResultObject();
 		try {
-			account.setNid(100);
+			account.setNid(1);
 			account.setSid(ID.newId(IhpConfig.ID_USER__$USERACCOUNT, IhpConfig.ID_GENERATOR_DATA_DATABASE_CODE, IhpConfig.ID_GENERATOR_DATA_TABLE_CODE));
-//			account.setSerialId(ID.newUuid());
 			if( !DataValidator.isNull(account.getPassword()) ){
 				account.setPassword( Sha256.encode(new Md5().getMd5String(account.getPassword())) );
 			}
+			System.out.println("account: " + account);
 			account.setType(100);
 			account.setGrade(1);
 			account.setPhone("4008000000");
@@ -93,7 +101,7 @@ public class AccountController {
 	@RequestMapping("/list")
 	@ResponseBody
 	public Object list(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("@@@sfsffseff_________list: " + accountService);
+		System.out.println("@@@sfsffseff_________list: " + request);
 		accountService.list();
 		Map res = new HashMap();
 		Map p1 = new HashMap();

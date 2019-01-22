@@ -9,6 +9,11 @@ import java.sql.Timestamp;
 
 public class Account extends Entity implements Serializable {
 	private static final long serialVersionUID = -7450117829974407869L;
+
+	public static final Integer		TYPE_USER = 1;
+	public static final Integer		TYPE_ENT = 2;
+	public static final Integer		TYPE_MASTER = 100;
+
 	public static final Integer 	STATUS_DEFAULT = 1;					//正常
 	public static final Integer 	STATUS_LOCK = 2;					//交互锁
 	public static final Integer 	STATUS_DENY = 3;					//拒绝服务
@@ -22,16 +27,16 @@ public class Account extends Entity implements Serializable {
 	private String			question;
 	private String			answer;
 	private String			mailbox;
-	private String			wx_openid;				//
-	private String			wx_sessionkey;			//
-	private String			wx_unionid;				//
-	private String			wx_nickname;			//
-	private String			wx_avatar;				//
-	private Integer			wx_gender;				//
-	private String			wx_city;				//
-	private String			wx_country;				//
-	private String			wx_province;			//
-	private String			wx_language;			//
+	private String			wxOpenid;				//
+	private String			wxSessionkey;			//
+	private String			wxUnionid;				//
+	private String			wxNickname;			//
+	private String			wxAvatar;				//
+	private Integer			wxGender;				//
+	private String			wxCity;				//
+	private String			wxCountry;				//
+	private String			wxProvince;			//
+	private String			wxLanguage;			//
 	private Integer			type; 
 	private Integer			grade;
 	private String			phone;					//电话号码
@@ -91,65 +96,65 @@ public class Account extends Entity implements Serializable {
 	public void setMailbox(String mailbox) {
 		this.mailbox = mailbox;
 	}
-	public String getWx_openid() {
-		return wx_openid;
+	public String getWxOpenid() {
+		return wxOpenid;
 	}
-	public void setWx_openid(String wx_openid) {
-		this.wx_openid = wx_openid;
+	public void setWxOpenid(String wxOpenid) {
+		this.wxOpenid = wxOpenid;
 	}
-	public String getWx_sessionkey() {
-		return wx_sessionkey;
+	public String getWxSessionkey() {
+		return wxSessionkey;
 	}
-	public void setWx_sessionkey(String wx_sessionkey) {
-		this.wx_sessionkey = wx_sessionkey;
+	public void setWxSessionkey(String wxSessionkey) {
+		this.wxSessionkey = wxSessionkey;
 	}
-	public String getWx_unionid() {
-		return wx_unionid;
+	public String getWxUnionid() {
+		return wxUnionid;
 	}
-	public void setWx_unionid(String wx_unionid) {
-		this.wx_unionid = wx_unionid;
+	public void setWxUnionid(String wxUnionid) {
+		this.wxUnionid = wxUnionid;
 	}
-	public String getWx_nickname() {
-		return wx_nickname;
+	public String getWxNickname() {
+		return wxNickname;
 	}
-	public void setWx_nickname(String wx_nickname) {
-		this.wx_nickname = wx_nickname;
+	public void setWxNickname(String wxNickname) {
+		this.wxNickname = wxNickname;
 	}
-	public String getWx_avatar() {
-		return wx_avatar;
+	public String getWxAvatar() {
+		return wxAvatar;
 	}
-	public void setWx_avatar(String wx_avatar) {
-		this.wx_avatar = wx_avatar;
+	public void setWxAvatar(String wxAvatar) {
+		this.wxAvatar = wxAvatar;
 	}
-	public Integer getWx_gender() {
-		return wx_gender;
+	public Integer getWxGender() {
+		return wxGender;
 	}
-	public void setWx_gender(Integer wx_gender) {
-		this.wx_gender = wx_gender;
+	public void setWxGender(Integer wxGender) {
+		this.wxGender = wxGender;
 	}
-	public String getWx_city() {
-		return wx_city;
+	public String getWxCity() {
+		return wxCity;
 	}
-	public void setWx_city(String wx_city) {
-		this.wx_city = wx_city;
+	public void setWxCity(String wxCity) {
+		this.wxCity = wxCity;
 	}
-	public String getWx_country() {
-		return wx_country;
+	public String getWxCountry() {
+		return wxCountry;
 	}
-	public void setWx_country(String wx_country) {
-		this.wx_country = wx_country;
+	public void setWxCountry(String wxCountry) {
+		this.wxCountry = wxCountry;
 	}
-	public String getWx_province() {
-		return wx_province;
+	public String getWxProvince() {
+		return wxProvince;
 	}
-	public void setWx_province(String wx_province) {
-		this.wx_province = wx_province;
+	public void setWxProvince(String wxProvince) {
+		this.wxProvince = wxProvince;
 	}
-	public String getWx_language() {
-		return wx_language;
+	public String getWxLanguage() {
+		return wxLanguage;
 	}
-	public void setWx_language(String wx_language) {
-		this.wx_language = wx_language;
+	public void setWxLanguage(String wxLanguage) {
+		this.wxLanguage = wxLanguage;
 	}
 	public Integer getType() {
 		return type;

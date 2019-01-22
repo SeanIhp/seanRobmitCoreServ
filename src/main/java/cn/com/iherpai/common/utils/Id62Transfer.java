@@ -9,7 +9,7 @@ public class Id62Transfer {
 	private static Map<String, Long> _62DecodeMap = new HashMap<String, Long>();
 	
 	static{
-		_62EncodeMap.put(0L, "_");
+		_62EncodeMap.put(0L, "0");
 		_62EncodeMap.put(1L, "1");
 		_62EncodeMap.put(2L, "2");
 		_62EncodeMap.put(3L, "3");
@@ -72,7 +72,7 @@ public class Id62Transfer {
 		_62EncodeMap.put(60L, "y");
 		_62EncodeMap.put(61L, "z");
 
-		_62DecodeMap.put("_", 0L);
+		_62DecodeMap.put("0", 0L);
 		_62DecodeMap.put("1", 1L);
 		_62DecodeMap.put("2", 2L);
 		_62DecodeMap.put("3", 3L);
@@ -148,7 +148,7 @@ public class Id62Transfer {
 				_tempRst = _tempNum / 62L;
 				long _tempMod = _tempNum % 62L;
 				res.append( _62EncodeMap.get(_tempMod) );
-				if(_tempRst>=36L){
+				if(_tempRst>=62L){
 					_tempNum = _tempRst;
 				}else{
 //					res.append( _62EncodeMap.get(_tempRst) );
@@ -216,11 +216,11 @@ public class Id62Transfer {
 		*/
 		
 		Thread th = Thread.currentThread();
-		System.out.println(th.getId());
-		System.out.println(iferx.toDecode62("______"));
-		System.out.println(iferx.toDecode62("_zzzzzz"));
+		System.out.println("th.getId() [tranfer:62] ==> " + th.getId());
+		System.out.println(iferx.toDecode62("000000"));
+		System.out.println(iferx.toDecode62("0zzzzzz"));
 		System.out.println(iferx.toEncode62(56800235583L));
-		System.out.println(iferx.toDecode62("_fF2xFa"));
+		System.out.println(iferx.toDecode62("0fF2xFa"));
 		System.out.println(iferx.toEncode62(37783795570L));
 		System.out.println(iferx.toDecode62("zzzzz"));
 		System.out.println(iferx.toEncode62(916132832L));

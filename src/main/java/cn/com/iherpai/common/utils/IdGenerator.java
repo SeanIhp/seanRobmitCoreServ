@@ -11,6 +11,7 @@ package cn.com.iherpai.common.utils;
 
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +26,7 @@ public class IdGenerator {
 	private static final int MAXSEED = IhpConfig.ID_GENERATOR_MAXSEED;
 	private static LinkedList<Long> randSeed = new LinkedList<Long>();
 	private static Random rnd = new Random();
-	private static long maxRnd = 56800235583L;
+	private static long maxRnd = 13845840L;
 	{
 		long temp = 0;
 		long tempLong = 0;
@@ -241,8 +242,8 @@ public class IdGenerator {
 		String id = null;
 		try {
 			for(int i=0; i<10000; i++){
-				id = IdGenerator.generate(IhpConfig.ID_GENERATOR_DATA_DATABASE_CODE, IhpConfig.ID_GENERATOR_DATA_TABLE_CODE);
-				System.out.println("--< "+i+" >----------------[ "+id+" ]------------------------------------------------------------------------------------------");
+				id = IdGenerator.generate61ForId(IhpConfig.ID_USER__$USERACCOUNT, IhpConfig.ID_GENERATOR_DATA_DATABASE_CODE, IhpConfig.ID_GENERATOR_DATA_TABLE_CODE);
+				System.out.println("--< "+i+" >--("+id.length()+")--------------[ "+id+" ]------------------------------------------------------------------------------------------");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -324,6 +325,84 @@ public class IdGenerator {
 		//log.debug("\tidPart1st: "+idPart1st+"\tidPart2st: "+idPart2st+"\tidPart3st: "+idPart3st+"\tidPart4st: "+idPart4st+"\tidPart5st: "+idPart5st+"\tidPart6st: "+idPart6st+"\tidPart7st: "+idPart7st);
 //		log.debug("["+TestTimer.getTimestamp()+"] 最终生成ID：");
 //		log.debug("ID: " + idPart1st + idPart2st + idPart3st + idPart4st + idPart5st + idPart6st + idPart7st);
+		
+		return idPart1st + idPart2st + idPart3st + idPart4st + idPart5st + idPart6st + idPart7st;
+	}
+	
+	
+	
+
+	/**
+	 * @author		Sean
+	 * @description	通用的数据ID生成器，生成由64个(61进制)字符组成的ID字符串，其各组成部分如下：
+	 * 				01~16	YYMMDDHHmmSSmsms	占16位
+	 * 				17~19	ID生成器所在服务器		占3位	max: 226,980
+	 * 				20~22	数据用途				占3位	max: 226,980
+	 * 				23~25	数据库服务器				占3位	max: 226,980
+	 * 				26~28	数据表					占3位	max: 226,980	 
+	 * 				29~60	保留位					占32位	
+	 * 				61~64	随机数					占4位	max: 13,845,840	
+	 * 
+	 */
+	public static String generate61ForId(long _idUse, long _databaseCode, long _datatableCode) throws Exception{	
+		//初始化随机数种子
+		if (randSeed==null) {
+			randSeed = new LinkedList<Long>();
+		}
+		//生成不少于IdGenerator.MINSEED且不多于IdGenerator.MAXSEED的备用随机数
+		if (randSeed.size() < IdGenerator.MINSEED) {
+			long temp = 0;
+			long tempLong = 0;
+			while(randSeed.size()<IdGenerator.MAXSEED){
+				temp = Math.abs(rnd.nextLong());
+				if(temp>maxRnd){				
+					tempLong = Math.abs(temp%maxRnd);
+				}else{
+					tempLong = Math.abs(temp);
+				}
+				if(!randSeed.contains(tempLong)){
+					randSeed.addFirst(tempLong);
+				}else{
+					continue;
+				}
+			}
+		}
+		
+		//取用随机数
+		Long randNum = randSeed.removeLast();
+		//YYMMDDHHmmSSmsms	占16位
+		String idPart1st = DateTime.getTheDateStr4Id();
+		//17~19	ID生成器所在服务器		占3位	max: 226,980
+		String idPart2st = Id61Transfer.toEncode61( IhpConfig.ID_GENERATOR_SERVER_CODE );
+		//20~22	数据用途				占3位	max: 226,980
+		String idPart3st = Id61Transfer.toEncode61( _idUse );
+		//23~25	数据库服务器				占3位	max: 226,980
+		String idPart4st = Id61Transfer.toEncode61( _databaseCode );
+		//26~28	数据表					占3位	max: 226,980
+		String idPart5st = Id61Transfer.toEncode61( _datatableCode );
+		//29~60	保留位	[UUID]				占32位
+		String idPart6st = UUID.randomUUID().toString();		//"00000000000000000000000000000000";
+		idPart6st = idPart6st.replace("-", "");
+		//61~64	随机数					占4位	max: 13,845,840
+		String idPart7st = Id61Transfer.toEncode61( Long.parseLong(randNum.toString()) );
+		
+		//log.debug("["+TestTimer.getTimestamp()+"] 生成ID基础值：");
+		//log.debug("\tidPart1st: "+idPart1st+"\tidPart2st: "+idPart2st+"\tidPart3st: "+idPart3st+"\tidPart4st: "+idPart4st+"\tidPart5st: "+idPart5st+"\tidPart6st: "+idPart6st+"\tidPart7st: "+idPart7st);
+		
+		try {
+			idPart2st = fillStr(idPart2st, idPart2st.length(), 3);
+			idPart3st = fillStr(idPart3st, idPart3st.length(), 3);
+			idPart4st = fillStr(idPart4st, idPart4st.length(), 3);
+			idPart5st = fillStr(idPart5st, idPart5st.length(), 3);
+			idPart7st = fillStr(idPart7st, idPart7st.length(), 4);
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		//log.debug("["+TestTimer.getTimestamp()+"] 调整ID各组成部分长度：");
+		//log.debug("\tidPart1st: "+idPart1st+"\tidPart2st: "+idPart2st+"\tidPart3st: "+idPart3st+"\tidPart4st: "+idPart4st+"\tidPart5st: "+idPart5st+"\tidPart6st: "+idPart6st+"\tidPart7st: "+idPart7st);
+//		log.debug("["+TestTimer.getTimestamp()+"] 最终生成ID：");
+//		log.debug("ID: " + idPart1st + " / " + idPart2st + " / " + idPart3st + " / " + idPart4st + " / " + idPart5st + " / " + idPart6st + " / " + idPart7st);
 		
 		return idPart1st + idPart2st + idPart3st + idPart4st + idPart5st + idPart6st + idPart7st;
 	}

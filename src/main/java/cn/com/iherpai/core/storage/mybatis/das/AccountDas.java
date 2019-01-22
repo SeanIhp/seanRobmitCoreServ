@@ -100,5 +100,17 @@ public class AccountDas extends BaseDas implements EntityDas {
 		res = accountDao.list(params);
 		return res;
 	}
+	
+	/*
+	 * 用户查询
+	 * @selectId	查询映射ID
+	 * @params		查询参数
+	 */
+	@Transactional
+	public List<Account> listAll() throws DaoException {
+		List<Account> res = null;
+		res = accountDao.listAll();
+		return res;
+	}
 
 }

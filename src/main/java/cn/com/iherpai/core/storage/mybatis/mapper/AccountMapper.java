@@ -30,4 +30,6 @@ public interface AccountMapper {
 	public long getCount(Map params) throws DaoException;
 	
 	public List<Account> list(Map params) throws DaoException;
+	
+	public List<Account> listAll() throws DaoException;
 }
