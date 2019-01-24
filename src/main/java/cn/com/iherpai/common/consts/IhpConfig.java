@@ -20,10 +20,19 @@ public class IhpConfig {
 	public static final long		ID_GENERATOR_DATA_TABLE_CODE 			= 1L;					//数据所在的表编号
 	
 
-	public static final int			ID_GENERATOR_MINSEED 				= 100;						//ID生成器批量产生随机数最小值
-	public static final int			ID_GENERATOR_MAXSEED 				= 1000;					//ID生成器批量产生随机数最大值
 	
-	//最大值：262,207
+	
+	public static final int			ID_GENERATOR_MINSEED 				= 100;						//ID生成器批量产生随机数最小值
+	public static final int			ID_GENERATOR_MAXSEED 				= 1000;						//ID生成器批量产生随机数最大值
+	
+	public static final long		ID_DATA_DATABASE_CODE 		= 1L;					//数据库所在的服务器编号
+	public static final long		ID_DATA_TABLE_CODE 			= 1L;					//数据所在的表编号
+	
+	//最大值：226,980
+	public static final long		SID_$ACCOUNT 						= 100101L;					//ID生成器: 数据用途所: Account
+	
+	
+	
 	
 	public static final long		ID_DICT__$DICT 						= 110021L;					//ID生成器: 数据用途所: Dict
 	public static final long		ID_DICT__$DICTGROUP 				= 110041L;					//ID生成器: 数据用途所: DictGroup

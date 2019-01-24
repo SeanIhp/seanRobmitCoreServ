@@ -12,6 +12,10 @@ public class AccountNameAlreadyExistsException extends Exception {
 		super("用户名已被占用");
 	}
 	
+	public AccountNameAlreadyExistsException(String msg) {
+		super(msg);
+	}
+	
 	public AccountNameAlreadyExistsException(String[] args) {
 		super("用户名"+args[0]+"已被占用");
 	}

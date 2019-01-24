@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE  mapper  PUBLIC  "-//mybatis.org//DTD  Mapper  3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.orm.Account">
+
+	<!-- 
+	1. 注册 [regist]
+	2. 添加 [add] <M>
+	3. 删除 [remove] <M>
+	4. 修改 [modify] 
+	5. 更新 [update] <M>
+	-->
+
+
+
+	<!-- START: [1] 注册 -->
+	<insert id="regist" parameterType="Account">
+		<![CDATA[
+			INSERT INTO account(
+				nid, sid,
+				username, password, question, answer, mailbox, 
+				wx_openid, wx_sessionkey, wx_unionid, wx_nickname, wx_avatar, wx_gender,
+				wx_city, wx_country, wx_province, wx_language, 
+				type, grade, phone, score, level, create_time, status
+			) VALUES (
+				#{nid}, #{sid}, 
+				#{username}, #{password}, #{question}, #{answer}, #{mailbox}, 
+				#{wxOpenid}, #{wxSessionkey}, #{wxUnionid}, #{wxNickname}, #{wxAvatar}, #{wxGender}, 
+				#{wxCity}, #{wxCountry}, #{wxProvince}, #{wxLanguage}, 
+				#{type}, #{grade}, #{phone}, #{score}, #{level}, #{createTime}, #{status}
+			)
+		]]>
+	</insert>
+	<!-- END: [1] 注册 -->
+
+
+	<!-- START: [2] 添加 <M> -->
+	<insert id="add" parameterType="Account">
+		<![CDATA[
+			INSERT INTO account(
+				nid, sid,
+				username, password, question, answer, mailbox, 
+				wx_openid, wx_sessionkey, wx_unionid, wx_nickname, wx_avatar, wx_gender,
+				wx_city, wx_country, wx_province, wx_language, 
+				type, grade, phone, score, level, create_time, status
+			) VALUES (
+				#{nid}, #{sid}, 
+				#{username}, #{password}, #{question}, #{answer}, #{mailbox}, 
+				#{wxOpenid}, #{wxSessionkey}, #{wxUnionid}, #{wxNickname}, #{wxAvatar}, #{wxGender}, 
+				#{wxCity}, #{wxCountry}, #{wxProvince}, #{wxLanguage}, 
+				#{type}, #{grade}, #{phone}, #{score}, #{level}, #{createTime}, #{status}
+			)
+		]]>
+	</insert>
+	<!-- END: [2] 添加 <M> -->	
+
+	
+	<!-- START: [3] 删除 <M> -->
+	<delete id="remove" parameterType="Account">
+		<![CDATA[
+			DELETE * 
+			FROM account 
+			WHERE 
+				id = #{id, jdbcType=BIGINT}
+		]]>
+	</delete>
+	<!-- END: [3] 删除 <M> -->	
+	
+	
+	<!-- START: [4] 修改 -->
+	<update id="modify" parameterType="Account">
+		<![CDATA[
+			UPDATE account
+			]]>
+			<set>
+				<if test="password != null">
+					password = #{password},
+				</if>
+				<if test="question != null">
+					question = #{question},
+				</if>
+				<if test="answer != null">
+					answer = #{answer},
+				</if>
+				<if test="mailbox != null">
+					mailbox = #{mailbox},
+				</if>
+				<if test="grade != null">
+					grade = #{grade},
+				</if>
+				<if test="phone != null">
+					phone = #{phone},
+				</if>
+				<if test="score != null">
+					score = #{score},
+				</if>
+				<if test="level != null">
+					level = #{level},
+				</if>
+				<if test="status != null">
+					status = #{status},
+				</if>
+			</set>
+			<![CDATA[
+			WHERE
+				id = #{id, jdbcType=BIGINT}
+			]]>
+	</update>
+	<!-- END: [4] 修改 -->
+	
+	
+	<!-- START: [5] 更新 <M> -->
+	<update id="update" parameterType="Account">
+		<![CDATA[
+			UPDATE account
+			]]>
+			<set>
+				<if test="grade != null">
+					grade = #{grade},
+				</if>
+				<if test="phone != null">
+					phone = #{phone},
+				</if>
+				<if test="score != null">
+					score = #{score},
+				</if>
+				<if test="level != null">
+					level = #{level},
+				</if>
+				<if test="status != null">
+					status = #{status},
+				</if>
+			</set>
+			<![CDATA[
+			WHERE
+				id = #{id, jdbcType=BIGINT}
+			]]>
+	</update>
+	<!-- END: [5] 更新 <M> -->
+	
+
+
+	<!-- START: [6] 查询 -->
+	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				${fields}
+			FROM 
+				account 
+			WHERE 
+				id = #{id, jdbcType=BIGINT}
+		]]>
+	</select>
+	
+	<select id="getByWxUnionId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				${fields}
+			FROM 
+				account 
+			WHERE 
+				wx_unionid = #{wxUnionId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<select id="getByUsername" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				${fields}
+			FROM 
+				account 
+			WHERE 
+				username = #{username, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<select id="getByWxNickname" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				${fields}
+			FROM 
+				account 
+			WHERE 
+				wx_nickname = #{wxNickname, jdbcType=VARCHAR}
+		]]>
+	</select>	
+	
+	<select id="getByPhoneNumber" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				${fields}
+			FROM 
+				account 
+			WHERE 
+				phoneNumber = #{phoneNumber, jdbcType=VARCHAR}
+		]]>
+	</select>	
+	<!-- END: 查 -->
+
+
+	<!-- START: 统 -->
+	<select id="countByWxNickname" parameterType="Account" resultType="long">
+		<![CDATA[
+			SELECT 
+				count(id)
+			FROM 
+				account 
+			WHERE 
+				wx_nickname = #{wxNickname, jdbcType=VARCHAR}
+		]]>
+	</select>
+
+	<select id="countByPhone" parameterType="Account" resultType="long">
+		<![CDATA[
+			SELECT 
+				count(id)
+			FROM 
+				account 
+			WHERE 
+				phone = #{phone, jdbcType=VARCHAR}
+		]]>
+	</select>
+	<!-- END: 统 -->
+	
+	
+	
+	<!-- START: 列 -->
+	<select id="listByActScoreRange" parameterType="java.util.HashMap" resultType="Account">
+		<![CDATA[
+			SELECT 
+				${fields}
+			FROM
+				account
+			WHERE 
+				actScore>= #{min_actScore, jdbcType=INTEGER} 
+				AND
+				actScore< #{max_actScore, jdbcType=INTEGER}
+		]]>
+	</select>
+	<!-- END: 列 -->
+	
+</mapper>

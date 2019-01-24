@@ -5,7 +5,8 @@ import cn.com.iherpai.common.underware.Base64;
 public class ID {
 	
 	public static String newId(long useFor, long dbNum, long tableNum) throws Exception{
-		return IdGenerator.generate63(useFor, dbNum, tableNum);
+//		return IdGenerator.generate63(useFor, dbNum, tableNum);
+		return IdGenerator.generate61ForId(useFor, dbNum, tableNum);		
 	}
 	
 	public static String newUuid(){

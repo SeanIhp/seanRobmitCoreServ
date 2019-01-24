@@ -208,7 +208,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<!-- START: [1] 注册 -->
-	<insert id="regist" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Account">
+	<insert id="regist" parameterType="Account">
 		INSERT INTO account(
 			nid, sid, 
 			username, password, question, answer, mailbox, 
@@ -227,7 +227,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<!-- START: [2] 添加 <M> -->
-	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Account">
+	<insert id="add" parameterType="Account">
 		INSERT INTO account(
 			nid, sid,
 			username, password, question, answer, mailbox, 

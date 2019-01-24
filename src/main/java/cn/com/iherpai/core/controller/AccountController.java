@@ -21,7 +21,10 @@ import cn.com.iherpai.common.underware.secure.Sha256;
 import cn.com.iherpai.common.utils.DateTime;
 import cn.com.iherpai.common.utils.ID;
 import cn.com.iherpai.core.entify.ResultObject;
+import cn.com.iherpai.core.exception.AccountRegistInfoErrorException;
+import cn.com.iherpai.core.exception.ServerServicingException;
 import cn.com.iherpai.core.service.AccountService;
+import cn.com.iherpai.core.storage.mybatis.exception.DaoException;
 import cn.com.iherpai.core.storage.mybatis.orm.Account;
 
 @Controller
@@ -39,12 +42,21 @@ public class AccountController {
 	private AccountService accountService;
 	
 	
+	// START: [1] 用户注册
 	@RequestMapping(value="regist", method=RequestMethod.POST)
 	public @ResponseBody ResultObject regist(@RequestBody Account account){
 		ResultObject ro = new ResultObject();
 		try {
+			//校验用户名规则
+			//throw new AccountRegistInfoErrorException("用户名填写有误！");
+			//校验密码规则
+			//throw new AccountRegistInfoErrorException("密码填写有误！");
+			//检验mailbox规则
+			//throw new AccountRegistInfoErrorException("电子邮箱填写有误！");
+			//检查用户名是否可用
+			//throw new AccountNameAlreadyExistsException("用户名已被占用");
 			account.setNid(1);
-			account.setSid(ID.newId(IhpConfig.ID_USER__$USERACCOUNT, IhpConfig.ID_GENERATOR_DATA_DATABASE_CODE, IhpConfig.ID_GENERATOR_DATA_TABLE_CODE));
+			account.setSid(ID.newId(IhpConfig.SID_$ACCOUNT, IhpConfig.ID_DATA_DATABASE_CODE, IhpConfig.ID_DATA_TABLE_CODE));
 			if( !DataValidator.isNull(account.getPassword()) ){
 				account.setPassword( Sha256.encode(new Md5().getMd5String(account.getPassword())) );
 			}
@@ -58,17 +70,28 @@ public class AccountController {
 			account.setStatus(0);
 			int res = accountService.regist(account);
 			if(res>0){
-				ro.setReturnCode(200);
+				ro.setReturnCode(100);
 				ro.addData("account", account);
 			}else{
 				ro.setReturnCode(-1);
 				ro.addData("resultTip", "无法注册！");
 			}
+		} catch (DaoException de) {
+			de.printStackTrace();
+			ro.setReturnCode(-1201);
+			ro.addData("resultTip", de.getMessage());
+		} catch (ServerServicingException se) {
+			se.printStackTrace();
+			ro.setReturnCode(-1401);
+			ro.addData("resultTip", se.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ro;
 	}
+	// END: [1] 用户注册
+	
+	
 	
 	@RequestMapping(value="login", method=RequestMethod.POST)
 	public @ResponseBody ResultObject login(@RequestBody Account account){
