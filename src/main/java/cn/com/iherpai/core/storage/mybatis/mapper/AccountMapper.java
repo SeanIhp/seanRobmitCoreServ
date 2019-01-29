@@ -10,10 +10,12 @@ import cn.com.iherpai.core.storage.mybatis.exception.DaoException;
 import cn.com.iherpai.core.storage.mybatis.orm.Account;
 
 @Component
-public interface AccountMapper {
+public interface AccountMapper {	
+	public int regist(Account account) throws DaoException;
+	
 	public Account getOnLogin(Map<String, Object> param) throws DaoException;
 	
-	public int regist(Account account) throws DaoException;
+	public int modify(Account account) throws DaoException;
 	
 	public int add(Account account) throws DaoException;
 	
@@ -29,7 +31,7 @@ public interface AccountMapper {
 	
 	public long getCount(Map params) throws DaoException;
 	
-	public List<Account> list(Map params) throws DaoException;
+	public List<Account> list(Map params, String fields) throws DaoException;
 	
 	public List<Account> listAll() throws DaoException;
 }

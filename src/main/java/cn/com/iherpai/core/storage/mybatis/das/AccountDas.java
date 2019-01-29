@@ -97,7 +97,7 @@ public class AccountDas extends BaseDas implements EntityDas {
 	@Transactional
 	public List<Account> list(Map params) throws DaoException {
 		List<Account> res = null;
-		res = accountDao.list(params);
+		res = accountDao.list(params, "");
 		return res;
 	}
 	

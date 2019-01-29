@@ -1,5 +1,6 @@
 package cn.com.iherpai.core.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +27,9 @@ import cn.com.iherpai.core.exception.ServerServicingException;
 import cn.com.iherpai.core.service.AccountService;
 import cn.com.iherpai.core.storage.mybatis.exception.DaoException;
 import cn.com.iherpai.core.storage.mybatis.orm.Account;
+import cn.com.iherpai.core.vo.AccountVo;
+import cn.com.iherpai.core.vo.ValueObject;
 
-@Controller
-@RequestMapping("/account")
 /*
  * 1. 用户注册 [regist]
  * 2. 用户登录 [login]
@@ -36,6 +37,8 @@ import cn.com.iherpai.core.storage.mybatis.orm.Account;
  * 4. 用户信息更新 [update]
  * 5. 
  */
+@Controller
+@RequestMapping("/account")
 public class AccountController {
 	
 	@Autowired
@@ -70,8 +73,14 @@ public class AccountController {
 			account.setStatus(0);
 			int res = accountService.regist(account);
 			if(res>0){
+				ArrayList<String> returnFields = ValueObject.returnFieldsBuild(
+						"id, nid, sid, username, mailbox, "
+						+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, "
+						+ "wxCity, wxCountry, wxProvince, wxLanguage, "
+						+ "type, grade, phone, score, level, createTime, status");
+				AccountVo actVo = new AccountVo(account, returnFields);
 				ro.setReturnCode(100);
-				ro.addData("account", account);
+				ro.addData("account", actVo);
 			}else{
 				ro.setReturnCode(-1);
 				ro.addData("resultTip", "无法注册！");
@@ -92,28 +101,78 @@ public class AccountController {
 	// END: [1] 用户注册
 	
 	
-	
+
+	// START: [2] 用户登录 
 	@RequestMapping(value="login", method=RequestMethod.POST)
 	public @ResponseBody ResultObject login(@RequestBody Account account){
 		ResultObject ro = new ResultObject();
 		try {
+			//校验用户名规则
+			//throw new AccountLoginInfoErrorException("用户名/密码错误，请检查后重试！");
+			//校验密码规则
+			//throw new AccountLoginInfoErrorException("用户名/密码错误，请检查后重试！");
+			System.out.println("------- "+account.getUsername()+" ------- alpha password: " + account.getPassword());
 			if( !DataValidator.isNull(account.getPassword()) ){
 				account.setPassword( Sha256.encode(new Md5().getMd5String(account.getPassword())) );
 			}
+			System.out.println("------- "+account.getUsername()+" ------- beta password: " + account.getPassword());
 			account.setType(100);
-			Account res = accountService.login(account);
-			if(res!=null){
-				ro.setReturnCode(200);
-				ro.addData("account", res);
-			}else{
+			String returnFieldsDefine = "id, nid, sid, username, mailbox, "
+					+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, "
+					+ "wxCity, wxCountry, wxProvince, wxLanguage, "
+					+ "type, grade, phone, score, level, createTime, status";
+			ArrayList<String> returnFields = ValueObject.returnFieldsBuild(returnFieldsDefine);
+			Account theAcount = accountService.login(account, returnFieldsDefine);
+			if( theAcount != null ){
+				AccountVo actVo = new AccountVo(theAcount, returnFields);
+				ro.setReturnCode(100);
+				ro.addData("account", actVo);
+			} else {
 				ro.setReturnCode(-1);
-				ro.addData("resultTip", "无法登录！");
+				ro.addData("resultTip", "用户名或密码错误,登录失败！");
 			}
+		} catch (DaoException de) {
+			de.printStackTrace();
+			ro.setReturnCode(-1201);
+			ro.addData("resultTip", de.getMessage());;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ro;
 	}
+	// END: [2] 用户登录
+	
+	
+
+	// START: [3] 用户修改密码 
+	@RequestMapping(value="modifyPassword", method=RequestMethod.POST)
+	public @ResponseBody ResultObject modifyPassword(@RequestBody AccountVo accountVo){
+		ResultObject ro = new ResultObject();
+		try {
+			//校验新密码规则
+			//throw new AccountLoginInfoErrorException("密码填写有误！");
+			if( !DataValidator.isNull(accountVo.getNewPassword()) ){
+				accountVo.setNewPassword( Sha256.encode(new Md5().getMd5String(accountVo.getNewPassword())) );
+			}
+			int res = accountService.modifyPassword(accountVo);
+			if(res!=-1){
+				ro.setReturnCode(200);
+				ro.addData("account", res);
+			}else{
+				ro.setReturnCode(-1);
+				ro.addData("resultTip", "用户名或密码错误,登录失败！");
+			}
+		} catch (DaoException de) {
+			de.printStackTrace();
+			ro.setReturnCode(-1201);
+			ro.addData("resultTip", de.getMessage());;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ro;
+	}
+	// END: [3] 用户修改密码
+	
 	
 	@RequestMapping("new")
 	public String add(HttpServletRequest request, HttpServletResponse response){

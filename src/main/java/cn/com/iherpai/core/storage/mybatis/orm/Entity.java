@@ -1,6 +1,7 @@
 package cn.com.iherpai.core.storage.mybatis.orm;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 import cn.com.iherpai.common.underware.DataValidator;
 
@@ -130,6 +131,5 @@ public class Entity implements Serializable {
 		}
 		return res;
 	}
-	
 	
 }

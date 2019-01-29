@@ -15,7 +15,17 @@ import cn.com.iherpai.core.service.AccountService;
 import cn.com.iherpai.core.storage.mybatis.exception.DaoException;
 import cn.com.iherpai.core.storage.mybatis.mapper.AccountMapper;
 import cn.com.iherpai.core.storage.mybatis.orm.Account;
+import cn.com.iherpai.core.storage.mybatis.orm.Entity;
+import cn.com.iherpai.core.vo.AccountVo;
+import cn.com.iherpai.core.vo.ValueObject;
 
+/*
+ * 1. 用户注册 [regist]
+ * 2. 用户登录 [login]
+ * 3. 用户修改密码 [modifyPassword]
+ * 4. 用户信息更新 [update]
+ * 5. 
+ */
 @Service
 @Transactional
 public class AccountServiceImpl implements AccountService {
@@ -23,13 +33,28 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountMapper accountMapper;
 
+	// START: [1] 用户注册
 	@Override
-	public Account login(Account account) throws DaoException{
-		Map<String, Object> param = new HashMap();
+	public int regist(Account account) throws DaoException{
+		return accountMapper.regist(account);
+	}
+	// END: [1] 用户注册
+	
+
+
+	// START: [2] 用户登录 
+	@Override
+	public Account login(Account account, String fields) throws DaoException{
+		Map<String, Object> param = new HashMap<String, Object>();
+		//补充查询的字段列表
+		fields += " ,password";
+		//字段列表转下划线分隔
+		String the_fields = ValueObject.accountOrmKeys(fields);
+		//Mapper参数准备
+		param.put("fields", the_fields);
 		param.put("username", account.getUsername());
 		param.put("type", account.getType());
 		Account theAccount = accountMapper.getOnLogin(param);
-		System.out.println("~~~~~~~~~~~theAccount: " + theAccount);
 		if(theAccount!=null){
 			if(theAccount.getPassword().equals(account.getPassword())){
 				return theAccount;
@@ -40,17 +65,31 @@ public class AccountServiceImpl implements AccountService {
 			return null;
 		}
 	}
+	// END: [2] 用户登录
+	
 
+
+	// START: [3] 用户修改密码 
 	@Override
-	public int regist(Account account) throws DaoException{
-		return accountMapper.regist(account);
+	public int modifyPassword(AccountVo accountVo) throws DaoException {
+		Map<String, Object> param = new HashMap<String, Object>();
+//		AccountVo accountVo = (AccountVo)account;
+		param.put("password", accountVo.getNewPassword());
+		param.put("sid", accountVo.getSid());
+		return accountMapper.modify((Account)accountVo);
 	}
+	// END: [3] 用户修改密码
+	
+	
+	
 
 	@Override
 	public String add(Account account){
 		System.out.println("AccountServiceImpl!!!! sfsffseff");
 		return "new account";
 	}
+
+
 
 	@Override
 	public Object list(){

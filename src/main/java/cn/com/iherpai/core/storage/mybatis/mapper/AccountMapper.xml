@@ -204,6 +204,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	5. 删除  by condi [remove] <M>
 	6. 修改 [modify] 
 	7. 更新 [update] <M>
+	8. 获取 [get] 
+	9. 登录时获取[getOnLogin]
 	-->
 
 
@@ -318,6 +320,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</where>
 	</select>
 	<!-- END: [8] 查询 -->
+
+
+	<!-- START: [9] 登录时获取-->
+	<select id="getOnLogin" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
+		SELECT 
+			${fields} 
+		FROM 
+			account 
+		WHERE
+			username = #{username, jdbcType=VARCHAR}
+			AND
+			type = #{type, jdbcType=INTEGER}
+	</select>
+	<!-- END: [9] 登录时获取 -->
 	
 	
 	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
@@ -343,27 +359,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="listAll" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
+		<![CDATA[
 		SELECT 
 			*
 		FROM
 			account
+		]]>
 		<where>
 			<include refid="queryCommon"/>
 		</where>
 	</select>
 	
 	
-	
-	<select id="getOnLogin" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Account">
-		SELECT 
-			* 
-		FROM 
-			account 
-		WHERE
-			username = #{username}
-			AND
-			type = #{type}
-	</select>
 	
 	
 	
