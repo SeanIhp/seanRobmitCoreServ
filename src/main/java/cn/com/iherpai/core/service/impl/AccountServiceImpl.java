@@ -74,9 +74,11 @@ public class AccountServiceImpl implements AccountService {
 	public int modifyPassword(AccountVo accountVo) throws DaoException {
 		Map<String, Object> param = new HashMap<String, Object>();
 //		AccountVo accountVo = (AccountVo)account;
-		param.put("password", accountVo.getNewPassword());
+		param.put("password", accountVo.getPassword());
+		param.put("newPassword", accountVo.getNewPassword());
 		param.put("sid", accountVo.getSid());
-		return accountMapper.modify((Account)accountVo);
+		System.out.println("Param: " + param);
+		return accountMapper.modifyPassword((Account)accountVo);
 	}
 	// END: [3] 用户修改密码
 	

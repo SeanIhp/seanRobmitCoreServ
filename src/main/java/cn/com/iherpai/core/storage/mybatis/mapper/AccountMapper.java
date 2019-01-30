@@ -17,6 +17,8 @@ public interface AccountMapper {
 	
 	public int modify(Account account) throws DaoException;
 	
+	public int modifyPassword(Account account) throws DaoException;
+	
 	public int add(Account account) throws DaoException;
 	
 	public int removeById(String id) throws DaoException;

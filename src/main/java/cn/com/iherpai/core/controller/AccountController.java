@@ -115,7 +115,6 @@ public class AccountController {
 			if( !DataValidator.isNull(account.getPassword()) ){
 				account.setPassword( Sha256.encode(new Md5().getMd5String(account.getPassword())) );
 			}
-			System.out.println("------- "+account.getUsername()+" ------- beta password: " + account.getPassword());
 			account.setType(100);
 			String returnFieldsDefine = "id, nid, sid, username, mailbox, "
 					+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, "
@@ -127,6 +126,7 @@ public class AccountController {
 				AccountVo actVo = new AccountVo(theAcount, returnFields);
 				ro.setReturnCode(100);
 				ro.addData("account", actVo);
+				System.out.println("[]["+returnFields+"]------- "+actVo.getUsername()+" ------- beta password: " + actVo.getPassword());
 			} else {
 				ro.setReturnCode(-1);
 				ro.addData("resultTip", "用户名或密码错误,登录失败！");
@@ -151,6 +151,9 @@ public class AccountController {
 		try {
 			//校验新密码规则
 			//throw new AccountLoginInfoErrorException("密码填写有误！");
+			if( !DataValidator.isNull(accountVo.getPassword()) ){
+				accountVo.setPassword( Sha256.encode(new Md5().getMd5String(accountVo.getPassword())) );
+			}
 			if( !DataValidator.isNull(accountVo.getNewPassword()) ){
 				accountVo.setNewPassword( Sha256.encode(new Md5().getMd5String(accountVo.getNewPassword())) );
 			}

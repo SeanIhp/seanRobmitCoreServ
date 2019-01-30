@@ -62,14 +62,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="mailbox != null">
 			AND mailbox = #{mailbox} 
 		</if>
-		<if test="wxOpenId != null">
-			AND wx_openid = #{wxOpenId} 
+		<if test="wxOpenid != null">
+			AND wx_openid = #{wxOpenid} 
 		</if>
 		<if test="wxSessionkey != null">
-			AND wx_sessionkey = #{wxSessionKey} 
+			AND wx_sessionkey = #{wxSessionkey} 
 		</if>
-		<if test="wxUnionId != null">
-			AND wx_unionid = #{wxUnionId} 
+		<if test="wxUnionid != null">
+			AND wx_unionid = #{wxUnionid} 
 		</if>
 		<if test="wxNickname != null">
 			AND wx_nickname LIKE "%"#{wxNickname}"%" 
@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND wx_avatar = #{wxAvatar} 
 		</if>
 		<if test="wxGender != null">
-			AND wx_gender = #{$wxGender} 
+			AND wx_gender = #{wxGender} 
 		</if>
 		<if test="wxCity != null">
 			AND wx_city LIKE "%"#{wxCity}"%" 
@@ -104,40 +104,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="score != null">
 			AND score = #{score} 
 		</if>
-		<if test="score_min != null">
+		<if test="scoreMin != null">
 			<![CDATA[				
-			AND score >= #{score_min} 
+			AND score >= #{scoreMin} 
 			]]> 
 		</if>
-		<if test="score_max != null">
+		<if test="scoreMax != null">
 			<![CDATA[				
-			AND score < #{score_max} 
+			AND score < #{scoreMax} 
 			]]> 
 		</if>
 		<if test="level != null">
 			AND level = #{level} 
 		</if>
-		<if test="level_min != null">
+		<if test="levelMin != null">
 			<![CDATA[				
-			AND level >= #{level_min} 
+			AND level >= #{levelMin} 
 			]]> 
 		</if>
-		<if test="level_max != null">
+		<if test="levelMax != null">
 			<![CDATA[				
-			AND level < #{level_max} 
+			AND level < #{levelMax} 
 			]]> 
 		</if>
 		<if test="status != null">
 			AND status = #{status} 
 		</if>
-		<if test="status_min != null">
+		<if test="statusMin != null">
 			<![CDATA[				
-			AND status >= #{status_min} 
+			AND status >= #{statusMin} 
 			]]> 
 		</if>
-		<if test="status_max != null">
+		<if test="statusMax != null">
 			<![CDATA[				
-			AND status < #{status_max} 
+			AND status < #{statusMax} 
 			]]> 
 		</if>
 	</sql>
@@ -291,6 +291,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
 			<include refid="queryCommon"/>
 		</where>
+	</update>
+	<!-- END: [6] 修改 -->
+	
+	
+	<!-- START: [6] 修改 -->
+	<update id="modifyPassword" parameterType="java.util.HashMap">
+		UPDATE 
+			account
+		SET
+			password = #{newPassword}
+		WHERE
+			sid = #{sid}
+			AND
+			password = #{password}
 	</update>
 	<!-- END: [6] 修改 -->
 	

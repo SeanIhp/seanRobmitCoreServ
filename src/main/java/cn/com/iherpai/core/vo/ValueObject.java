@@ -28,7 +28,7 @@ public class ValueObject implements Serializable {
 		ArrayList<String> returnFields = new ArrayList<String>(0);
 		String[] returnFieldsStrs = returnFieldsString.split(",");
 		for(int i=0; i<returnFieldsStrs.length; i++){
-			returnFields.add(returnFieldsStrs[i]);
+			returnFields.add(returnFieldsStrs[i].replace(" ", ""));
 		}
 		return returnFields;
 	}
