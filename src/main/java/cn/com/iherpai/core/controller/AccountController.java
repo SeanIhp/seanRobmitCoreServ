@@ -177,24 +177,39 @@ public class AccountController {
 	// END: [3] 用户修改密码
 	
 	
-	@RequestMapping("new")
-	public String add(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("@@@sfsffseff");
-		return "new account";
+
+	// START: [4] 用户查询 
+	@RequestMapping(value="list", method=RequestMethod.POST)	
+	public @ResponseBody Object list(HttpServletRequest request, HttpServletResponse response){
+		ResultObject ro = new ResultObject();
+//		try {
+//			int res = accountService.list(accountVo);
+//			if(res!=-1){
+//				ro.setReturnCode(200);
+//				ro.addData("account", res);
+//			}else{
+//				ro.setReturnCode(-1);
+//				ro.addData("resultTip", "用户名或密码错误,登录失败！");
+//			}
+//		} catch (DaoException de) {
+//			de.printStackTrace();
+//			ro.setReturnCode(-1201);
+//			ro.addData("resultTip", de.getMessage());;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		return ro;
+		
+		
+//		System.out.println("@@@sfsffseff_________list: " + request);
+//		
+//		accountService.list();
+//		Map res = new HashMap();
+//		Map p1 = new HashMap();
+//		res.put("result", p1);
+//		return res;
 	}
+	// END: [4] 用户修改密码
 	
-	@RequestMapping("/list")
-	@ResponseBody
-	public Object list(HttpServletRequest request, HttpServletResponse response){
-		System.out.println("@@@sfsffseff_________list: " + request);
-		accountService.list();
-		Map res = new HashMap();
-		Map p1 = new HashMap();
-//		p1.put("女主", "大美妞宝宝");
-//		p1.put("男主", "哆啦枪枪哥");
-		p1.put("Since", "5.12");
-		p1.put("从此", "大美妞宝宝和哆啦枪枪哥，这对儿欢喜猴幸福快乐的生活在一起.....=^^=~");
-		res.put("result", p1);
-		return res;
-	}
+	
 }

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.AgendaMapper">
+
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.Agenda" id="AgendaFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="meetingId" 		column="meeting_id" />
+	    <result property="meetingNid" 		column="meeting_nid" />
+	    <result property="meetingSid" 		column="meeting_sid" />
+	    <result property="sortno" 			column="sortno" />
+	    <result property="content" 			column="content" />
+	    <result property="durationExpect" 	column="duration_expect" />
+	    <result property="duration" 		column="duration" />
+	    <result property="accountId" 		column="account_id" />
+	    <result property="accountNid" 		column="account_nid" />
+	    <result property="accountSid"		column="account_sid" />
+	    <result property="createTime" 		column="create_time" />
+	    <result property="status" 			column="status" />
+	</resultMap>
+
+
+	<sql id="queryCommon">
+		<if test="id != null">
+			AND id = #{id} 
+		</if>
+		<if test="nid != null">
+			AND nid = #{nid} 
+		</if>
+		<if test="sid != null">
+			AND sid = #{sid} 
+		</if>
+		<if test="meetingId != null">
+			AND meeting_id = #{meetingId} 
+		</if>
+		<if test="meetingNid != null">
+			AND meeting_nid = #{meetingNid} 
+		</if>
+		<if test="meetingSid != null">
+			AND meeting_sid = #{meetingSid} 
+		</if>
+		<if test="sortno != null">
+			AND sortno = #{sortno} 
+		</if>
+		<if test="sortnoMin != null">
+			<![CDATA[				
+			AND sortno >= #{sortnoMin} 
+			]]> 
+		</if>
+		<if test="sortnoMax != null">
+			<![CDATA[				
+			AND sortno < #{sortnoMax} 
+			]]> 
+		</if>
+		<if test="content != null">
+			AND content LIKE "%"#{content}"%" 
+		</if>
+		<if test="durationExpect != null">
+			AND duration_expert = #{durationExpect} 
+		</if>
+		<if test="durationExpectMin != null">
+			<![CDATA[				
+			AND duration_expert >= #{durationExpectMin} 
+			]]> 
+		</if>
+		<if test="durationExpectMax != null">
+			<![CDATA[				
+			AND duration_expert < #{durationExpectMax} 
+			]]> 
+		</if>
+		<if test="duration != null">
+			AND duration = #{duration} 
+		</if>
+		<if test="durationMin != null">
+			<![CDATA[				
+			AND duration >= #{durationMin} 
+			]]> 
+		</if>
+		<if test="durationMax != null">
+			<![CDATA[				
+			AND duration < #{durationMax} 
+			]]> 
+		</if>
+		<if test="accountId != null">
+			AND account_id = #{accountId} 
+		</if>
+		<if test="accountNid != null">
+			AND account_nid = #{accountNid} 
+		</if>
+		<if test="meetingSid != null">
+			AND account_sid = #{accountSid} 
+		</if>
+		<if test="status != null">
+			AND status = #{status} 
+		</if>
+		<if test="statusMin != null">
+			<![CDATA[				
+			AND status >= #{statusMin} 
+			]]> 
+		</if>
+		<if test="statusMax != null">
+			<![CDATA[				
+			AND status < #{statusMax} 
+			]]> 
+		</if>
+	</sql>
+	
+		
+	<sql id="modifyFields">
+		<if test="sortno != null">
+			sortno = #{sortno},
+		</if>
+		<if test="content != null">
+			content = #{content},
+		</if>
+		<if test="durationExpect != null">
+			duration_expect = #{durationExpect},
+		</if>
+		<if test="duration != null">
+			duration = #{duration},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+	</sql>
+	
+
+	<!-- 
+	1. 添加 [add] <M>
+	2. 删除  by id [remove] <M>
+	3. 删除  by sid [remove] <M>
+	4. 删除  by condi [remove] <M>
+	5. 修改 [modify] 
+	6. 获取 [get] 
+	-->
+
+
+	<!-- START: [1] 添加 <M> -->
+	<insert id="add" parameterType="Account">
+		INSERT INTO account(
+			nid, sid,
+			meeting_id, meeting_nid, meeting_sid, 
+			sortno, content, duration_expert, duration, 
+			account_id, account_nid, account_sid, 
+			create_time, status
+		) VALUES (
+			#{nid}, #{sid}, 
+			#{meeting_id}, #{meeting_nid}, #{meeting_sid}, 
+			#{sortno}, #{content}, #{duration_export}, #{duration}, 
+			#{account_id}, #{account_nid}, #{account_sid}, 
+			#{createTime}, #{status}
+		)
+	</insert>
+	<!-- END: [1] 添加 <M> -->	
+
+	
+<!-- START: [2] 删除  by id <M> -->
+	<delete id="removeById" parameterType="long">
+		DELETE * 
+		FROM 
+			agenda 
+		WHERE 
+			id = #{id}
+	</delete>
+	<!-- END: [2] 删除 by id <M> -->	
+	
+	
+	<!-- START: [3] 删除 by sid <M> -->
+	<delete id="removeBySid" parameterType="string">
+		DELETE * 
+		FROM 
+			agenda 
+		WHERE 
+			sid = #{sid}
+	</delete>
+	<!-- END: [3] 删除 by sid  <M> -->	
+	
+	
+	<!-- START: [4] 删除 by condi <M> -->
+	<delete id="remove" parameterType="java.util.HashMap">
+		DELETE * 
+		FROM 
+			agenda 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</delete>
+	<!-- END: [4] 删除 by condi <M> -->	
+	
+	
+	<!-- START: [5] 修改 -->
+	<update id="modify" parameterType="java.util.HashMap">
+		UPDATE 
+			agenda
+		<set>
+			<include refid="modifyFields"/>
+		</set>
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</update>
+	<!-- END: [5] 修改 -->
+
+
+	<!-- START: [6] 查询 -->
+	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			${fields} 
+		FROM 
+			agenda 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	<!-- END: [6] 查询 -->
+	
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
+		SELECT 
+			count(id)
+		FROM 
+			agenda 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+
+	
+
+</mapper>
