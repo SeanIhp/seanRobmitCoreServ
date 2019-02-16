@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.MeetingMapper">
+
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.Meeting" id="MeetingFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="user" />
+	    <result property="title" 			column="title" />
+	    <result property="subTitle" 		column="sub_title" />
+	    <result property="level" 			column="level" />
+	    <result property="levelAlpha" 		column="level_alpha" />
+	    <result property="levelBeta" 		column="level_beta" />
+	    <result property="levelCharlie" 	column="level_charlie" />
+	    <result property="joinTime" 		column="join_time" />
+	    <result property="startTime" 		column="start_time" />
+	    <result property="endTime" 			column="end_time" />
+	    <result property="minJoin" 			column="min_join" />
+	    <result property="invitedCount" 	column="invited_count" />
+	    <result property="joinedCount" 		column="joined_count" />
+	    <result property="isHost" 			column="is_host" />
+	    <result property="isVote" 			column="is_vote" />
+	    <result property="isDelineation" 	column="is_delineation" />
+	    <result property="isInvite" 		column="is_invite" />
+	    <result property="canAgent" 		column="can_agent" />
+	    <result property="accountId" 		column="account_id" />
+	    <result property="accountNid" 		column="account_nid" />
+	    <result property="accountSid" 		column="account_sid" />
+	    <result property="hostAccountId" 		column="host_account_id" />
+	    <result property="hostAccountNid" 		column="host_account_nid" />
+	    <result property="hostAccountSid" 		column="host_account_sid" />
+	    <result property="secretaryAccountId" 	column="secretary_account_id" />
+	    <result property="secretaryAccountNid" 	column="secretary_account_nid" />
+	    <result property="secretaryAccountSid" 	column="secretary_account_sid" />
+	    <result property="createTime" 			column="create_time" />
+	    <result property="status" 				column="status" />
+	</resultMap>
+
+
+	<sql id="queryCommon">
+		<if test="id != null">
+			AND id = #{id} 
+		</if>
+		<if test="nid != null">
+			AND nid = #{nid} 
+		</if>
+		<if test="sid != null">
+			AND sid = #{sid} 
+		</if>
+		<if test="title != null">
+			AND title = #{title} 
+		</if>
+		<if test="subTitle != null">
+			AND sub_title = #{subTitle} 
+		</if>
+		<if test="level != null">
+			AND level = #{level} 
+		</if>
+		<if test="levelMin != null">
+			<![CDATA[				
+			AND level >= #{levelMin} 
+			]]> 
+		</if>
+		<if test="levelMax != null">
+			<![CDATA[				
+			AND level < #{levelMax} 
+			]]> 
+		</if>
+		<if test="levelAlpha != null">
+			AND level_alpha = #{levelAlpha} 
+		</if>
+		<if test="levelAlphaMin != null">
+			<![CDATA[				
+			AND level_alpha >= #{levelAlphaMin} 
+			]]> 
+		</if>
+		<if test="levelAlphaMax != null">
+			<![CDATA[				
+			AND level_alpha < #{levelAlphaMax} 
+			]]> 
+		</if>
+		<if test="levelBeta != null">
+			AND level_beta = #{levelBeta} 
+		</if>
+		<if test="levelBetaMin != null">
+			<![CDATA[				
+			AND level_beta >= #{levelBetaMin} 
+			]]> 
+		</if>
+		<if test="levelBetaMax != null">
+			<![CDATA[				
+			AND level_beta < #{levelBetaMax} 
+			]]> 
+		</if>
+		<if test="levelCharlie != null">
+			AND level_charlie = #{levelCharlie} 
+		</if>
+		<if test="levelCharlieMin != null">
+			<![CDATA[				
+			AND level_charlie >= #{levelCharlieMin} 
+			]]> 
+		</if>
+		<if test="levelCharlieMax != null">
+			<![CDATA[				
+			AND level_charlie < #{levelCharlieMax} 
+			]]> 
+		</if>
+		<if test="minJoin != null">
+			AND min_join = #{minJoin} 
+		</if>
+		<if test="minJoinMin != null">
+			<![CDATA[				
+			AND min_join >= #{minJoinMin} 
+			]]> 
+		</if>
+		<if test="minJoinMax != null">
+			<![CDATA[				
+			AND min_join < #{minJoinMax} 
+			]]> 
+		</if>
+		<if test="invitedCount != null">
+			AND invited_count = #{invitedCount} 
+		</if>
+		<if test="invitedCountMin != null">
+			<![CDATA[				
+			AND invited_count >= #{invitedCountMin} 
+			]]> 
+		</if>
+		<if test="invitedCountMax != null">
+			<![CDATA[				
+			AND invited_count < #{invitedCountMax} 
+			]]> 
+		</if>
+		<if test="joinedCount != null">
+			AND joined_count = #{joinedCount} 
+		</if>
+		<if test="joinedCountMin != null">
+			<![CDATA[				
+			AND joined_count >= #{joinedCountMin} 
+			]]> 
+		</if>
+		<if test="joinedCountMax != null">
+			<![CDATA[				
+			AND joined_count < #{joinedCountMax} 
+			]]> 
+		</if>
+		<if test="isHost != null">
+			AND is_host = #{isHost} 
+		</if>
+		<if test="isVote != null">
+			AND is_vote = #{isVote} 
+		</if>
+		<if test="isDelineation != null">
+			AND is_delineation = #{isDelineation} 
+		</if>
+		<if test="isInvite != null">
+			AND is_invite = #{isInvite} 
+		</if>
+		<if test="canAgent != null">
+			AND can_agent = #{canAgent} 
+		</if>
+		<if test="accountId != null">
+			AND account_id = #{accountId} 
+		</if>
+		<if test="accountNid != null">
+			AND account_nid = #{accountNid} 
+		</if>
+		<if test="accountSid != null">
+			AND account_sid = #{accountSid} 
+		</if>
+		<if test="hostAccountId != null">
+			AND host_account_id = #{hostAccountId} 
+		</if>
+		<if test="hostAccountNid != null">
+			AND host_account_nid = #{hostAccountNid} 
+		</if>
+		<if test="hostAccountSid != null">
+			AND host_account_sid = #{hostAccountSid} 
+		</if>
+		<if test="secretaryAccountId != null">
+			AND secretary_account_id = #{secretaryAccountId} 
+		</if>
+		<if test="secretaryAccountNid != null">
+			AND secretary_account_id = #{secretaryAccountNid} 
+		</if>
+		<if test="secretaryAccountSid != null">
+			AND secretary_account_id = #{secretaryAccountSid} 
+		</if>
+		<if test="status != null">
+			AND status = #{status} 
+		</if>
+		<if test="statusMin != null">
+			<![CDATA[				
+			AND status >= #{statusMin} 
+			]]> 
+		</if>
+		<if test="statusMax != null">
+			<![CDATA[				
+			AND status < #{statusMax} 
+			]]> 
+		</if>
+	</sql>
+	
+		
+	<sql id="modifyFields">
+		<if test="title != null">
+			title = #{title},
+		</if>
+		<if test="subTitle != null">
+			sub_title = #{subTitle},
+		</if>
+		<if test="level != null">
+			level = #{level},
+		</if>
+		<if test="levelAlpha != null">
+			level_alpha = #{levelAlpha},
+		</if>
+		<if test="levelBeta != null">
+			level_beta = #{levelBeta},
+		</if>
+		<if test="levelCharlie != null">
+			level_charlie = #{levelCharlie},
+		</if>
+		<if test="startTime != null">
+			start_time = #{startTime},
+		</if>
+		<if test="endTime != null">
+			end_time = #{endTime},
+		</if>
+		<if test="minJoin != null">
+			min_join = #{minJoin},
+		</if>
+		<if test="invitedCount != null">
+			invited_count = #{invitedCount},
+		</if>
+		<if test="joinedCount != null">
+			joined_count = #{joinedCount},
+		</if>
+		<if test="isHost != null">
+			is_host = #{isHost},
+		</if>
+		<if test="isVote != null">
+			is_vote = #{isVote},
+		</if>
+		<if test="isDelineation != null">
+			is_delineation = #{isDelineation},
+		</if>
+		<if test="isInvite != null">
+			is_invite = #{isInvite},
+		</if>
+		<if test="canAgent != null">
+			can_agent = #{canAgent},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+	</sql>
+	
+
+	<!-- 
+	1. 添加 [add] <M>
+	2. 删除  by id [remove] <M>
+	3. 删除  by sid [remove] <M>
+	4. 删除  by condi [remove] <M>
+	5. 修改 [modify] 
+	6. 获取 [get] 
+	-->
+
+
+	<!-- START: [1] 添加 -->
+	<insert id="add" parameterType="Meeting">
+		INSERT INTO meeting(
+			nid, sid, 
+			title, sub_title, level, level_alpha, level_beta, level_charlie,
+			join_time, start_time, end_time, min_join, invited_count, joined_count,
+			is_host, is_vote, is_delineation, is_invite, can_agent,
+			account_id, account_nid, account_sid, 
+			host_account_id, host_account_nid, host_account_sid, 
+			secretary_account_id, secretary_account_nid, secretary_account_sid, 
+			create_time, status
+		) VALUES (
+			#{nid}, #{sid}, 
+			#{title}, #{subTitle}, #{level}, #{levelAlpha}, #{levelBeta}, #{levelCharlie}, 
+			#{joinTime}, #{startTime}, #{endTime}, #{minJoin}, #{invitedCount}, #{joinedCount}, 
+			#{isHost}, #{isVote}, #{isDelineation}, #{isInvite}, #{canAgent}, 
+			#{accountId}, #{accountNid}, #{accountSid}, 
+			#{hostAccountId}, #{hostAccountNid}, #{hostAccountSid}, 
+			#{secretaryAccountId}, #{secretaryAccountNid}, #{secretaryAccountSid}, 
+			#{createTime}, #{status}
+		)
+	</insert>
+	<!-- END: [1] 添加 -->
+
+	
+	<!-- START: [2] 删除  by id -->
+	<delete id="removeById" parameterType="long">
+		DELETE * 
+		FROM 
+			meeting 
+		WHERE 
+			id = #{id}
+	</delete>
+	<!-- END: [2] 删除 by id -->		
+	
+	
+	<!-- START: [3] 删除 by sid -->
+	<delete id="removeBySid" parameterType="string">
+		DELETE * 
+		FROM 
+			meeting 
+		WHERE 
+			sid = #{sid}
+	</delete>
+	<!-- END: [3] 删除 by sid -->	
+	
+	
+	<!-- START: [4] 删除 by condi -->
+	<delete id="remove" parameterType="java.util.HashMap">
+		DELETE * 
+		FROM 
+			meeting 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</delete>
+	<!-- END: [4] 删除 by condi -->	
+	
+	
+	<!-- START: [5] 修改 -->
+	<update id="modify" parameterType="java.util.HashMap">
+		UPDATE 
+			meeting
+		<set>
+			<include refid="modifyFields"/>
+		</set>
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</update>
+	<!-- END: [5] 修改 -->
+
+
+	<!-- START: [6] 查询 -->
+	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			${fields} 
+		FROM 
+			meeting 
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+	<!-- END: [6] 查询 -->
+	
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
+		SELECT 
+			${fields}
+		FROM
+			account
+		<where>
+			<include refid="queryCommon"/>
+		</where>
+	</select>
+
+
+</mapper>

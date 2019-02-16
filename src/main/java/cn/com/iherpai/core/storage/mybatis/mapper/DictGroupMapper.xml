@@ -12,11 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="id != null">
 			AND id = #{id} 
 		</if>
-		<if test="dgid != null">
-			AND id = #{dgid} 
+		<if test="nid != null">
+			AND nid = #{nid} 
 		</if>
-		<if test="serialId != null">
-			AND serialId = #{serialId} 
+		<if test="sid != null">
+			AND sid = #{sid} 
 		</if>
 		<if test="code != null">
 			AND code = #{code} 
@@ -34,13 +34,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND type = #{type} 
 		</if>
 		<if test="hasChild != null">
-			AND hasChild = #{hasChild} 
+			AND has_child = #{hasChild} 
 		</if>
 		<if test="level != null">
 			AND level = #{level} 
 		</if>
+		<if test="levelMin != null">
+			<![CDATA[				
+			AND level >= #{levelMin} 
+			]]> 
+		</if>
+		<if test="levelMax != null">
+			<![CDATA[				
+			AND level < #{levelMax} 
+			]]> 
+		</if>
 		<if test="parentId != null">
 			AND parentId = #{parentId} 
+		</if>
+		<if test="parentNid != null">
+			AND parent_nid = #{parentNid} 
+		</if>
+		<if test="parentSid != null">
+			AND parent_sid = #{parentSid} 
 		</if>
 		<if test="description != null">
 			AND description LIKE "%"#{description}"%" 
@@ -48,14 +64,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="status != null">
 			AND status = #{status} 
 		</if>
-		<if test="status_min != null">
+		<if test="statusMin != null">
 			<![CDATA[				
-			AND status >= #{status_min} 
+			AND status >= #{statusMin} 
 			]]> 
 		</if>
-		<if test="status_max != null">
+		<if test="statusMax != null">
 			<![CDATA[				
-			AND status < #{status_max} 
+			AND status < #{statusMax} 
 			]]> 
 		</if>
 	</sql>

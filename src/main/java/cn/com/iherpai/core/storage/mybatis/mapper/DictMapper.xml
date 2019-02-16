@@ -12,38 +12,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="id != null">
 			AND id = #{id} 
 		</if>
-		<if test="did != null">
-			AND did = #{did} 
+		<if test="nid != null">
+			AND nid = #{nid} 
 		</if>
-		<if test="serialId != null">
-			AND serialId = #{serialId} 
+		<if test="sid != null">
+			AND sid = #{sid} 
 		</if>
-		<if test="dictGroup_id != null">
-			AND dictGroup_id = #{dictGroupId} 
+		<if test="dictGroupId != null">
+			AND dict_group_id = #{dictGroupId} 
 		</if>
-		<if test="dictGroup_id != null">
-			AND dictGroup_dgid = #{dictGroupDgid} 
+		<if test="dictGroupNid != null">
+			AND dict_group_nid = #{dictGroupNid} 
 		</if>
-		<if test="name != null">
-			AND name = #{name} 
+		<if test="dictGroupSid != null">
+			AND dict_group_sid = #{dictGroupSid} 
 		</if>
 		<if test="code != null">
 			AND code = #{code} 
 		</if>
+		<if test="name != null">
+			AND name = #{name} 
+		</if>
 		<if test="constCode != null">
-			AND constCode = #{constCode} 
+			AND const_code = #{constCode} 
 		</if>
 		<if test="constType != null">
-			AND constType = #{constType} 
+			AND const_type = #{constType} 
 		</if>
 		<if test="constValue != null">
-			AND constValue = #{constValue} 
+			AND const_value = #{constValue} 
 		</if>
 		<if test="constText != null">
-			AND constText = #{constText} 
+			AND const_text = #{constText} 
 		</if>
-		<if test="sortNo != null">
-			AND sortNo = #{sortNo} 
+		<if test="sortno != null">
+			AND sortno = #{sortno} 
 		</if>
 		<if test="description != null">
 			AND description LIKE "%"#{description}"%" 
@@ -51,14 +54,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="status != null">
 			AND status = #{status} 
 		</if>
-		<if test="status_min != null">
+		<if test="statusMin != null">
 			<![CDATA[				
-			AND status >= #{status_min} 
+			AND status >= #{statusMin} 
 			]]> 
 		</if>
-		<if test="status_max != null">
+		<if test="statusMax != null">
 			<![CDATA[				
-			AND status < #{status_max} 
+			AND status < #{statusMax} 
 			]]> 
 		</if>
 	</sql>
@@ -73,19 +76,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			code = #{code} ,
 		</if>
 		<if test="constCode != null">
-			constCode = #{constCode} ,
+			const_code = #{constCode} ,
 		</if>
 		<if test="constType != null">
-			constType = #{constType} ,
+			const_type = #{constType} ,
 		</if>
 		<if test="constValue != null">
-			constValue = #{constValue} ,
+			const_value = #{constValue} ,
 		</if>
 		<if test="constText != null">
-			constText = #{constText} ,
+			const_text = #{constText} ,
 		</if>
-		<if test="sortNo != null">
-			sortNo = #{sortNo} ,
+		<if test="sortno != null">
+			sortno = #{sortno} ,
 		</if>
 		<if test="description != null">
 			description = #{description} ,
@@ -100,35 +103,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Dict">
 		INSERT INTO account(
-			did,
-			serialId,
-			dictGroup_id,
-			dictGroup_dgid,
-			name,
-			code, 
-			constCode,
-			constType, 
-			constValue,
-			constText,
-			sortNo,
-			description,
-			createTime,
-			status
+			nid, sid, 
+			dict_group_id, dict_group_nid, dict_group_sid, 
+			code, name, 			
+			const_code,	const_type, const_value, const_text, sortno, description, 
+			create_time, status
 		) VALUES (
-			#{did},
-			#{serialId},
-			#{dictGroupId},
-			#{dictGroupDgid},
-			#{name},
-			#{code},
-			#{constCode},
-			#{constType},
-			#{constValue},
-			#{constText},
-			#{sortNo},
-			#{description},
-			#{createTime},
-			#{status}
+			#{nid},	#{sid},
+			#{dict_group_id}, #{dict_group_nid}, #{dict_group_sid}, 
+			#{code}, #{name}, 
+			#{const_code}, #{const_type}, #{const_value}, #{const_text}, #{sortno},	#{description}, 
+			#{create_time}, #{status}
 		)
 	</insert>
 	
@@ -219,7 +204,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM 
 			dict 
 		WHERE
-			dictGroup_id = #{dictGroupId}
+			dict_group_id = #{dictGroupId}
 	</select>
 	
 	

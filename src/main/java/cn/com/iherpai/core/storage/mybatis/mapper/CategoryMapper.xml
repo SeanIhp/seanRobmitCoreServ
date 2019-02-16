@@ -12,11 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="id != null">
 			AND id = #{id} 
 		</if>
-		<if test="cid != null">
-			AND cid = #{cid} 
+		<if test="nid != null">
+			AND nid = #{nid} 
 		</if>
-		<if test="serialId != null">
-			AND serialId = #{serialId} 
+		<if test="sid != null">
+			AND sid = #{sid} 
 		</if>
 		<if test="name != null">
 			AND name = #{name} 
@@ -34,37 +34,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND level = #{level} 
 		</if>
 		<if test="asRoot != null">
-			AND asRoot = #{asRoot} 
+			AND as_root = #{asRoot} 
 		</if>
 		<if test="hasChild != null">
-			AND hasChild = #{hasChild} 
+			AND has_child = #{hasChild} 
 		</if>
 		<if test="sequenceNumber != null">
-			AND sequenceNumber = #{sequenceNumber} 
+			AND sequence_number = #{sequenceNumber} 
 		</if>
 		<if test="rootId != null">
-			AND rootId = #{rootId} 
+			AND root_id = #{rootId} 
 		</if>
-		<if test="rootCid != null">
-			AND rootCid = #{rootCid} 
+		<if test="rootNid != null">
+			AND root_nid = #{rootNid} 
+		</if>
+		<if test="rootSid != null">
+			AND root_sid = #{rootSid} 
 		</if>
 		<if test="parentId != null">
-			AND parentId = #{parentId} 
+			AND parent_id = #{parentId} 
 		</if>
-		<if test="parentCid != null">
-			AND parentCid = #{parentCid} 
+		<if test="parentNid != null">
+			AND parent_nid = #{parentNid} 
+		</if>
+		<if test="parentSid != null">
+			AND parent_sid = #{parentSid} 
 		</if>
 		<if test="status != null">
 			AND status = #{status} 
 		</if>
-		<if test="status_min != null">
+		<if test="statusMin != null">
 			<![CDATA[				
-			AND status >= #{status_min} 
+			AND status >= #{statusMin} 
 			]]> 
 		</if>
-		<if test="status_max != null">
+		<if test="statusMax != null">
 			<![CDATA[				
-			AND status < #{status_max} 
+			AND status < #{statusMax} 
 			]]> 
 		</if>
 	</sql>
@@ -88,25 +94,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			level = #{level},
 		</if>
 		<if test="asRoot != null">
-			asRoot = #{asRoot},
+			as_root = #{asRoot},
 		</if>
 		<if test="hasChild != null">
-			hasChild = #{hasChild},
+			has_child = #{hasChild},
 		</if>
 		<if test="sequenceNumber != null">
-			sequenceNumber = #{sequenceNumber},
+			sequence_number = #{sequenceNumber},
 		</if>
 		<if test="rootId != null">
-			rootId = #{rootId},
+			root_id = #{rootId},
 		</if>
-		<if test="rootCid != null">
-			rootCid = #{rootCid},
+		<if test="rootNid != null">
+			root_nid = #{rootNid},
+		</if>
+		<if test="rootSid != null">
+			root_sid = #{rootSid},
 		</if>
 		<if test="parentId != null">
 			parentId = #{parentId},
 		</if>
-		<if test="parentCid != null">
-			parentCid = #{parentCid},
+		<if test="parentNid != null">
+			parent_nid = #{parentNid},
+		</if>
+		<if test="parentSid != null">
+			parent_sid = #{parentSid},
 		</if>
 		<if test="status != null">
 			status = #{status},
@@ -118,39 +130,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Category">
 		INSERT INTO category(
-			cid, 
-			serialId, 
-			name, 
-			code, 
-			icon,
-			intro, 
-			level,
-			asRoot,
-			hasChild,
-			sequenceNumber,
-			rootId,
-			rootCid, 
-			parentId, 
-			parentCid, 
-			createTime, 
-			status
+			nid, sid, name, code, icon,	intro, level,
+			as_root, has_child, sequence_number, root_id, root_nid, root_sid, 
+			parent_id, parent_nid, parent_sid, createTime, status
 		) VALUES (
-			#{cid},
-			#{serialId},
-			#{name},
-			#{code},
-			#{icon},
-			#{intro},
-			#{level},
-			#{asRoot},
-			#{hasChild},
-			#{sequenceNumber},
-			#{rootId},
-			#{rootCid},
-			#{parentId},
-			#{parentCid},
-			#{createTime},
-			#{status}
+			#{nid}, #{sid}, #{name}, #{code}, #{icon}, #{intro}, #{level},
+			#{asRoot}, #{hasChild}, #{sequenceNumber}, #{rootId}, #{rootNid}, #{rootSid}, 
+			#{parentId}, #{parentNid}, #{parentSid}, #{createTime}, #{status}
 		)
 	</insert>
 	

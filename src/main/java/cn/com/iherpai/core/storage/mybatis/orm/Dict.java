@@ -18,7 +18,7 @@ public class Dict extends Entity implements Serializable {
 	private String			constType;
 	private String			constValue;
 	private String			constText;
-	private Integer			sortNo;
+	private Integer			sortno;
 	private String			description;
 	private Date			createTime;
 	private Integer			status;
@@ -98,11 +98,11 @@ public class Dict extends Entity implements Serializable {
 	public void setConstText(String constText) {
 		this.constText = constText;
 	}
-	public Integer getSortNo() {
-		return sortNo;
+	public Integer getSortno() {
+		return sortno;
 	}
-	public void setSortNo(Integer sortNo) {
-		this.sortNo = sortNo;
+	public void setSortno(Integer sortno) {
+		this.sortno = sortno;
 	}
 	public String getDescription() {
 		return description;

@@ -25,9 +25,15 @@ public class Meeting extends Entity implements Serializable {
 	private Boolean		isDelineation;
 	private Boolean		isInvite;
 	private Boolean		canAgent;
+	private Long		accountId;
+	private Integer		accountNid;
 	private String		accountSid;
-	private String		hostSid;
-	private String		secretarySid;
+	private Long		hostAccountId;
+	private Integer		hostAccountNid;
+	private String		hostAccountSid;
+	private Long		secretaryAccountId;
+	private Integer		secretaryAccountNid;
+	private String		secretaryAccountSid;
 	private Date		createTime;
 	private Integer		status;
 
@@ -154,23 +160,59 @@ public class Meeting extends Entity implements Serializable {
 	public void setCanAgent(Boolean canAgent) {
 		this.canAgent = canAgent;
 	}
+	public Long getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
+	public Integer getAccountNid() {
+		return accountNid;
+	}
+	public void setAccountNid(Integer accountNid) {
+		this.accountNid = accountNid;
+	}
 	public String getAccountSid() {
 		return accountSid;
 	}
 	public void setAccountSid(String accountSid) {
 		this.accountSid = accountSid;
 	}
-	public String getHostSid() {
-		return hostSid;
+	public Long getHostAccountId() {
+		return hostAccountId;
 	}
-	public void setHostSid(String hostSid) {
-		this.hostSid = hostSid;
+	public void setHostAccountId(Long hostAccountId) {
+		this.hostAccountId = hostAccountId;
 	}
-	public String getSecretarySid() {
-		return secretarySid;
+	public Integer getHostAccountNid() {
+		return hostAccountNid;
 	}
-	public void setSecretarySid(String secretarySid) {
-		this.secretarySid = secretarySid;
+	public void setHostAccountNid(Integer hostAccountNid) {
+		this.hostAccountNid = hostAccountNid;
+	}
+	public String getHostAccountSid() {
+		return hostAccountSid;
+	}
+	public void setHostAccountSid(String hostAccountSid) {
+		this.hostAccountSid = hostAccountSid;
+	}
+	public Long getSecretaryAccountId() {
+		return secretaryAccountId;
+	}
+	public void setSecretaryAccountId(Long secretaryAccountId) {
+		this.secretaryAccountId = secretaryAccountId;
+	}
+	public Integer getSecretaryAccountNid() {
+		return secretaryAccountNid;
+	}
+	public void setSecretaryAccountNid(Integer secretaryAccountNid) {
+		this.secretaryAccountNid = secretaryAccountNid;
+	}
+	public String getSecretaryAccountSid() {
+		return secretaryAccountSid;
+	}
+	public void setSecretaryAccountSid(String secretaryAccountSid) {
+		this.secretaryAccountSid = secretaryAccountSid;
 	}
 	public Date getCreateTime() {
 		return createTime;
