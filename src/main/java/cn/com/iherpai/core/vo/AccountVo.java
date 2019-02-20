@@ -3,6 +3,7 @@ package cn.com.iherpai.core.vo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import cn.com.iherpai.core.storage.mybatis.orm.Account;
 
@@ -16,6 +17,10 @@ public class AccountVo extends Account implements Serializable {
 	private Integer			levelMax;
 	private Integer			statusMin;
 	private Integer			statusMax;
+	private String			pageKeys;
+	private Integer			pageNo;
+	private Integer			pageSize;
+	private Map<String, String> pageOrder;
 
 	public AccountVo() {
 		super();
@@ -157,6 +162,38 @@ public class AccountVo extends Account implements Serializable {
 
 	public void setStatusMax(Integer statusMax) {
 		this.statusMax = statusMax;
+	}
+
+	public String getPageKeys() {
+		return pageKeys;
+	}
+
+	public void setPageKeys(String pageKeys) {
+		this.pageKeys = pageKeys;
+	}
+
+	public Integer getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNO(Integer pageNo) {
+		this.pageNo = pageNo;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Map<String, String> getPageOrder() {
+		return pageOrder;
+	}
+
+	public void setPageOrder(Map<String, String> pageOrder) {
+		this.pageOrder = pageOrder;
 	}
 	
 }

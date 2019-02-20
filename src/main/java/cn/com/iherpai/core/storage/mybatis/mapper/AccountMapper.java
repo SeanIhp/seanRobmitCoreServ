@@ -36,4 +36,6 @@ public interface AccountMapper {
 	public List<Account> list(Map params, String fields) throws DaoException;
 	
 	public List<Account> listAll() throws DaoException;
+	
+	public List<Account> SearchIn() throws DaoException;
 }

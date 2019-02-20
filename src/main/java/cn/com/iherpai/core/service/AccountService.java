@@ -2,6 +2,7 @@ package cn.com.iherpai.core.service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,7 @@ public interface AccountService {
 	
 	public String add(Account account);
 	
-	public Object list();
+	public List<Account> search(AccountVo accountVo) throws DaoException;
+	
+	public List<Account> searchIn(AccountVo accountVo) throws DaoException;
 }

@@ -94,6 +94,21 @@ public class AccountServiceImpl implements AccountService {
 
 
 	@Override
+	public List<Account> search(AccountVo accountVo) throws DaoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public List<Account> searchIn(AccountVo accountVo) throws DaoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 	public Object list(){
 //		System.out.println("AccountServiceImpl!!!! sfsffseff_________list: " + accountMapper);
 

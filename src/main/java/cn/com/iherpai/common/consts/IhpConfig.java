@@ -30,8 +30,7 @@ public class IhpConfig {
 	
 	//最大值：226,980
 	public static final long		SID_$ACCOUNT 						= 100101L;					//ID生成器: 数据用途所: Account
-	public static final long		SID_$DICT 							= 110021L;					//ID生成器: 数据用途所: Dict
-	public static final long		SID_$DICTGROUP 						= 110041L;					//ID生成器: 数据用途所: DictGroup
+	public static final long		SID_$MEETING 						= 101101L;					//ID生成器: 数据用途所: Meeting
 	
 	
 	
