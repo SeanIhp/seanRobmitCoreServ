@@ -584,7 +584,7 @@ public class SqlHelper {
         final int a = 4;
         final int b = 5;
         if (where.length() > a) {
-            sql.append(" " + where.substring(b) + " ");
+            sql.append(" #" + where.substring(b) + "# ");
         }
         if (!isEmpty(groupBy)) {
             sql.append(" GROUP BY " + groupBy + " ");
