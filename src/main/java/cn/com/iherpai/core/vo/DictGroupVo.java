@@ -2,16 +2,22 @@ package cn.com.iherpai.core.vo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import cn.com.iherpai.core.storage.mybatis.orm.Dict;
 import cn.com.iherpai.core.storage.mybatis.orm.DictGroup;
 
 public class DictGroupVo extends DictGroup implements Serializable {
 	private static final long serialVersionUID = -8181070496651620541L;
+	
+	private DictGroup selfObj = new DictGroup();
 
-	private Integer			levelMin;
-	private Integer			levelMax;
-	private Integer			statusMin;
-	private Integer			statusMax;
+//	private Integer			sortnoMin;
+//	private Integer			sortnoMax;
+//	private Integer			levelMin;
+//	private Integer			levelMax;
+//	private Integer			statusMin;
+//	private Integer			statusMax;
 	
 	public DictGroupVo() {
 		super();
@@ -48,6 +54,9 @@ public class DictGroupVo extends DictGroup implements Serializable {
 		if( fields.contains("level") ) {
 			this.setLevel(dictGroup.getLevel());
 		}
+		if( fields.contains("sortno") ) {
+			this.setSortno(dictGroup.getSortno());
+		}
 		if( fields.contains("parentId") ) {
 			this.setParentId(dictGroup.getParentId());
 		}
@@ -68,37 +77,61 @@ public class DictGroupVo extends DictGroup implements Serializable {
 		}	
 	}
 
-	public Integer getLevelMin() {
-		return levelMin;
+	public DictGroup getSelfObj() {
+		return selfObj;
 	}
 
-	public void setLevelMin(Integer levelMin) {
-		this.levelMin = levelMin;
+	public void setSelfObj(DictGroup selfObj) {
+		this.selfObj = selfObj;
 	}
 
-	public Integer getLevelMax() {
-		return levelMax;
-	}
-
-	public void setLevelMax(Integer levelMax) {
-		this.levelMax = levelMax;
-	}
-
-	public Integer getStatusMin() {
-		return statusMin;
-	}
-
-	public void setStatusMin(Integer statusMin) {
-		this.statusMin = statusMin;
-	}
-
-	public Integer getStatusMax() {
-		return statusMax;
-	}
-
-	public void setStatusMax(Integer statusMax) {
-		this.statusMax = statusMax;
-	}
+//	public Integer getLevelMin() {
+//		return levelMin;
+//	}
+//
+//	public void setLevelMin(Integer levelMin) {
+//		this.levelMin = levelMin;
+//	}
+//
+//	public Integer getLevelMax() {
+//		return levelMax;
+//	}
+//
+//	public void setLevelMax(Integer levelMax) {
+//		this.levelMax = levelMax;
+//	}
+//
+//	public Integer getSortnoMin() {
+//		return sortnoMin;
+//	}
+//
+//	public void setSortnoMin(Integer sortnoMin) {
+//		this.sortnoMin = sortnoMin;
+//	}
+//
+//	public Integer getSortnoMax() {
+//		return sortnoMax;
+//	}
+//
+//	public void setSortnoMax(Integer sortnoMax) {
+//		this.sortnoMax = sortnoMax;
+//	}
+//
+//	public Integer getStatusMin() {
+//		return statusMin;
+//	}
+//
+//	public void setStatusMin(Integer statusMin) {
+//		this.statusMin = statusMin;
+//	}
+//
+//	public Integer getStatusMax() {
+//		return statusMax;
+//	}
+//
+//	public void setStatusMax(Integer statusMax) {
+//		this.statusMax = statusMax;
+//	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

@@ -1,0 +1,162 @@
+{
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "http://example.com/root.json",
+	"type": "object",
+	"title": "The Root Schema",
+	"required": [
+	],
+	"properties": {
+		"id": {
+			"$id": "#/properties/id",
+			"type": "integer",
+			"title": "The Id Schema",
+			"default": 0,
+			"examples": [
+				100000000
+			]
+		},
+		"nid": {
+			"$id": "#/properties/nid",
+			"type": "integer",
+			"title": "The Nid Schema",
+			"default": 0,
+			"examples": [
+				1
+			]
+		},
+		"sid": {
+			"$id": "#/properties/sid",
+			"type": "string",
+			"title": "The Sid Schema",
+			"default": "",
+			"examples": [
+				"AABBCCDD00"
+			],
+			"pattern": "^(.*)$"
+		},
+		"code": {
+			"$id": "#/properties/code",
+			"type": "string",
+			"title": "The Code Schema",
+			"default": "",
+			"examples": [
+				"wuhan"
+			],
+			"pattern": "^(.*)$"
+		},
+		"name": {
+			"$id": "#/properties/name",
+			"type": "string",
+			"title": "The Name Schema",
+			"default": "",
+			"examples": [
+				"cityName"
+			],
+			"pattern": "^(.*)$"
+		},
+		"scode": {
+			"$id": "#/properties/scode",
+			"type": "string",
+			"title": "The Scode Schema",
+			"default": "",
+			"examples": [
+				"wh"
+			],
+			"pattern": "^(.*)$"
+		},
+		"sname": {
+			"$id": "#/properties/sname",
+			"type": "string",
+			"title": "The Sname Schema",
+			"default": "",
+			"examples": [
+				"city"
+			],
+			"pattern": "^(.*)$"
+		},
+		"type": {
+			"$id": "#/properties/type",
+			"type": "integer",
+			"title": "The Type Schema",
+			"default": 0,
+			"examples": [
+				1
+			]
+		},
+		"hasChild": {
+			"$id": "#/properties/hasChild",
+			"type": "boolean",
+			"title": "The Haschild Schema",
+			"default": false,
+			"examples": [
+				false
+			]
+		},
+		"level": {
+			"$id": "#/properties/level",
+			"type": "integer",
+			"title": "The Level Schema",
+			"default": 0,
+			"examples": [
+				1
+			]
+		},
+		"sortno": {
+			"$id": "#/properties/sortno",
+			"type": "integer",
+			"title": "The Sortno Schema",
+			"default": 0,
+			"examples": [
+				1
+			]
+		},
+		"parent_id": {
+			"$id": "#/properties/parent_id",
+			"type": "integer",
+			"title": "The Parent_id Schema",
+			"default": 0,
+			"examples": [
+				0
+			]
+		},
+		"parent_nid": {
+			"$id": "#/properties/parent_nid",
+			"type": "integer",
+			"title": "The Parent_nid Schema",
+			"default": 0,
+			"examples": [
+				0
+			]
+		},
+		"parent_sid": {
+			"$id": "#/properties/parent_sid",
+			"type": "string",
+			"title": "The Parent_sid Schema",
+			"default": "",
+			"examples": [
+				"AABBCCDD00__"
+			],
+			"pattern": "^(.*)$"
+		},
+		"description": {
+			"$id": "#/properties/description",
+			"type": "string",
+			"title": "The Description Schema",
+			"default": "",
+			"examples": [
+				"dictionary memo"
+			],
+			"pattern": "^(.*)$"
+		},
+		"status": {
+			"$id": "#/properties/status",
+			"type": "integer",
+			"title": "The Status Schema",
+			"default": 0,
+			"examples": [
+				1
+			]
+		}
+	}
+}

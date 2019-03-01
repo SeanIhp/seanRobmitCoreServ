@@ -10,10 +10,16 @@
 		http://www.springframework.org/schema/context/spring-context.xsd 
 		http://www.springframework.org/schema/aop 
 		http://www.springframework.org/schema/aop/spring-aop.xsd 
-		http://www.springframework.org/schema/tx 
-		http://www.springframework.org/schema/tx/spring-tx.xsd ">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!--使用注释事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"  />
 		
-	<context:component-scan base-package="cn.com.iherpai.core.*"></context:component-scan>	
+	<context:component-scan base-package="cn.com.iherpai.core.*">
+		<!-- 
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		 -->
+	</context:component-scan>	
 	
 	<!--
 	静态资源访问 spring 3.0-  

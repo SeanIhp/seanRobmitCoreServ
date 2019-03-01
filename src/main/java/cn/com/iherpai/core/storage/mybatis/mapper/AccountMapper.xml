@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.Account" id="AccountFldsDefault">
 		<id property="id" 					column="id" />
 	    <result property="nid" 				column="nid" />
-	    <result property="sid" 				column="user" />
+	    <result property="sid" 				column="sid" />
 	    <result property="username" 		column="username" />
 	    <result property="password" 		column="password" />
 	    <result property="question" 		column="question" />

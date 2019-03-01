@@ -20,7 +20,8 @@ public class AccountVo extends Account implements Serializable {
 	private String			pageKeys;
 	private Integer			pageNo;
 	private Integer			pageSize;
-	private Map<String, String> pageOrder;
+	private String			pageOrders;
+//	private Map<String, String> pageOrder;
 
 	public AccountVo() {
 		super();
@@ -188,12 +189,24 @@ public class AccountVo extends Account implements Serializable {
 		this.pageSize = pageSize;
 	}
 
-	public Map<String, String> getPageOrder() {
-		return pageOrder;
+//	public Map<String, String> getPageOrder() {
+//		return pageOrder;
+//	}
+//
+//	public void setPageOrder(Map<String, String> pageOrder) {
+//		this.pageOrder = pageOrder;
+//	}
+
+	public String getPageOrders() {
+		return pageOrders;
 	}
 
-	public void setPageOrder(Map<String, String> pageOrder) {
-		this.pageOrder = pageOrder;
+	public void setPageOrders(String pageOrders) {
+		this.pageOrders = pageOrders;
+	}
+
+	public void setPageNo(Integer pageNo) {
+		this.pageNo = pageNo;
 	}
 	
 }

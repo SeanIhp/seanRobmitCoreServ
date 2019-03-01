@@ -1,6 +1,7 @@
 package cn.com.iherpai.core.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,24 +15,25 @@ import cn.com.iherpai.core.vo.DictVo;
 @Service
 @Transactional
 public interface DictService {
-	public String add(Dict meeting) throws DaoException;
+	public Dict add(DictVo meeting, String fields) throws DaoException;
 	
-	public String remove(DictVo dictVo) throws DaoException;
+	public int remove(DictVo dictVo) throws DaoException;
 	
-	public String update(DictVo dictVo) throws DaoException;
+	public int update(DictVo dictVo) throws DaoException;
 	
-	public DictVo get(DictVo dictVo) throws DaoException;
+	public Dict get(DictVo dictVo, String fields) throws DaoException;
 	
-	public ArrayList<Dict> search(DictVo dictVo) throws DaoException;
+	public HashMap<String, Object> list(DictVo dictVo, String fields) throws DaoException;
 	
-	public String addGroup(DictGroup dictGroup) throws DaoException;
 	
-	public String removeGroup(DictGroupVo dictGroupVo) throws DaoException;
+	public DictGroup add(DictGroupVo dictGroup, String fields) throws DaoException;
 	
-	public String updateGroup(DictGroupVo dictGroupVo) throws DaoException;
+	public int remove(DictGroupVo dictGroupVo) throws DaoException;
 	
-	public DictVo getGroup(DictGroupVo dictGroupVo) throws DaoException;
+	public int update(DictGroupVo dictGroupVo) throws DaoException;
 	
-	public ArrayList<DictGroup> search(DictGroupVo dictGroupVo) throws DaoException;
+	public DictGroup get(DictGroupVo dictGroupVo, String fields) throws DaoException;
+	
+	public HashMap<String, Object> list(DictGroupVo dictGroupVo, String fields) throws DaoException;
 
 }

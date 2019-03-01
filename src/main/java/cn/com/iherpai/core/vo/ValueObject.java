@@ -2,7 +2,13 @@ package cn.com.iherpai.core.vo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
+
+import cn.com.iherpai.core.storage.mybatis.orm.Account;
+import cn.com.iherpai.core.storage.mybatis.orm.Dict;
+import cn.com.iherpai.core.storage.mybatis.orm.DictGroup;
 
 public class ValueObject implements Serializable {
 	private static final long serialVersionUID = -3385090885493168457L;
@@ -21,6 +27,15 @@ public class ValueObject implements Serializable {
 		the_keys = Pattern.compile("\\bwxLanguage\\b").matcher(the_keys).replaceAll("wx_language");
 		the_keys = Pattern.compile("\\bcreateTime\\b").matcher(the_keys).replaceAll("create_time");
 		return the_keys;
+	}
+	
+	public static ArrayList<AccountVo> getAccountVos(List<Account> accountList, ArrayList<String> returnFields ) {
+		ArrayList<AccountVo> res = new ArrayList<AccountVo>(0);
+		Iterator<Account> itor = accountList.iterator();
+		while(itor.hasNext()){
+			res.add( new AccountVo((Account)itor.next(), returnFields) );
+		}
+		return res;
 	}
 	
 	
@@ -70,6 +85,15 @@ public class ValueObject implements Serializable {
 		return the_keys;
 	}
 	
+	public static ArrayList<DictVo> getDictVos(List<Dict> dictList, ArrayList<String> returnFields ) {
+		ArrayList<DictVo> res = new ArrayList<DictVo>(0);
+		Iterator<Dict> itor = dictList.iterator();
+		while(itor.hasNext()){
+			res.add( new DictVo((Dict)itor.next(), returnFields) );
+		}
+		return res;
+	}
+	
 	
 	
 	public static String dictGroupOrmKeys(String theKeys) {
@@ -80,6 +104,15 @@ public class ValueObject implements Serializable {
 		the_keys = Pattern.compile("\\bparentSid\\b").matcher(the_keys).replaceAll("parent_sid");
 		the_keys = Pattern.compile("\\bcreateTime\\b").matcher(the_keys).replaceAll("create_time");
 		return the_keys;
+	}
+	
+	public static ArrayList<DictGroupVo> getDictGroupVos(List<DictGroup> dictGroupList, ArrayList<String> returnFields ) {
+		ArrayList<DictGroupVo> res = new ArrayList<DictGroupVo>(0);
+		Iterator<DictGroup> itor = dictGroupList.iterator();
+		while(itor.hasNext()){
+			res.add( new DictGroupVo((DictGroup)itor.next(), returnFields) );
+		}
+		return res;
 	}
 	
 	

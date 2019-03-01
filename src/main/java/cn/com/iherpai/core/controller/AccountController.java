@@ -57,24 +57,14 @@ public class AccountController {
 	@RequestMapping(value="regist", method=RequestMethod.POST)
 	public @ResponseBody ResultObject regist(@RequestBody AccountVo account){
 		ResultObject ro = new ResultObject();
-		try {
-//			String accountVoJson = cn.com.iherpai.common.utils.JsonParser.jsonFromObject(account);
-			
-			com.alibaba.fastjson.JSONObject accountVoJson = com.alibaba.fastjson.JSONObject.parseObject(cn.com.iherpai.common.utils.JsonParser.jsonFromObject(account));
-//			JSONObject accountVoJson = 
-
-			System.out.println("~~~~~ ## http request: " + accountVoJson);
+		try {			
+//			com.alibaba.fastjson.JSONObject accountVoJson = com.alibaba.fastjson.JSONObject.parseObject(cn.com.iherpai.common.utils.JsonParser.jsonFromObject(account));
 			JSONObject jsonObject=new JSONObject(account);
 			//这个就是你设定的标准JSON
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/AccountVoSchema.json");
-	        //这个是你打算验证的JSON，这里我也用一份文件来存放，你也可以使用string或者jsonObject
-//	        InputStream inputStream1 = getClass().getResourceAsStream("/failure.json");
+	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Account__regist.json");
 	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-//	        JSONObject data = new JSONObject(new JSONTokener(inputStream1));
 	        Schema schema = SchemaLoader.load(Schema);
-//            schema.validate(data);
 	        schema.validate(jsonObject);
-//			AccountVo account = cn.com.iherpai.common.utils.JsonParser.objectFromJson(accountVoJson, AccountVo.class);
 			//校验用户名规则
 			//throw new AccountRegistInfoErrorException("用户名填写有误！");
 			//校验密码规则
@@ -112,6 +102,9 @@ public class AccountController {
 			}
 		} catch (ValidationException ve) {
 			ve.printStackTrace();
+			//throw new AccountNameAlreadyExistsException("用户名已被占用");
+			ro.setReturnCode(-100);
+			ro.addData("resultTip", "注册信息填写有误！");
 		} catch (DaoException de) {
 			de.printStackTrace();
 			ro.setReturnCode(-1201);
@@ -131,9 +124,14 @@ public class AccountController {
 
 	// START: [2] 用户登录 
 	@RequestMapping(value="login", method=RequestMethod.POST)
-	public @ResponseBody ResultObject login(@RequestBody Account account){
+	public @ResponseBody ResultObject login(@RequestBody AccountVo account){
 		ResultObject ro = new ResultObject();
 		try {
+			JSONObject jsonObject=new JSONObject(account);
+	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Account__login.json");
+	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
+	        Schema schema = SchemaLoader.load(Schema);
+	        schema.validate(jsonObject);
 			//校验用户名规则
 			//throw new AccountLoginInfoErrorException("用户名/密码错误，请检查后重试！");
 			//校验密码规则
@@ -147,9 +145,9 @@ public class AccountController {
 					+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, "
 					+ "wxCity, wxCountry, wxProvince, wxLanguage, "
 					+ "type, grade, phone, score, level, createTime, status";
-			ArrayList<String> returnFields = ValueObject.returnFieldsBuild(returnFieldsDefine);
 			Account theAcount = accountService.login(account, returnFieldsDefine);
 			if( theAcount != null ){
+				ArrayList<String> returnFields = ValueObject.returnFieldsBuild(returnFieldsDefine);
 				AccountVo actVo = new AccountVo(theAcount, returnFields);
 				ro.setReturnCode(100);
 				ro.addData("account", actVo);
@@ -158,6 +156,10 @@ public class AccountController {
 				ro.setReturnCode(-1);
 				ro.addData("resultTip", "用户名或密码错误,登录失败！");
 			}
+		} catch (ValidationException ve) {
+			ve.printStackTrace();
+			ro.setReturnCode(-100);
+			ro.addData("resultTip", "帐户信息填写有误！");
 		} catch (DaoException de) {
 			de.printStackTrace();
 			ro.setReturnCode(-1201);
@@ -176,6 +178,11 @@ public class AccountController {
 	public @ResponseBody ResultObject modifyPassword(@RequestBody AccountVo accountVo){
 		ResultObject ro = new ResultObject();
 		try {
+			JSONObject jsonObject=new JSONObject(accountVo);
+	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Account.json");
+	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
+	        Schema schema = SchemaLoader.load(Schema);
+	        schema.validate(jsonObject);
 			//校验新密码规则
 			//throw new AccountLoginInfoErrorException("密码填写有误！");
 			if( !DataValidator.isNull(accountVo.getPassword()) ){

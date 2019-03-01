@@ -8,6 +8,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 -->
 <mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.DictMapper">
 
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.Dict" id="DictFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="sid" />
+	    <result property="dictGroupId" 		column="dict_group_id" />
+	    <result property="dictGroupNid" 	column="dict_group_nid" />
+	    <result property="dictGroupSid" 	column="dict_group_sid" />
+	    <result property="code" 			column="code" />
+	    <result property="name" 			column="name" />
+	    <result property="constCode" 		column="const_code" />
+	    <result property="constType" 		column="const_type" />
+	    <result property="constValue" 		column="const_value" />
+	    <result property="constText" 		column="const_text" />
+	    <result property="sortno" 			column="sortno" />
+	    <result property="description" 		column="description" />
+	    <result property="createTime" 		column="create_time" />
+	    <result property="status" 			column="status" />
+	</resultMap>
+
 	<sql id="queryCommon">
 		<if test="id != null">
 			AND id = #{id} 
@@ -69,32 +88,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	<sql id="updateFields">
-		<if test="name != null">
-			name = #{name} ,
+		<if test="_name != null">
+			name = #{_name} ,
 		</if>
-		<if test="code != null">
-			code = #{code} ,
+		<if test="_code != null">
+			code = #{_code} ,
 		</if>
-		<if test="constCode != null">
-			const_code = #{constCode} ,
+		<if test="_constCode != null">
+			const_code = #{_constCode} ,
 		</if>
-		<if test="constType != null">
-			const_type = #{constType} ,
+		<if test="_constType != null">
+			const_type = #{_constType} ,
 		</if>
-		<if test="constValue != null">
-			const_value = #{constValue} ,
+		<if test="_constValue != null">
+			const_value = #{_constValue} ,
 		</if>
-		<if test="constText != null">
-			const_text = #{constText} ,
+		<if test="_constText != null">
+			const_text = #{_constText} ,
 		</if>
-		<if test="sortno != null">
-			sortno = #{sortno} ,
+		<if test="_sortno != null">
+			sortno = #{_sortno} ,
 		</if>
-		<if test="description != null">
-			description = #{description} ,
+		<if test="_description != null">
+			description = #{_description} ,
 		</if>
-		<if test="status != null">
-			status = #{status} , 
+		<if test="_status != null">
+			status = #{_status} , 
 		</if>
 	</sql>
 	
@@ -116,27 +135,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			#{create_time}, #{status}
 		)
 	</insert>
-	
-	
-	
-	<delete id="removeById" parameterType="string">
-		DELETE 
-		FROM 
-			dict 
-		WHERE 
-			id = #{id}
-	</delete>
-	
-	
-	
-	<delete id="removeByCode" parameterType="string">
-		DELETE 
-		FROM 
-			dict 
-		WHERE 
-			code = #{code}
-	</delete>
-	
+		
 	
 	
 	<delete id="remove" parameterType="java.util.HashMap">
@@ -145,6 +144,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			dict 
 		<where>
 			<include refid="queryCommon"/>
+		</where>
+	</delete>
+		
+	
+	
+	<delete id="removeIn" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			dict 
+		<where>
+			sid IN (#{sids}) 
 		</where>
 	</delete>
 	
@@ -163,7 +173,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	<select id="get" parameterType="java.util.HashMap" resultMap="DictFldsDefault">
 		SELECT 
 			${fields} 
 		FROM 
@@ -175,7 +185,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT 
 			count(id)
 		FROM 

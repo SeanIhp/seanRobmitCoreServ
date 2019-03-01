@@ -8,6 +8,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 -->
 <mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.DictGroupMapper">
 
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.DictGroup" id="DictGroupFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="sid" />
+	    <result property="code" 			column="code" />
+	    <result property="name" 			column="name" />
+	    <result property="scode" 			column="scode" />
+	    <result property="sname" 			column="sname" />
+	    <result property="type" 			column="type" />
+	    <result property="hasChild" 		column="has_child" />
+	    <result property="level" 			column="level" />
+	    <result property="sortno" 			column="sortno" />
+	    <result property="parentId" 		column="parent_id" />
+	    <result property="parentNid" 		column="parent_nid" />
+	    <result property="parentSid" 		column="parent_sid" />
+	    <result property="description" 		column="description" />
+	    <result property="createTime" 		column="create_time" />
+	    <result property="status" 			column="status" />
+	</resultMap>
+
 	<sql id="queryCommon">
 		<if test="id != null">
 			AND id = #{id} 
@@ -49,6 +69,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND level < #{levelMax} 
 			]]> 
 		</if>
+		<if test="sortno != null">
+			AND sortno = #{sortno} 
+		</if>
+		<if test="sortnoMin != null">
+			<![CDATA[				
+			AND sortno >= #{sortnoMin} 
+			]]> 
+		</if>
+		<if test="sortnoMax != null">
+			<![CDATA[				
+			AND sortno < #{sortnoMax} 
+			]]> 
+		</if>
 		<if test="parentId != null">
 			AND parentId = #{parentId} 
 		</if>
@@ -78,36 +111,56 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
+	<sql id="removeCommon">
+		<include refid="queryCommon"/>
+		<if test="true">
+			<![CDATA[				
+			AND status < 0  
+			]]> 
+		</if>
+	</sql>
+	
+	
+	
 	<sql id="updateFields">
-		<if test="code != null">
-			code = #{code} ,
+		<if test="_code != null">
+			code = #{_code} ,
 		</if>
-		<if test="name != null">
-			name = #{name} ,
+		<if test="_name != null">
+			name = #{_name} ,
 		</if>
-		<if test="scode != null">
-			scode = #{scode} ,
+		<if test="_scode != null">
+			scode = #{_scode} ,
 		</if>
-		<if test="sname != null">
-			sname = #{sname} ,
+		<if test="_sname != null">
+			sname = #{_sname} ,
 		</if>
-		<if test="type != null">
-			type = #{type} ,
+		<if test="_type != null">
+			type = #{_type} ,
 		</if>
-		<if test="hasChild != null">
-			hasChild = #{hasChild} ,
+		<if test="_hasChild != null">
+			has_child = #{_hasChild} ,
 		</if>
-		<if test="level != null">
-			level = #{level} ,
+		<if test="_level != null">
+			level = #{_level} ,
 		</if>
-		<if test="parentId != null">
-			parentId = #{parentId} ,
+		<if test="_sortno != null">
+			sortno = #{_sortno} ,
 		</if>
-		<if test="description != null">
-			description = #{description} ,
+		<if test="_parentId != null">
+			parent_id = #{_parentId} ,
 		</if>
-		<if test="status != null">
-			status = #{status} , 
+		<if test="_parentNid != null">
+			parent_nid = #{_parentNid} ,
+		</if>
+		<if test="_parentSid != null">
+			parent_sid = #{_parentSid} ,
+		</if>
+		<if test="_description != null">
+			description = #{_description} ,
+		</if>
+		<if test="_status != null">
+			status = #{_status} , 
 		</if>
 	</sql>
 	
@@ -115,56 +168,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.DictGroup">
-		INSERT INTO account(
-			dgid,
-			serialId,
-			code, 
-			name,
-			scode, 
-			sname,
-			type,
-			hasChild, 
-			level,
-			parentId,
-			description,
-			createTime,
-			status
+		INSERT INTO dict_group(
+			nid, sid, 
+			code, name, scode, sname, type, has_child, level, sortno,
+			parent_id, parent_nid, parent_sid,  
+			description, create_time, status
 		) VALUES (
-			#{dgid},
-			#{serialId},
-			#{code},
-			#{name},
-			#{scode},
-			#{sname},
-			#{type},
-			#{hasChild},
-			#{level},
-			#{parentId},
-			#{description},
-			#{createTime},
-			#{status}
+			#{nid}, #{sid},
+			#{code}, #{name}, #{scode}, #{sname}, #{type}, #{hasChild}, #{level}, #{sortno},
+			#{parentId}, #{parentNid}, #{parentSid}, 
+			#{description}, #{createTime}, #{status}
 		)
 	</insert>
-	
-	
-	
-	<delete id="removeById" parameterType="string">
-		DELETE 
-		FROM 
-			dict_group 
-		WHERE 
-			id = #{id}
-	</delete>
-	
-	
-	
-	<delete id="removeByCode" parameterType="string">
-		DELETE 
-		FROM 
-			dict_group 
-		WHERE 
-			code = #{code}
-	</delete>
 	
 	
 	
@@ -172,8 +187,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE 
 		FROM 
 			dict_group 
+		WHERE
+			1=1 AND 
+			(${conditions})
+	</delete>
+	
+	
+	
+	<delete id="removeBySid" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			dict_group 
+		<where>		
+			sid = #{sid}
+			AND
+			parentSid = #{parentSid}
+			AND
+			status = 0
+			<include refid="queryCommon"/>
+			<if test="true">
+				<![CDATA[				
+				AND status = 0  
+				]]> 
+			</if>
+		</where>
+	</delete>
+	
+	
+	
+	<delete id="removeByCondi" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			dict_group 
 		<where>
 			<include refid="queryCommon"/>
+			<if test="true">
+				<![CDATA[				
+				AND status = 0  
+				]]> 
+			</if>
 		</where>
 	</delete>
 	
@@ -192,7 +244,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	<select id="get" parameterType="java.util.HashMap" resultMap="DictGroupFldsDefault">
 		SELECT 
 			${fields} 
 		FROM 
@@ -204,9 +256,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT 
-			count(id)
+			count(sid)
 		FROM 
 			dict_group 
 		<where>
@@ -215,14 +267,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	
-	<select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.DictGroup">
+	<select id="list" parameterType="java.util.HashMap" resultMap="DictGroupFldsDefault">
 		SELECT 
 			${fields}
 		FROM
 			dict_group
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE 
+			sid >=
+			(	
+				SELECT sid 
+				FROM dict_group 
+				<where>
+					<include refid="queryCommon"/>
+				</where> 
+				LIMIT
+					#{pageOff}, 1
+			)
+		LIMIT 
+			#{pageSize}
 	</select>
 	
 	
