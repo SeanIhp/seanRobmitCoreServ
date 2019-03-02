@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class SqlHelper {
     private StringBuilder where = new StringBuilder(" ");
+    private StringBuilder whereAddition = new StringBuilder("");
     private String groupBy;
     private String having;
     private String orderBy;
@@ -17,7 +18,15 @@ public class SqlHelper {
         this.where = where;
     }
  
-    public String getGroupBy() {
+    public StringBuilder getWhereAddition() {
+		return whereAddition;
+	}
+
+	public void setWhereAddition(StringBuilder whereAddition) {
+		this.whereAddition = whereAddition;
+	}
+
+	public String getGroupBy() {
         return groupBy;
     }
  
@@ -578,13 +587,560 @@ public class SqlHelper {
         }
         return this;
     }
+    
+    // ------------
+ 
+    public SqlHelper addOrderBy(String addi, String sortField, String order) {
+        if (!isEmpty(sortField) && !isEmpty(order)) {
+        	if( !isEmpty(this.orderBy) ){
+        		this.orderBy += ", " + EntityUtil.toUnderScoreName(sortField) + " " + order;
+        	} else {
+                this.orderBy = EntityUtil.toUnderScoreName(sortField) + " " + order;
+        	}
+        }
+        return this;
+    }
+ 
+    public SqlHelper orLike(String addi, int msk, String columns, String value) {
+        if (!isEmpty(value)) {
+            StringBuffer strBuf = new StringBuffer("");
+            for (String column : columns.split(",")) {
+                strBuf.append(EntityUtil.toUnderScoreName(column) + " LIKE '%"
+                        + value + "%' OR ");
+            }
+            String orLikeStr = strBuf.substring(0, strBuf.lastIndexOf("OR"));
+            if ( msk < 0 ) {
+            	whereAddition.append(" OR (" + orLikeStr + ")");
+            } else {
+                whereAddition.append(" AND (" + orLikeStr + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper orMike(String addi, int msk, String columns, String value) {
+        if (!isEmpty(value)) {
+            StringBuffer strBuf = new StringBuffer("");
+            for (String column : columns.split(",")) {
+                strBuf.append(EntityUtil.toUnderScoreName(column) + " LIKE '"
+                        + value + "%' OR ");
+            }
+            String orLikeStr = strBuf.substring(0, strBuf.lastIndexOf("OR"));
+            if ( msk < 0 ) {
+            	whereAddition.append(" OR (" + orLikeStr + ")");
+            } else {
+                whereAddition.append(" AND (" + orLikeStr + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper orNike(String addi, int msk, String columns, String value) {
+        if (!isEmpty(value)) {
+            StringBuffer strBuf = new StringBuffer("");
+            for (String column : columns.split(",")) {
+                strBuf.append(EntityUtil.toUnderScoreName(column) + " LIKE '%"
+                        + value + "' OR ");
+            }
+            String orLikeStr = strBuf.substring(0, strBuf.lastIndexOf("OR"));
+            if ( msk < 0 ) {
+            	whereAddition.append(" OR (" + orLikeStr + ")");
+            } else {
+                whereAddition.append(" AND (" + orLikeStr + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper eq(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " = '" + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " = '" + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+
+    public SqlHelper eq(String addi, int msk, String column, Integer value) {
+        if ( value !=null ) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " = " + value );
+            }
+        }
+        return this;
+    }
+
+    public SqlHelper eq(String addi, int msk, String column, Float value) {
+        if ( value !=null ) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " = " + value );
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper ne(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " != '" + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " != '" + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+    
+    public SqlHelper ne(String addi, int msk, String column, Integer value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            }
+        }
+        return this;
+    }
+    
+    public SqlHelper ne(String addi, int msk, String column, Float value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper like(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " LIKE '%" + sqlParam(value) + "%'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " LIKE '%" + sqlParam(value) + "%'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper notLike(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " NOT LIKE '%" + sqlParam(value) + "%'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " NOT LIKE '%" + sqlParam(value) + "%'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper mike(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " LIKE '" + sqlParam(value) + "%'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " LIKE '" + sqlParam(value) + "%'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper notMike(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " NOT LIKE '" + sqlParam(value) + "%'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " NOT LIKE '" + sqlParam(value) + "%'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper nike(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " LIKE '%" + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " LIKE '%" + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper notNike(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " NOT LIKE '%" + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " NOT LIKE '%" + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper in(String addi, int msk, String column, String... values) {
+        if (!isEmpty(values)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " IN (" + inValuesString(values) + ")");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " IN (" + inValuesString(values) + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper in(String addi, int msk, String column, Integer... values) {
+        if (values!=null && values.length>0) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " IN (" + inValuesInteger(values) + ")");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " IN (" + inValuesInteger(values) + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper in(String addi, int msk, String column, Float... values) {
+        if (values!=null && values.length>0) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " IN (" + inValuesFloat(values) + ")");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " IN (" + inValuesFloat(values) + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper notIn(String addi, int msk, String column, String... values) {
+        if (!isEmpty(values)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " NOT IN (" + inValuesString(values) + ")");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " NOT IN (" + inValuesString(values) + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper notIn(String addi, int msk, String column, Integer... values) {
+        if (values!=null && values.length>0) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " NOT IN (" + inValuesInteger(values) + ")");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " NOT IN (" + inValuesInteger(values) + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper notIn(String addi, int msk, String column, Float... values) {
+        if (values!=null && values.length>0) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " NOT IN (" + inValuesFloat(values) + ")");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " NOT IN (" + inValuesFloat(values) + ")");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper gt(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > '"
+                        + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > '"
+                        + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+    
+    public SqlHelper gt(String addi, int msk, String column, Integer value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+    
+    public SqlHelper gt(String addi, int msk, String column, Float value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper gte(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " >= '" + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " >= '" + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+
+    public SqlHelper gte(String addi, int msk, String column, Integer value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+
+    public SqlHelper gte(String addi, int msk, String column, Float value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper lt(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " < '"
+                        + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " < '"
+                        + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper lt(String addi, int msk, String column, Integer value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper lt(String addi, int msk, String column, Float value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper lte(String addi, int msk, String column, String value) {
+        if (!isEmpty(value)) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " <= '" + sqlParam(value) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " <= '" + sqlParam(value) + "'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper lte(String addi, int msk, String column, Integer value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper lte(String addi, int msk, String column, Float value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " > "
+                        + value );
+            }
+        }
+        return this;
+    }
+
+    public SqlHelper between(String addi, int msk, String column, String from, String to) {
+        if (isEmpty(from) && isEmpty(to)) {
+            return this;
+        }
+        if ( msk < 0 ) {
+            if (isEmpty(to)) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " >= '" + sqlParam(from) + "'");
+            } else if (isEmpty(from)) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " <= '" + sqlParam(to) + "'");
+            } else {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " BETWEEN '" + sqlParam(from) + "' AND '" + sqlParam(to)
+                        + "'");
+            }
+        } else {
+            if (isEmpty(to)) {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " >= '" + sqlParam(from) + "'");
+            } else if (isEmpty(from)) {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " <= '" + sqlParam(to) + "'");
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " BETWEEN '" + sqlParam(from) + "' AND '" + sqlParam(to)
+                        + "'");
+            }
+        }
+        return this;
+    }
+ 
+    public SqlHelper between(String addi, int msk, String column, Integer from, Integer to) {
+        if (from==null && to==null) {
+            return this;
+        }
+        if ( msk < 0 ) {
+            if (to==null) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " >= " + from );
+            } else if (from==null) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " <= " + to );
+            } else {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " BETWEEN " + from + " AND " + to );
+            }
+        } else {
+            if (to==null) {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " >= " + from );
+            } else if (from==null) {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " <= " + to );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " BETWEEN " + from + " AND " + to );
+            }
+        }
+        return this;
+    }
+
+    public SqlHelper between(String addi, int msk, String column, Float from, Float to) {
+        if (from==null && to==null) {
+            return this;
+        }
+        if ( msk < 0 ) {
+            if (to==null) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " >= " + from );
+            } else if (from==null) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " <= " + to );
+            } else {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                        + " BETWEEN " + from + " AND " + to );
+            }
+        } else {
+            if (to==null) {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " >= " + from );
+            } else if (from==null) {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " <= " + to );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                        + " BETWEEN " + from + " AND " + to );
+            }
+        }
+        return this;
+    }
+    
+    
+    //----------------------------------
  
     public String sql() {
         StringBuilder sql = new StringBuilder("");
         final int a = 4;
         final int b = 5;
         if (where.length() > a) {
-            sql.append(" #" + where.substring(b) + "# ");
+        	if ( whereAddition.length()>0 ) {
+                sql.append(" (" + where.substring(b) + ") AND ( 1=1 AND "+ whereAddition +")");
+        	}else{
+                sql.append(" " + where.substring(b) + " ");
+        	}
         }
         if (!isEmpty(groupBy)) {
             sql.append(" GROUP BY " + groupBy + " ");
@@ -663,148 +1219,296 @@ public class SqlHelper {
         return sqlParam.replaceAll("([';]+|(--)+)", "");
     }
     
-    public static String generate(ArrayList<HashMap> conditions) {
+    public static String generate(ArrayList<HashMap> conditions, ArrayList<HashMap> additions) {
     	SqlHelper sp = new SqlHelper();
 		for(HashMap condi : conditions){
-			String key = (String)condi.get("key");
-			String op = (String)condi.get("op");
-			int msk = ((Integer)condi.get("msk")).intValue();
-			int mskAbs = Math.abs(msk);
-			if ( op.equalsIgnoreCase("ORLIKE") ) {
-				sp.orLike(msk, key, (String)condi.get("val"));
-			} else if ( op.equalsIgnoreCase("EQ") ) {
-				if ( mskAbs == 18 ) {		// integer
-					sp.eq(msk, key, (Integer)condi.get("val"));
-				} else if ( mskAbs == 24 ) {		// float
-					sp.eq(msk, key, (Float)condi.get("val"));
-				} else {	// string
-					sp.eq(msk, key, (String)condi.get("val"));	
-				}
-			} else if ( op.equalsIgnoreCase("NE") ) {
-				if ( mskAbs == 18 ) {		// integer
-					sp.ne(msk, key, (Integer)condi.get("val"));
-				} else if ( mskAbs == 24 ) {		// float
-					sp.ne(msk, key, (Float)condi.get("val"));
-				} else {	// string
-					sp.ne(msk, key, (String)condi.get("val"));	
-				}
-			} else if ( op.equalsIgnoreCase("LIKE") ) {
-				sp.like(msk, key, (String)condi.get("val"));
-			} else if ( op.equalsIgnoreCase("NOTLIKE") ) {
-				sp.notLike(msk, key, (String)condi.get("val"));
-			} else if ( op.equalsIgnoreCase("ORLIKE") ) {
-				String[] valstr = ((String)condi.get("val")).split(",");
-				sp.orLike(msk, key, (String)condi.get("val"));
-				
-			} else if ( op.equalsIgnoreCase("MIKE") ) {
-				sp.mike(msk, key, (String)condi.get("val"));
-			} else if ( op.equalsIgnoreCase("NOTMIKE") ) {
-				sp.notMike(msk, key, (String)condi.get("val"));
-			} else if ( op.equalsIgnoreCase("ORMIKE") ) {
-				String[] valstr = ((String)condi.get("val")).split(",");
-				sp.orMike(msk, key, (String)condi.get("val"));
-				
-			} else if ( op.equalsIgnoreCase("NIKE") ) {
-				sp.nike(msk, key, (String)condi.get("val"));
-			} else if ( op.equalsIgnoreCase("NOTNIKE") ) {
-				sp.notNike(msk, key, (String)condi.get("val"));
-			} else if ( op.equalsIgnoreCase("ORNIKE") ) {
-				String[] valstr = ((String)condi.get("val")).split(",");
-				sp.orNike(msk, key, (String)condi.get("val"));
-				
-			} else if ( op.equalsIgnoreCase("IN") ) {
-				String[] valstr = ((String)condi.get("val")).split(",");
-				if ( mskAbs == 18 ) {		// integer
-					Integer[] vals = new Integer[valstr.length];
-					for(int i=0; i<vals.length; i++){
-						vals[i] = new Integer(valstr[i]);
-					}
-					sp.in(msk, key, vals);
-				} else if ( mskAbs == 24 ) {		// float
-					Float[] vals = new Float[valstr.length];
-					for(int i=0; i<vals.length; i++){
-						vals[i] = new Float(valstr[i]);
-					}
-					sp.in(msk, key, vals);
-				} else {	// string
-					sp.in(msk, key, valstr);	
-				}
-			} else if ( op.equalsIgnoreCase("NOTIN") ) {
-				String[] valstr = ((String)condi.get("val")).split(",");
-				if ( mskAbs == 18 ) {		// integer
-					Integer[] vals = new Integer[valstr.length];
-					for(int i=0; i<vals.length; i++){
-						vals[i] = new Integer(valstr[i]);
-					}
-					sp.notIn(msk, key, vals);
-				} else if ( mskAbs == 24 ) {		// float
-					Float[] vals = new Float[valstr.length];
-					for(int i=0; i<vals.length; i++){
-						vals[i] = new Float(valstr[i]);
-					}
-					sp.notIn(msk, key, vals);
-				} else {	// string
-					sp.notIn(msk, key, valstr);	
-				}
-			} else if ( op.equalsIgnoreCase("GT") ) {
-				if ( mskAbs == 18 ) {		// integer
-					sp.gt(msk, key, (Integer)condi.get("val"));
-				} else if ( mskAbs == 24 ) {		// float
-					sp.gt(msk, key, (Float)condi.get("val"));
-				} else {	// string
-					sp.gt(msk, key, (String)condi.get("val"));	
-				}
-			} else if ( op.equalsIgnoreCase("GTE") ) {
-				if ( mskAbs == 18 ) {		// integer
-					sp.gte(msk, key, (Integer)condi.get("val"));
-				} else if ( mskAbs == 24 ) {		// float
-					sp.gte(msk, key, (Float)condi.get("val"));
-				} else {	// string
-					sp.gte(msk, key, (String)condi.get("val"));	
-				}
-			} else if ( op.equalsIgnoreCase("LT") ) {
-				if ( mskAbs == 18 ) {		// integer
-					sp.lt(msk, key, (Integer)condi.get("val"));
-				} else if ( mskAbs == 24 ) {		// float
-					sp.lt(msk, key, (Float)condi.get("val"));
-				} else {	// string
-					sp.lt(msk, key, (String)condi.get("val"));	
-				}
-			} else if ( op.equalsIgnoreCase("LTE") ) {
-				if ( mskAbs == 18 ) {		// integer
-					sp.lte(msk, key, (Integer)condi.get("val"));
-				} else if ( mskAbs == 24 ) {		// float
-					sp.lte(msk, key, (Float)condi.get("val"));
-				} else {	// string
-					sp.lte(msk, key, (String)condi.get("val"));	
-				}
-			} else if ( op.equalsIgnoreCase("BETWEEN") ) {
-				String[] valstr = ((String)condi.get("val")).split(",");
-				if ( mskAbs == 18 ) {		// integer
-					Integer[] vals = new Integer[valstr.length];
-					for(int i=0; i<vals.length; i++){
-						vals[i] = new Integer(valstr[i]);
-					}
-					sp.between(msk, key, vals[0], vals[1]);
-				} else if ( mskAbs == 24 ) {		// float
-					Float[] vals = new Float[valstr.length];
-					for(int i=0; i<vals.length; i++){
-						vals[i] = new Float(valstr[i]);
-					}
-					sp.between(msk, key, vals[0], vals[1]);
-				} else {	// string
-					sp.between(msk, key, valstr[0], valstr[1]);
-				}
-			} else if ( op.equalsIgnoreCase("OD") ) {
-				if ( msk > 0 ) {
-					sp.addOrderBy(key, "ASC");
-				} else {
-					sp.addOrderBy(key, "DESC");
-				}
+			generatorCondition(sp, condi);
+		}
+		if(additions!=null){
+			for(HashMap addi : additions){
+				generatorAddition(sp, addi);
 			}
 		}
     	return sp.sql();
     }
+
+	private static void generatorCondition(SqlHelper sp, HashMap condi) {
+		String key = (String)condi.get("key");
+		String op = (String)condi.get("op");
+		int msk = ((Integer)condi.get("msk")).intValue();
+		int mskAbs = Math.abs(msk);
+		if ( op.equalsIgnoreCase("ORLIKE") ) {
+			sp.orLike(msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("EQ") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.eq(msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.eq(msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.eq(msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("NE") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.ne(msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.ne(msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.ne(msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("LIKE") ) {
+			sp.like(msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("NOTLIKE") ) {
+			sp.notLike(msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("ORLIKE") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			sp.orLike(msk, key, (String)condi.get("val"));
+			
+		} else if ( op.equalsIgnoreCase("MIKE") ) {
+			sp.mike(msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("NOTMIKE") ) {
+			sp.notMike(msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("ORMIKE") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			sp.orMike(msk, key, (String)condi.get("val"));
+			
+		} else if ( op.equalsIgnoreCase("NIKE") ) {
+			sp.nike(msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("NOTNIKE") ) {
+			sp.notNike(msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("ORNIKE") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			sp.orNike(msk, key, (String)condi.get("val"));
+			
+		} else if ( op.equalsIgnoreCase("IN") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			if ( mskAbs == 18 ) {		// integer
+				Integer[] vals = new Integer[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Integer(valstr[i]);
+				}
+				sp.in(msk, key, vals);
+			} else if ( mskAbs == 24 ) {		// float
+				Float[] vals = new Float[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Float(valstr[i]);
+				}
+				sp.in(msk, key, vals);
+			} else {	// string
+				sp.in(msk, key, valstr);	
+			}
+		} else if ( op.equalsIgnoreCase("NOTIN") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			if ( mskAbs == 18 ) {		// integer
+				Integer[] vals = new Integer[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Integer(valstr[i]);
+				}
+				sp.notIn(msk, key, vals);
+			} else if ( mskAbs == 24 ) {		// float
+				Float[] vals = new Float[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Float(valstr[i]);
+				}
+				sp.notIn(msk, key, vals);
+			} else {	// string
+				sp.notIn(msk, key, valstr);	
+			}
+		} else if ( op.equalsIgnoreCase("GT") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.gt(msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.gt(msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.gt(msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("GTE") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.gte(msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.gte(msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.gte(msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("LT") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.lt(msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.lt(msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.lt(msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("LTE") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.lte(msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.lte(msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.lte(msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("BETWEEN") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			if ( mskAbs == 18 ) {		// integer
+				Integer[] vals = new Integer[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Integer(valstr[i]);
+				}
+				sp.between(msk, key, vals[0], vals[1]);
+			} else if ( mskAbs == 24 ) {		// float
+				Float[] vals = new Float[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Float(valstr[i]);
+				}
+				sp.between(msk, key, vals[0], vals[1]);
+			} else {	// string
+				sp.between(msk, key, valstr[0], valstr[1]);
+			}
+		} else if ( op.equalsIgnoreCase("OD") ) {
+			if ( msk > 0 ) {
+				sp.addOrderBy(key, "ASC");
+			} else {
+				sp.addOrderBy(key, "DESC");
+			}
+		}
+	}
+
+	private static void generatorAddition(SqlHelper sp, HashMap condi) {
+		String key = (String)condi.get("key");
+		String op = (String)condi.get("op");
+		int msk = ((Integer)condi.get("msk")).intValue();
+		int mskAbs = Math.abs(msk);
+		if ( op.equalsIgnoreCase("ORLIKE") ) {
+			sp.orLike("Addi", msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("EQ") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.eq("Addi", msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.eq("Addi", msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.eq("Addi", msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("NE") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.ne("Addi", msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.ne("Addi", msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.ne("Addi", msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("LIKE") ) {
+			sp.like("Addi", msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("NOTLIKE") ) {
+			sp.notLike("Addi", msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("ORLIKE") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			sp.orLike("Addi", msk, key, (String)condi.get("val"));
+			
+		} else if ( op.equalsIgnoreCase("MIKE") ) {
+			sp.mike("Addi", msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("NOTMIKE") ) {
+			sp.notMike("Addi", msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("ORMIKE") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			sp.orMike("Addi", msk, key, (String)condi.get("val"));
+			
+		} else if ( op.equalsIgnoreCase("NIKE") ) {
+			sp.nike("Addi", msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("NOTNIKE") ) {
+			sp.notNike("Addi", msk, key, (String)condi.get("val"));
+		} else if ( op.equalsIgnoreCase("ORNIKE") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			sp.orNike("Addi", msk, key, (String)condi.get("val"));
+			
+		} else if ( op.equalsIgnoreCase("IN") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			if ( mskAbs == 18 ) {		// integer
+				Integer[] vals = new Integer[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Integer(valstr[i]);
+				}
+				sp.in("Addi", msk, key, vals);
+			} else if ( mskAbs == 24 ) {		// float
+				Float[] vals = new Float[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Float(valstr[i]);
+				}
+				sp.in("Addi", msk, key, vals);
+			} else {	// string
+				sp.in("Addi", msk, key, valstr);	
+			}
+		} else if ( op.equalsIgnoreCase("NOTIN") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			if ( mskAbs == 18 ) {		// integer
+				Integer[] vals = new Integer[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Integer(valstr[i]);
+				}
+				sp.notIn("Addi", msk, key, vals);
+			} else if ( mskAbs == 24 ) {		// float
+				Float[] vals = new Float[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Float(valstr[i]);
+				}
+				sp.notIn("Addi", msk, key, vals);
+			} else {	// string
+				sp.notIn("Addi", msk, key, valstr);	
+			}
+		} else if ( op.equalsIgnoreCase("GT") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.gt("Addi", msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.gt("Addi", msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.gt("Addi", msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("GTE") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.gte("Addi", msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.gte("Addi", msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.gte("Addi", msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("LT") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.lt("Addi", msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.lt("Addi", msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.lt("Addi", msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("LTE") ) {
+			if ( mskAbs == 18 ) {		// integer
+				sp.lte("Addi", msk, key, (Integer)condi.get("val"));
+			} else if ( mskAbs == 24 ) {		// float
+				sp.lte("Addi", msk, key, (Float)condi.get("val"));
+			} else {	// string
+				sp.lte("Addi", msk, key, (String)condi.get("val"));	
+			}
+		} else if ( op.equalsIgnoreCase("BETWEEN") ) {
+			String[] valstr = ((String)condi.get("val")).split(",");
+			if ( mskAbs == 18 ) {		// integer
+				Integer[] vals = new Integer[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Integer(valstr[i]);
+				}
+				sp.between("Addi", msk, key, vals[0], vals[1]);
+			} else if ( mskAbs == 24 ) {		// float
+				Float[] vals = new Float[valstr.length];
+				for(int i=0; i<vals.length; i++){
+					vals[i] = new Float(valstr[i]);
+				}
+				sp.between("Addi", msk, key, vals[0], vals[1]);
+			} else {	// string
+				sp.between("Addi", msk, key, valstr[0], valstr[1]);
+			}
+		} else if ( op.equalsIgnoreCase("OD") ) {
+			if ( msk > 0 ) {
+				sp.addOrderBy(key, "ASC");
+			} else {
+				sp.addOrderBy(key, "DESC");
+			}
+		}
+	}
     
     public static void main(String[] args){
 //    	SqlHelper sp = new SqlHelper();
@@ -849,6 +1553,23 @@ public class SqlHelper {
     	conditions.add(condi04);
     	conditions.add(condi05);
     	
-    	System.out.println("SQL: " + SqlHelper.generate(conditions));
+    	ArrayList<HashMap> additions = new ArrayList<HashMap>(0);
+    	HashMap<String, Object> addi01 = new HashMap<String, Object>();
+    	addi01.put("key", "xxv");
+    	addi01.put("op", "eq");
+    	addi01.put("val", "wuke");
+    	addi01.put("msk", 1);
+    	
+    	HashMap<String, Object> addi02 = new HashMap<String, Object>();
+    	addi02.put("key", "vsee");
+    	addi02.put("op", "in");
+    	addi02.put("val", "112,334,556,67");
+    	addi02.put("msk", 1);
+    	
+    	additions.add(addi01);
+    	additions.add(addi02);
+    	
+    	System.out.println("SQL: " + SqlHelper.generate(conditions, additions));
+    	System.out.println("SQL: " + SqlHelper.generate(conditions, null));
     }
 }
