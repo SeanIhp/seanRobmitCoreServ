@@ -272,30 +272,32 @@ public class DictServiceImpl implements DictService {
 		int res = -1;
 		ArrayList<HashMap> maz = dictGroupVo.getMaz();
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("conditions", SqlHelper.generate(dictGroupVo.getMaz()));
+		dictGroupVo.addAddition("xxbb", "eq", "vs11", 1);
+		String sql = SqlHelper.generate(dictGroupVo.getMaz(), dictGroupVo.getMazAddition());
+		params.put("conditions", sql);
 		
 //		Map<String, Object> params = new HashMap<String, Object>();
 //		params.put("sid", dictGroupVo.getSid());
 //		params.put("hasChild", false);
 		res = dictGroupMapper.remove(params);
-		if( res > 0 ) {
-			String fields = "sid";
-			String the_fields = ValueObject.dictGroupOrmKeys(fields);
-			// 查询尚存的同级字典组数量
-			Map<String, Object> p1 = new HashMap<String, Object>();
-			p1.put("fields", the_fields);
-			p1.put("paraentSid", dictGroupVo.getSid());
-			int r1 = dictGroupMapper.getCount(p1);
-			if( r1 <= 0 ) {
-				// 上级字典组hasChild改为false
-				Map<String, Object> p2 = new HashMap<String, Object>();
-				p2.put("hasChild", false);
-				p2.put("sid", dictGroupVo.getParentSid());
-				dictGroupMapper.update(p2);
-			}
-		} else {
-			// 字典组不存在/其不为空/status不为0
-		}
+//		if( res > 0 ) {
+//			String fields = "sid";
+//			String the_fields = ValueObject.dictGroupOrmKeys(fields);
+//			// 查询尚存的同级字典组数量
+//			Map<String, Object> p1 = new HashMap<String, Object>();
+//			p1.put("fields", the_fields);
+//			p1.put("paraentSid", dictGroupVo.getSid());
+//			int r1 = dictGroupMapper.getCount(p1);
+//			if( r1 <= 0 ) {
+//				// 上级字典组hasChild改为false
+//				Map<String, Object> p2 = new HashMap<String, Object>();
+//				p2.put("hasChild", false);
+//				p2.put("sid", dictGroupVo.getParentSid());
+//				dictGroupMapper.update(p2);
+//			}
+//		} else {
+//			// 字典组不存在/其不为空/status不为0
+//		}
 		return res;
 	}
 

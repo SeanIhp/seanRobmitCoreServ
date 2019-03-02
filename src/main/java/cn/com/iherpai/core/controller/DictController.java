@@ -290,7 +290,7 @@ public class DictController {
 	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
 	        Schema schema = SchemaLoader.load(Schema);
 	        schema.validate(jsonObject);
-	        dictGroupVo.absMsk(3, false);
+//	        dictGroupVo.absMsk(3, false);
 	        dictGroupVo.addCondition("status", "eq", 0, 18);
 			int res = dictService.remove(dictGroupVo);
 			if(res>0){

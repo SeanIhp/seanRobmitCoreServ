@@ -17,6 +17,8 @@ public class Orm implements Serializable {
 	
 	private ArrayList<HashMap>		maz = null;
 
+	private ArrayList<HashMap>		mazAddition = null;
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -77,6 +79,14 @@ public class Orm implements Serializable {
 		this.maz = maz;
 	}
 	
+	public ArrayList<HashMap> getMazAddition() {
+		return mazAddition;
+	}
+
+	public void setMazAddition(ArrayList<HashMap> mazAddition) {
+		this.mazAddition = mazAddition;
+	}
+
 	public void absMsk(int maxConditionLimit, boolean needAbsMsk) throws Exception {
 		if(maxConditionLimit >= 0){
 			if(this.maz.size()!=maxConditionLimit){
@@ -111,6 +121,42 @@ public class Orm implements Serializable {
 	}
 	
 	public void addCondition(String key, String operater, Float value, Integer msk) {
+    	HashMap condition = new HashMap();
+    	condition.put("key", key);
+    	condition.put("op", operater);
+    	condition.put("val", value);
+    	condition.put("msk", msk);
+		this.maz.add(condition);
+	}
+	
+	public void addAddition(String key, String operater, String value, Integer msk) {
+		if(this.mazAddition==null){
+			this.mazAddition = new ArrayList(0);
+		}
+    	HashMap condition = new HashMap();
+    	condition.put("key", key);
+    	condition.put("op", operater);
+    	condition.put("val", value);
+    	condition.put("msk", msk);
+		this.maz.add(condition);
+	}
+	
+	public void addAddition(String key, String operater, Integer value, Integer msk) {
+		if(this.mazAddition==null){
+			this.mazAddition = new ArrayList(0);
+		}
+    	HashMap condition = new HashMap();
+    	condition.put("key", key);
+    	condition.put("op", operater);
+    	condition.put("val", value);
+    	condition.put("msk", msk);
+		this.maz.add(condition);
+	}
+	
+	public void addAddition(String key, String operater, Float value, Integer msk) {
+		if(this.mazAddition==null){
+			this.mazAddition = new ArrayList(0);
+		}
     	HashMap condition = new HashMap();
     	condition.put("key", key);
     	condition.put("op", operater);
