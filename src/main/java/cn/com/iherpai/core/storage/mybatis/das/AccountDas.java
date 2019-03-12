@@ -43,11 +43,11 @@ public class AccountDas extends BaseDas implements EntityDas {
 	 * @id	用户ID
 	 */
 	//Transactional
-	public int removeById(String id) throws DaoException {
-		int res = 0;
-		res = accountDao.removeById(id);
-		return res;
-	}
+//	public int removeById(String id) throws DaoException {
+//		int res = 0;
+//		res = accountDao.removeById(id);
+//		return res;
+//	}
 
 	//Transactional
 	public int remove(Map params) throws DaoException {
@@ -72,17 +72,17 @@ public class AccountDas extends BaseDas implements EntityDas {
 	 * @name	用户名
 	 */
 	@Transactional
-	public Map get(Map params) throws DaoException {
-		Map res = null; 
-		res = accountDao.get(params);
-		return res;
-	}
+//	public Map get(Map params) throws DaoException {
+//		Map res = null; 
+//		res = accountDao.get(params);
+//		return res;
+//	}
 	
 	/*
 	 * 用户名占用情况查询
 	 * @name	查询映射ID
 	 */
-	@Transactional
+//	@Transactional
 	public long getCount(Map params) throws DaoException {
 		long res = 0; 
 		res = accountDao.getCount(params);
@@ -97,7 +97,7 @@ public class AccountDas extends BaseDas implements EntityDas {
 	@Transactional
 	public List<Account> list(Map params) throws DaoException {
 		List<Account> res = null;
-		res = accountDao.list(params, "");
+//		res = accountDao.list(params, "");
 		return res;
 	}
 	
@@ -109,8 +109,20 @@ public class AccountDas extends BaseDas implements EntityDas {
 	@Transactional
 	public List<Account> listAll() throws DaoException {
 		List<Account> res = null;
-		res = accountDao.listAll();
+//		res = accountDao.listAll();
 		return res;
+	}
+
+	@Override
+	public int removeById(String id) throws DaoException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Map get(Map params) throws DaoException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

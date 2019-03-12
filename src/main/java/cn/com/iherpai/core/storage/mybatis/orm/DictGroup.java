@@ -35,6 +35,10 @@ public class DictGroup extends Orm implements Serializable {
 	
 	public static final int 		LEVEL_MAX 				= 2;				//最大层级
 	
+	public static final String fieldsAll = "id, nid, sid, code, name, scode, sname, "
+			+ "type, hasChild, level, sortno, parentId, parentNid, parentSid, "
+			+ "description, createTime, status";
+	
 	public static final String fieldsDefault = "sid, code, name, scode, sname, "
 			+ "type, hasChild, level, sortno, parentSid, "
 			+ "description, createTime, status";

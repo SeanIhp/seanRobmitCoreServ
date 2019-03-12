@@ -17,15 +17,17 @@ import cn.com.iherpai.core.vo.AccountVo;
 @Service
 @Transactional
 public interface AccountService {
-	public int regist(Account account) throws DaoException;
+	public Account add(AccountVo account, String fields) throws DaoException;
 	
-	public Account login(Account account, String fields) throws DaoException;
+	public Account regist(AccountVo account, String fields) throws DaoException;
 	
-	public int modifyPassword(AccountVo accountVo) throws DaoException;
+	public int remove(AccountVo accountVo) throws DaoException;
 	
-	public String add(Account account);
+	public int update(AccountVo accountVo) throws DaoException;
 	
-	public List<Account> search(AccountVo accountVo) throws DaoException;
+	public Account get(AccountVo accountVo, String fields) throws DaoException;
 	
-	public List<Account> searchIn(AccountVo accountVo) throws DaoException;
+	public Account login(AccountVo accountVo, String fields) throws DaoException;
+	
+	public HashMap<String, Object> list(AccountVo accountVo, String fields) throws DaoException;
 }

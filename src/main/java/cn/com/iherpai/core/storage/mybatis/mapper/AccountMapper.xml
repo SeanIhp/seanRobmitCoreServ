@@ -245,143 +245,72 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)
 	</insert>
 	<!-- END: [2] 添加 <M> -->	
-
-	
-	<!-- START: [3] 删除  by id <M> -->
-	<delete id="removeById" parameterType="long">
-		DELETE * 
-		FROM 
-			account 
-		WHERE 
-			id = #{id}
-	</delete>
-	<!-- END: [3] 删除 by id <M> -->	
-	
-	
-	<!-- START: [4] 删除 by sid <M> -->
-	<delete id="removeBySid" parameterType="string">
-		DELETE * 
-		FROM 
-			account 
-		WHERE 
-			sid = #{sid}
-	</delete>
-	<!-- END: [4] 删除 by sid  <M> -->	
 	
 	
 	<!-- START: [5] 删除 by condi <M> -->
 	<delete id="remove" parameterType="java.util.HashMap">
-		DELETE * 
+		DELETE 
 		FROM 
 			account 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</delete>
 	<!-- END: [5] 删除 by condi <M> -->	
 	
 	
 	<!-- START: [6] 修改 -->
-	<update id="modify" parameterType="java.util.HashMap">
-		UPDATE 
-			account
-		<set>
-			<include refid="modifyFields"/>
-		</set>
-		<where>
-			<include refid="queryCommon"/>
-		</where>
-	</update>
-	<!-- END: [6] 修改 -->
-	
-	
-	<!-- START: [6] 修改 -->
-	<update id="modifyPassword" parameterType="java.util.HashMap">
-		UPDATE 
-			account
-		SET
-			password = #{newPassword}
-		WHERE
-			sid = #{sid}
-			AND
-			password = #{password}
-	</update>
-	<!-- END: [6] 修改 -->
-	
-	
-	<!-- START: [7] 更新 <M> -->
 	<update id="update" parameterType="java.util.HashMap">
 		UPDATE 
-			account
+			account 
 		<set>
 			<include refid="updateFields"/>
 		</set>
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</update>
-	<!-- END: [7] 更新 <M> -->
+	<!-- END: [6] 修改 -->
 
 
 	<!-- START: [8] 查询 -->
-	<select id="get" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		SELECT 
-			${fields} 
-		FROM 
-			account 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
-	</select>
-	<!-- END: [8] 查询 -->
-
-
-	<!-- START: [9] 登录时获取-->
-	<select id="getOnLogin" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
+	<select id="get" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
 		SELECT 
 			${fields} 
 		FROM 
 			account 
 		WHERE
-			username = #{username, jdbcType=VARCHAR}
-			AND
-			type = #{type, jdbcType=INTEGER}
+			1=1 AND 
+			${conditions}
 	</select>
-	<!-- END: [9] 登录时获取 -->
+	<!-- END: [8] 查询 -->
 	
 	
-	<select id="getCount" parameterType="java.util.HashMap" resultType="long">
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT 
-			count(id)
+			count(sid)
 		FROM 
 			account 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</select>
 	
 	
-	<!-- <select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Account"> -->
 	<select id="list" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
 		SELECT 
-			${fields}
+			t.${fields}
 		FROM
-			account
-		<where>
-			<include refid="queryCommon"/>
-		</where>
-	</select>
-	
-	<select id="listAll" parameterType="java.util.HashMap" resultMap="AccountFldsDefault">
-		<![CDATA[
-		SELECT 
-			*
-		FROM
-			account
-		]]>
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+			account t 
+		INNER JOIN 
+			(
+				SELECT x.sid from account x 
+				WHERE 1=1 AND ${conditions} 
+				LIMIT #{pageOff}, #{pageSize}
+			) 
+			AS p 
+			ON t.sid = p.sid 
+			${orderBy}
 	</select>
 	
 	

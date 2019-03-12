@@ -19,5 +19,7 @@ public interface DictGroupMapper {
 	
 	public int getCount(Map params) throws DaoException;
 	
+	public int getMaxSortno(Map params) throws DaoException;
+	
 	public ArrayList<DictGroup> list(Map params) throws DaoException;
 }

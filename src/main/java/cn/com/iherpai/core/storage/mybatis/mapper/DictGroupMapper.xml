@@ -111,56 +111,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-	<sql id="removeCommon">
-		<include refid="queryCommon"/>
-		<if test="true">
-			<![CDATA[				
-			AND status < 0  
-			]]> 
-		</if>
-	</sql>
-	
-	
-	
 	<sql id="updateFields">
-		<if test="_code != null">
-			code = #{_code} ,
+		<if test="code != null">
+			code = #{code} ,
 		</if>
-		<if test="_name != null">
-			name = #{_name} ,
+		<if test="name != null">
+			name = #{name} ,
 		</if>
-		<if test="_scode != null">
-			scode = #{_scode} ,
+		<if test="scode != null">
+			scode = #{scode} ,
 		</if>
-		<if test="_sname != null">
-			sname = #{_sname} ,
+		<if test="sname != null">
+			sname = #{sname} ,
 		</if>
-		<if test="_type != null">
-			type = #{_type} ,
+		<if test="type != null">
+			type = #{type} ,
 		</if>
-		<if test="_hasChild != null">
-			has_child = #{_hasChild} ,
+		<if test="hasChild != null">
+			has_child = #{hasChild} ,
 		</if>
-		<if test="_level != null">
-			level = #{_level} ,
+		<if test="level != null">
+			level = #{level} ,
 		</if>
-		<if test="_sortno != null">
-			sortno = #{_sortno} ,
+		<if test="sortno != null">
+			sortno = #{sortno} ,
 		</if>
-		<if test="_parentId != null">
-			parent_id = #{_parentId} ,
+		<if test="parentId != null">
+			parent_id = #{parentId} ,
 		</if>
-		<if test="_parentNid != null">
-			parent_nid = #{_parentNid} ,
+		<if test="parentNid != null">
+			parent_nid = #{parentNid} ,
 		</if>
-		<if test="_parentSid != null">
-			parent_sid = #{_parentSid} ,
+		<if test="parentSid != null">
+			parent_sid = #{parentSid} ,
 		</if>
-		<if test="_description != null">
-			description = #{_description} ,
+		<if test="description != null">
+			description = #{description} ,
 		</if>
-		<if test="_status != null">
-			status = #{_status} , 
+		<if test="status != null">
+			status = #{status} , 
 		</if>
 	</sql>
 	
@@ -194,52 +183,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-	<delete id="removeBySid" parameterType="java.util.HashMap">
-		DELETE 
-		FROM 
-			dict_group 
-		<where>		
-			sid = #{sid}
-			AND
-			parentSid = #{parentSid}
-			AND
-			status = 0
-			<include refid="queryCommon"/>
-			<if test="true">
-				<![CDATA[				
-				AND status = 0  
-				]]> 
-			</if>
-		</where>
-	</delete>
-	
-	
-	
-	<delete id="removeByCondi" parameterType="java.util.HashMap">
-		DELETE 
-		FROM 
-			dict_group 
-		<where>
-			<include refid="queryCommon"/>
-			<if test="true">
-				<![CDATA[				
-				AND status = 0  
-				]]> 
-			</if>
-		</where>
-	</delete>
-	
-	
-	
 	<update id="update" parameterType="java.util.HashMap">
 		UPDATE 
 			dict_group 
 		<set>
 			<include refid="updateFields"/>
 		</set>
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</update>
 	
 	
@@ -249,9 +201,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			${fields} 
 		FROM 
 			dict_group 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</select>
 	
 	
@@ -261,32 +213,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			count(sid)
 		FROM 
 			dict_group 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</select>
+	
+	
+	
+	<select id="getMaxSortno" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			max(sortno)
+		FROM 
+			dict_group 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
 	
 	
 	<select id="list" parameterType="java.util.HashMap" resultMap="DictGroupFldsDefault">
 		SELECT 
-			${fields}
+			t.${fields}
 		FROM
-			dict_group
-		WHERE 
-			sid >=
-			(	
-				SELECT sid 
-				FROM dict_group 
-				<where>
-					<include refid="queryCommon"/>
-				</where> 
-				LIMIT
-					#{pageOff}, 1
-			)
-		LIMIT 
-			#{pageSize}
+			dict_group t
+		INNER JOIN 
+			(
+				SELECT x.sid from dict_group x 
+				WHERE 1=1 AND ${conditions} 
+				LIMIT #{pageOff}, #{pageSize}
+			) 
+			AS p 
+			ON t.sid = p.sid 
+			${orderBy}
 	</select>
 	
-	
-	
+
+		
 </mapper>

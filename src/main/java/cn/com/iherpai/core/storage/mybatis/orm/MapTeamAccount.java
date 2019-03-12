@@ -3,8 +3,24 @@ package cn.com.iherpai.core.storage.mybatis.orm;
 import java.io.Serializable;
 import java.util.Date;
 
-public class MappingOrganizeTeam extends Entity implements Serializable {
-	private static final long serialVersionUID = -6278126117831350069L;
+public class MapTeamAccount extends Entity implements Serializable {
+	private static final long serialVersionUID = -3585588225496650439L;
+
+	public static final int 		STATUS_CREATED 			= 0;				//已创建，未使用
+	public static final String 		STATUS_CREATED_TXT 		= "待使用";			//已创建，未使用
+	
+	public static final int 		STATUS_ENABLED 			= 1;				//正常，可使用
+	public static final String 		STATUS_ENABLED_TXT 		= "可使用";			//正常，可使用
+	
+	public static final int 		STATUS_DISABLED 		= -99;				//拒绝使用
+	public static final String 		STATUS_DISABLED_TXT 	= "已禁用";			//拒绝使用
+	
+	public static final String fieldsAll = "id, nid, sid, organizeId, organizeNid, organizeSid, "
+			+ "teamId, teamNid, teamSid, accountId, accountNid, accountSid, "
+			+ "nickname, type, grade, score, role, createTime, status";
+	
+	public static final String fieldsDefault = "sid, organizeSid, teamSid, accountSid, "
+			+ "nickname, type, grade, score, role, createTime, status";
 	
 	private Long		id;
 	private Integer		nid;
@@ -18,6 +34,11 @@ public class MappingOrganizeTeam extends Entity implements Serializable {
 	private Long		accountId;
 	private Integer		accountNid;
 	private String		accountSid;
+	private String		nickname;
+	private Integer		type;
+	private Integer		grade;
+	private Long		score;
+	private Integer		role;
 	private Date		createTime;
 	private Integer		status;
 
@@ -121,6 +142,46 @@ public class MappingOrganizeTeam extends Entity implements Serializable {
 		this.accountSid = accountSid;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Integer grade) {
+		this.grade = grade;
+	}
+
+	public Long getScore() {
+		return score;
+	}
+
+	public void setScore(Long score) {
+		this.score = score;
+	}
+
+	public Integer getRole() {
+		return role;
+	}
+
+	public void setRole(Integer role) {
+		this.role = role;
+	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -136,4 +197,5 @@ public class MappingOrganizeTeam extends Entity implements Serializable {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+	
 }

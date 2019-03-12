@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.OrganizeMapper">
+
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.Organize" id="OrganizeFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="sid" />
+	    <result property="parentId" 		column="parent_id" />
+	    <result property="parentNid" 		column="parent_nid" />
+	    <result property="parentSid" 		column="parent_sid" />
+	    <result property="isValid" 			column="is_valid" />
+	    <result property="childCount"		column="child_count" />
+	    <result property="name" 			column="name" />
+	    <result property="code" 			column="code" />
+	    <result property="type" 			column="type" />
+	    <result property="icon" 			column="icon" />
+	    <result property="intro" 			column="intro" />
+	    <result property="grade" 			column="grade" />
+	    <result property="gradeTitle" 		column="grade_title" />
+	    <result property="total" 			column="total" />
+	    <result property="settingMessage" 	column="setting_message" />
+	    <result property="settingTop" 		column="setting_top" />
+	    <result property="settingJoin" 		column="setting_join" />
+	    <result property="settingVisit" 	column="setting_visit" />
+	    <result property="settingSpeak" 	column="setting_speak" />
+	    <result property="level" 			column="level" />
+	    <result property="createTime" 		column="create_time" />
+	    <result property="status" 			column="status" />
+	</resultMap>
+	
+	
+	
+	<sql id="updateFields">
+		<if test="parentId != null">
+			parent_id = #{parentId} ,
+		</if>
+		<if test="parentNid != null">
+			parent_nid = #{parentNid} ,
+		</if>
+		<if test="parentSid != null">
+			parent_sid = #{parentSid} ,
+		</if>
+		<if test="isValid != null">
+			is_valid = #{isValid} ,
+		</if>
+		<if test="childCount != null">
+			child_count = #{childCount} ,
+		</if>
+		<if test="childCountAccu != null">
+			child_count = child_count + #{childCountAccu} ,
+		</if>
+		<if test="childCountDeeg != null">
+			child_count = child_count - #{childCountDeeg} ,
+		</if>
+		<if test="name != null">
+			name = #{name} ,
+		</if>
+		<if test="code != null">
+			code = #{code} ,
+		</if>
+		<if test="type != null">
+			type = #{type} ,
+		</if>
+		<if test="icon != null">
+			icon = #{icon} ,
+		</if>
+		<if test="intro != null">
+			intro = #{intro} ,
+		</if>
+		<if test="grade != null">
+			grade = #{grade} ,
+		</if>
+		<if test="gradeAccu != null">
+			grade = grade + #{gradeAccu} ,
+		</if>
+		<if test="gradeDeeg != null">
+			grade = grade - #{gradeDeeg} ,
+		</if>
+		<if test="gradeTitle != null">
+			grade_title = #{gradeTitle} ,
+		</if>
+		<if test="total != null">
+			total = #{total} ,
+		</if>
+		<if test="totalAccu != null">
+			total = total + #{totalAccu} ,
+		</if>
+		<if test="totalDeeg != null">
+			total = total - #{totalDeeg} ,
+		</if>
+		<if test="settingMessage != null">
+			setting_message = #{settingMessage} ,
+		</if>
+		<if test="settingTop != null">
+			setting_top = #{settingTop} ,
+		</if>
+		<if test="settingJoin != null">
+			setting_join = #{settingJoin} ,
+		</if>
+		<if test="settingVisit != null">
+			setting_visit = #{settingVisit} ,
+		</if>
+		<if test="settingSpeak != null">
+			setting_speak = #{settingSpeak} ,
+		</if>
+		<if test="level != null">
+			level = #{level} ,
+		</if>
+		<if test="levelAccu != null">
+			level = level + #{levelAccu} ,
+		</if>
+		<if test="levelDeeg != null">
+			level = level - #{levelDeeg} ,
+		</if>
+		<if test="status != null">
+			status = #{status} , 
+		</if>
+	</sql>
+	
+
+
+	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Organize">
+		INSERT INTO organize(
+			nid, sid, parent_id, parent_nid, parent_sid, is_valid, child_count, 
+			name, code, type, icon, intro, grade, grade_title, total, 
+			setting_message, setting_top, setting_join, setting_visit, setting_speak,  
+			level, create_time, status
+		) VALUES (
+			#{nid},	#{sid}, #{parentId}, #{parentNid}, #{parentSid}, #{isValid}, #{childCount},   
+			#{name}, #{code}, #{type}, #{intro}, #{grade}, #{gradeTitle}, #{total}, 
+			#{settingMessage}, #{settingTop}, #{settingJoin}, #{settingVisit}, #{settingSpeak},		
+			#{level}, #{createTime}, #{status}
+		)
+	</insert>
+		
+	
+	
+	<delete id="remove" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			organize 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</delete>
+	
+	
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE 
+			organize 
+		<set>
+			<include refid="updateFields"/>
+		</set>
+		WHERE
+			1=1 AND 
+			${conditions}
+	</update>
+	
+	
+	
+	<select id="get" parameterType="java.util.HashMap" resultMap="OrganizeFldsDefault">
+		SELECT 
+			${fields} 
+		FROM 
+			organize 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			count(sid)
+		FROM 
+			organize 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getMaxSortno" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			max(sortno)
+		FROM 
+			organize 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="OrganizeFldsDefault">
+		SELECT 
+			t.${fields}
+		FROM
+			organize t 
+		INNER JOIN 
+			(
+				SELECT x.sid from organize x 
+				WHERE 1=1 AND ${conditions} 
+				LIMIT #{pageOff}, #{pageSize}
+			) 
+			AS p 
+			ON t.sid = p.sid 
+			${orderBy}
+	</select>
+	
+	
+	
+</mapper>

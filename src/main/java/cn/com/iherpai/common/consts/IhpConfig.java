@@ -29,16 +29,24 @@ public class IhpConfig {
 	public static final long		ID_DATA_TABLE_CODE 			= 1L;					//数据所在的表编号
 	
 	//最大值：226,980
-	public static final long		SID_$ACCOUNT 						= 100101L;					//ID生成器: 数据用途所: Account
-	public static final long		SID_$MEETING 						= 101101L;					//ID生成器: 数据用途所: Meeting
-	public static final long		SID_$DICT 							= 110021L;					//ID生成器: 数据用途所: Dict
-	public static final long		SID_$DICTGROUP 						= 110041L;					//ID生成器: 数据用途所: DictGroup
+	public static final long		SID_$ACCOUNT 						= 100001L;					//ID生成器: 数据用途所: Account
+	public static final long		SID_$MEETING 						= 101011L;					//ID生成器: 数据用途所: Meeting
+	public static final long		SID_$DICT 							= 100021L;					//ID生成器: 数据用途所: Dict
+	public static final long		SID_$DICTGROUP 						= 100031L;					//ID生成器: 数据用途所: DictGroup
+	public static final long		SID_$TEAM 							= 100041L;					//ID生成器: 数据用途所: Team
+	public static final long		SID_$ORGANIZE 						= 100051L;					//ID生成器: 数据用途所: Organize
+	public static final long		SID_$MAPTEAMACCOUNT					= 100061L;					//ID生成器: 数据用途所: MapTeamAccount
 	
 	
 	
-	
+	// --------------------------------------------------------------
+	public static final long		ID_DICT__$ACCOUNT 					= 110021L;					//ID生成器: 数据用途所: Dict
+	public static final long		ID_DICT__$MEETING 					= 110041L;					//ID生成器: 数据用途所: DictGroup
 	public static final long		ID_DICT__$DICT 						= 110021L;					//ID生成器: 数据用途所: Dict
 	public static final long		ID_DICT__$DICTGROUP 				= 110041L;					//ID生成器: 数据用途所: DictGroup
+	public static final long		ID_DICT__$TEAM 						= 110021L;					//ID生成器: 数据用途所: Dict
+	public static final long		ID_DICT__$ORGANIZE 					= 110041L;					//ID生成器: 数据用途所: DictGroup
+	public static final long		ID_DICT__$MAPTEAMACCOUNT			= 110021L;					//ID生成器: 数据用途所: Dict
 	
 	
 	public static final long		ID_GROUP__$GROUP 					= 110021L;					//ID生成器: 数据用途所: Group

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.TeamMapper">
+
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.Team" id="TeamFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="sid" />
+	    <result property="name" 			column="name" />
+	    <result property="code" 			column="code" />
+	    <result property="type" 			column="type" />
+	    <result property="icon" 			column="icon" />
+	    <result property="intro" 			column="intro" />
+	    <result property="grade" 			column="grade" />
+	    <result property="gradeTitle" 		column="grade_title" />
+	    <result property="total" 			column="total" />
+	    <result property="settingMessage" 	column="setting_message" />
+	    <result property="settingTop" 		column="setting_top" />
+	    <result property="settingJoin" 		column="setting_join" />
+	    <result property="settingVisit" 	column="setting_visit" />
+	    <result property="settingSpeak" 	column="setting_speak" />
+	    <result property="settingAlias" 	column="setting_alias" />
+	    <result property="level" 			column="level" />
+	    <result property="createTime" 		column="create_time" />
+	    <result property="status" 			column="status" />
+	</resultMap>
+	
+	
+	
+	<sql id="updateFields">
+		<if test="name != null">
+			name = #{name} ,
+		</if>
+		<if test="code != null">
+			code = #{code} ,
+		</if>
+		<if test="icon != null">
+			icon = #{icon} ,
+		</if>
+		<if test="intro != null">
+			intro = #{intro} ,
+		</if>
+		<if test="grade != null">
+			grade = #{grade} ,
+		</if>
+		<if test="gradeAccu != null">
+			grade = grade + #{gradeAccu} ,
+		</if>
+		<if test="gradeDeeg != null">
+			grade = grade - #{gradeDeeg} ,
+		</if>
+		<if test="gradeTitle != null">
+			grade_title = #{gradeTitle} ,
+		</if>
+		<if test="total != null">
+			total = #{total} ,
+		</if>
+		<if test="totalAccu != null">
+			total = total + #{totalAccu} ,
+		</if>
+		<if test="totalDeeg != null">
+			total = total - #{totalDeeg} ,
+		</if>
+		<if test="settingMessage != null">
+			setting_message = #{settingMessage} ,
+		</if>
+		<if test="settingTop != null">
+			setting_top = #{settingTop} ,
+		</if>
+		<if test="settingJoin != null">
+			setting_join = #{settingJoin} ,
+		</if>
+		<if test="settingVisit != null">
+			setting_visit = #{settingVisit} ,
+		</if>
+		<if test="settingSpeak != null">
+			setting_speak = #{settingSpeak} ,
+		</if>
+		<if test="settingAlias != null">
+			setting_alias = #{settingAlias} ,
+		</if>
+		<if test="level != null">
+			level = #{level} ,
+		</if>
+		<if test="levelAccu != null">
+			level = level + #{levelAccu} ,
+		</if>
+		<if test="levelDeeg != null">
+			level = level - #{levelDeeg} ,
+		</if>
+		<if test="status != null">
+			status = #{status} , 
+		</if>
+	</sql>
+	
+
+
+	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.Team">
+		INSERT INTO team(
+			nid, sid, organize_id, organize_nid, organize_sid, 
+			name, code, type, icon, intro, grade, grade_title, total, 
+			setting_message, setting_top, setting_join, setting_visit, setting_speak, setting_alias, 
+			level, create_time, status
+		) VALUES (
+			#{nid},	#{sid}, #{organizeId}, #{organizeNid}, #{organizeSid},   
+			#{name}, #{code}, #{type}, #{intro}, #{grade}, #{gradeTitle}, #{total}, 
+			#{settingMessage}, #{settingTop}, #{settingJoin}, #{settingVisit}, #{settingSpeak},	#{settingAlias},	
+			#{level}, #{createTime}, #{status}
+		)
+	</insert>
+		
+	
+	
+	<delete id="remove" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			team 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</delete>
+	
+	
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE 
+			team 
+		<set>
+			<include refid="updateFields"/>
+		</set>
+		WHERE
+			1=1 AND 
+			${conditions}
+	</update>
+	
+	
+	
+	<select id="get" parameterType="java.util.HashMap" resultMap="TeamFldsDefault">
+		SELECT 
+			${fields} 
+		FROM 
+			team 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			count(sid)
+		FROM 
+			team 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getMaxSortno" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			max(sortno)
+		FROM 
+			team 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="TeamFldsDefault">
+		SELECT 
+			t.${fields}
+		FROM
+			team t 
+		INNER JOIN 
+			(
+				SELECT x.sid from team x 
+				WHERE 1=1 AND ${conditions} 
+				LIMIT #{pageOff}, #{pageSize}
+			) 
+			AS p 
+			ON t.sid = p.sid 
+			${orderBy}
+	</select>
+	
+	
+	
+</mapper>

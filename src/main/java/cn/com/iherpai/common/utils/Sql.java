@@ -3,8 +3,8 @@ package cn.com.iherpai.common.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SqlHelper {
-    private StringBuilder where = new StringBuilder(" ");
+public class Sql {
+    private StringBuilder where = new StringBuilder("");
     private StringBuilder whereAddition = new StringBuilder("");
     private String groupBy;
     private String having;
@@ -50,7 +50,7 @@ public class SqlHelper {
         this.orderBy = orderBy;
     }
  
-    public SqlHelper addOrderBy(String sortField, String order) {
+    public Sql addOrderBy(String sortField, String order) {
         if (!isEmpty(sortField) && !isEmpty(order)) {
         	if( !isEmpty(this.orderBy) ){
         		this.orderBy += ", " + EntityUtil.toUnderScoreName(sortField) + " " + order;
@@ -61,7 +61,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper orLike(int msk, String columns, String value) {
+    public Sql orLike(int msk, String columns, String value) {
         if (!isEmpty(value)) {
             StringBuffer strBuf = new StringBuffer("");
             for (String column : columns.split(",")) {
@@ -78,7 +78,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper orMike(int msk, String columns, String value) {
+    public Sql orMike(int msk, String columns, String value) {
         if (!isEmpty(value)) {
             StringBuffer strBuf = new StringBuffer("");
             for (String column : columns.split(",")) {
@@ -95,7 +95,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper orNike(int msk, String columns, String value) {
+    public Sql orNike(int msk, String columns, String value) {
         if (!isEmpty(value)) {
             StringBuffer strBuf = new StringBuffer("");
             for (String column : columns.split(",")) {
@@ -112,18 +112,26 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper eq(int msk, String column, String value) {
+    public Sql eq(int msk, String column, String value) {
         if (!isEmpty(value)) {
-            if ( msk < 0 ) {
-                where.append(" OR " + EntityUtil.toUnderScoreName(column) + " = '" + sqlParam(value) + "'");
-            } else {
-                where.append(" AND " + EntityUtil.toUnderScoreName(column) + " = '" + sqlParam(value) + "'");
-            }
+        	if(value.equals("##NULL##")){
+                if ( msk < 0 ) {
+                    where.append(" OR " + EntityUtil.toUnderScoreName(column) + " IS NULL");
+                } else {
+                    where.append(" AND " + EntityUtil.toUnderScoreName(column) + " IS NULL");
+                }
+        	}else{
+                if ( msk < 0 ) {
+                    where.append(" OR " + EntityUtil.toUnderScoreName(column) + " = '" + sqlParam(value) + "'");
+                } else {
+                    where.append(" AND " + EntityUtil.toUnderScoreName(column) + " = '" + sqlParam(value) + "'");
+                }
+        	}
         }
         return this;
     }
 
-    public SqlHelper eq(int msk, String column, Integer value) {
+    public Sql eq(int msk, String column, Integer value) {
         if ( value !=null ) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
@@ -134,7 +142,18 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper eq(int msk, String column, Float value) {
+    public Sql eq(int msk, String column, Float value) {
+        if ( value !=null ) {
+            if ( msk < 0 ) {
+                where.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
+            } else {
+                where.append(" AND " + EntityUtil.toUnderScoreName(column) + " = " + value );
+            }
+        }
+        return this;
+    }
+
+    public Sql eq(int msk, String column, Boolean value) {
         if ( value !=null ) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
@@ -145,20 +164,28 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper ne(int msk, String column, String value) {
+    public Sql ne(int msk, String column, String value) {
         if (!isEmpty(value)) {
-            if ( msk < 0 ) {
-                where.append(" OR " + EntityUtil.toUnderScoreName(column)
-                + " != '" + sqlParam(value) + "'");
-            } else {
-                where.append(" AND " + EntityUtil.toUnderScoreName(column)
-                + " != '" + sqlParam(value) + "'");
-            }
+        	if(value.equals("##NULL##")){
+                if ( msk < 0 ) {
+                    where.append(" OR " + EntityUtil.toUnderScoreName(column) + " IS NOT NULL");
+                } else {
+                    where.append(" AND " + EntityUtil.toUnderScoreName(column) + " IS NOT NULL");
+                }
+        	}else{
+	            if ( msk < 0 ) {
+	                where.append(" OR " + EntityUtil.toUnderScoreName(column)
+	                + " != '" + sqlParam(value) + "'");
+	            } else {
+	                where.append(" AND " + EntityUtil.toUnderScoreName(column)
+	                + " != '" + sqlParam(value) + "'");
+	            }
+        	}
         }
         return this;
     }
     
-    public SqlHelper ne(int msk, String column, Integer value) {
+    public Sql ne(int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -171,7 +198,20 @@ public class SqlHelper {
         return this;
     }
     
-    public SqlHelper ne(int msk, String column, Float value) {
+    public Sql ne(int msk, String column, Float value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                where.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            } else {
+                where.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            }
+        }
+        return this;
+    }
+    
+    public Sql ne(int msk, String column, Boolean value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -184,7 +224,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper like(int msk, String column, String value) {
+    public Sql like(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -197,7 +237,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notLike(int msk, String column, String value) {
+    public Sql notLike(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -210,7 +250,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper mike(int msk, String column, String value) {
+    public Sql mike(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -223,7 +263,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notMike(int msk, String column, String value) {
+    public Sql notMike(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -236,7 +276,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper nike(int msk, String column, String value) {
+    public Sql nike(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -249,7 +289,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notNike(int msk, String column, String value) {
+    public Sql notNike(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -262,7 +302,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper in(int msk, String column, String... values) {
+    public Sql in(int msk, String column, String... values) {
         if (!isEmpty(values)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -275,7 +315,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper in(int msk, String column, Integer... values) {
+    public Sql in(int msk, String column, Integer... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -288,7 +328,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper in(int msk, String column, Float... values) {
+    public Sql in(int msk, String column, Float... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -301,7 +341,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notIn(int msk, String column, String... values) {
+    public Sql notIn(int msk, String column, String... values) {
         if (!isEmpty(values)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -314,7 +354,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notIn(int msk, String column, Integer... values) {
+    public Sql notIn(int msk, String column, Integer... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -327,7 +367,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notIn(int msk, String column, Float... values) {
+    public Sql notIn(int msk, String column, Float... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -340,7 +380,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper gt(int msk, String column, String value) {
+    public Sql gt(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > '"
@@ -353,7 +393,7 @@ public class SqlHelper {
         return this;
     }
     
-    public SqlHelper gt(int msk, String column, Integer value) {
+    public Sql gt(int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -366,7 +406,7 @@ public class SqlHelper {
         return this;
     }
     
-    public SqlHelper gt(int msk, String column, Float value) {
+    public Sql gt(int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -379,7 +419,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper gte(int msk, String column, String value) {
+    public Sql gte(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -392,7 +432,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper gte(int msk, String column, Integer value) {
+    public Sql gte(int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -405,7 +445,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper gte(int msk, String column, Float value) {
+    public Sql gte(int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -418,7 +458,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lt(int msk, String column, String value) {
+    public Sql lt(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " < '"
@@ -431,7 +471,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lt(int msk, String column, Integer value) {
+    public Sql lt(int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -444,7 +484,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lt(int msk, String column, Float value) {
+    public Sql lt(int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -457,7 +497,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lte(int msk, String column, String value) {
+    public Sql lte(int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -470,7 +510,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lte(int msk, String column, Integer value) {
+    public Sql lte(int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -483,7 +523,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lte(int msk, String column, Float value) {
+    public Sql lte(int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 where.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -496,7 +536,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper between(int msk, String column, String from, String to) {
+    public Sql between(int msk, String column, String from, String to) {
         if (isEmpty(from) && isEmpty(to)) {
             return this;
         }
@@ -528,7 +568,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper between(int msk, String column, Integer from, Integer to) {
+    public Sql between(int msk, String column, Integer from, Integer to) {
         if (from==null && to==null) {
             return this;
         }
@@ -558,7 +598,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper between(int msk, String column, Float from, Float to) {
+    public Sql between(int msk, String column, Float from, Float to) {
         if (from==null && to==null) {
             return this;
         }
@@ -590,7 +630,7 @@ public class SqlHelper {
     
     // ------------
  
-    public SqlHelper addOrderBy(String addi, String sortField, String order) {
+    public Sql addOrderBy(String addi, String sortField, String order) {
         if (!isEmpty(sortField) && !isEmpty(order)) {
         	if( !isEmpty(this.orderBy) ){
         		this.orderBy += ", " + EntityUtil.toUnderScoreName(sortField) + " " + order;
@@ -601,7 +641,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper orLike(String addi, int msk, String columns, String value) {
+    public Sql orLike(String addi, int msk, String columns, String value) {
         if (!isEmpty(value)) {
             StringBuffer strBuf = new StringBuffer("");
             for (String column : columns.split(",")) {
@@ -618,7 +658,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper orMike(String addi, int msk, String columns, String value) {
+    public Sql orMike(String addi, int msk, String columns, String value) {
         if (!isEmpty(value)) {
             StringBuffer strBuf = new StringBuffer("");
             for (String column : columns.split(",")) {
@@ -635,7 +675,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper orNike(String addi, int msk, String columns, String value) {
+    public Sql orNike(String addi, int msk, String columns, String value) {
         if (!isEmpty(value)) {
             StringBuffer strBuf = new StringBuffer("");
             for (String column : columns.split(",")) {
@@ -652,7 +692,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper eq(String addi, int msk, String column, String value) {
+    public Sql eq(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " = '" + sqlParam(value) + "'");
@@ -663,7 +703,26 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper eq(String addi, int msk, String column, Integer value) {
+    public Sql eq(String addi, int msk, String column, Integer value) {
+        if ( value !=null ) {
+        	if(value.equals("##NULL##")){
+                if ( msk < 0 ) {
+                	whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " IS NULL");
+                } else {
+                	whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " IS NULL");
+                }
+        	}else{
+	            if ( msk < 0 ) {
+	                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
+	            } else {
+	                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " = " + value );
+	            }
+        	}
+        }
+        return this;
+    }
+
+    public Sql eq(String addi, int msk, String column, Float value) {
         if ( value !=null ) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
@@ -674,7 +733,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper eq(String addi, int msk, String column, Float value) {
+    public Sql eq(String addi, int msk, String column, Boolean value) {
         if ( value !=null ) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " = " + value );
@@ -685,20 +744,28 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper ne(String addi, int msk, String column, String value) {
+    public Sql ne(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
-            if ( msk < 0 ) {
-                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
-                + " != '" + sqlParam(value) + "'");
-            } else {
-                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
-                + " != '" + sqlParam(value) + "'");
-            }
+        	if(value.equals("##NULL##")){
+                if ( msk < 0 ) {
+                	whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " IS NOT NULL");
+                } else {
+                	whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column) + " IS NOT NULL");
+                }
+        	}else{
+	            if ( msk < 0 ) {
+	                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+	                + " != '" + sqlParam(value) + "'");
+	            } else {
+	                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+	                + " != '" + sqlParam(value) + "'");
+	            }
+        	}
         }
         return this;
     }
     
-    public SqlHelper ne(String addi, int msk, String column, Integer value) {
+    public Sql ne(String addi, int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -711,7 +778,20 @@ public class SqlHelper {
         return this;
     }
     
-    public SqlHelper ne(String addi, int msk, String column, Float value) {
+    public Sql ne(String addi, int msk, String column, Float value) {
+        if (value!=null) {
+            if ( msk < 0 ) {
+                whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            } else {
+                whereAddition.append(" AND " + EntityUtil.toUnderScoreName(column)
+                + " != " + value );
+            }
+        }
+        return this;
+    }
+    
+    public Sql ne(String addi, int msk, String column, Boolean value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -724,7 +804,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper like(String addi, int msk, String column, String value) {
+    public Sql like(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -737,7 +817,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notLike(String addi, int msk, String column, String value) {
+    public Sql notLike(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -750,7 +830,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper mike(String addi, int msk, String column, String value) {
+    public Sql mike(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -763,7 +843,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notMike(String addi, int msk, String column, String value) {
+    public Sql notMike(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -776,7 +856,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper nike(String addi, int msk, String column, String value) {
+    public Sql nike(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -789,7 +869,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notNike(String addi, int msk, String column, String value) {
+    public Sql notNike(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -802,7 +882,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper in(String addi, int msk, String column, String... values) {
+    public Sql in(String addi, int msk, String column, String... values) {
         if (!isEmpty(values)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -815,7 +895,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper in(String addi, int msk, String column, Integer... values) {
+    public Sql in(String addi, int msk, String column, Integer... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -828,7 +908,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper in(String addi, int msk, String column, Float... values) {
+    public Sql in(String addi, int msk, String column, Float... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -841,7 +921,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notIn(String addi, int msk, String column, String... values) {
+    public Sql notIn(String addi, int msk, String column, String... values) {
         if (!isEmpty(values)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -854,7 +934,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notIn(String addi, int msk, String column, Integer... values) {
+    public Sql notIn(String addi, int msk, String column, Integer... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -867,7 +947,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper notIn(String addi, int msk, String column, Float... values) {
+    public Sql notIn(String addi, int msk, String column, Float... values) {
         if (values!=null && values.length>0) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -880,7 +960,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper gt(String addi, int msk, String column, String value) {
+    public Sql gt(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > '"
@@ -893,7 +973,7 @@ public class SqlHelper {
         return this;
     }
     
-    public SqlHelper gt(String addi, int msk, String column, Integer value) {
+    public Sql gt(String addi, int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -906,7 +986,7 @@ public class SqlHelper {
         return this;
     }
     
-    public SqlHelper gt(String addi, int msk, String column, Float value) {
+    public Sql gt(String addi, int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -919,7 +999,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper gte(String addi, int msk, String column, String value) {
+    public Sql gte(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -932,7 +1012,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper gte(String addi, int msk, String column, Integer value) {
+    public Sql gte(String addi, int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -945,7 +1025,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper gte(String addi, int msk, String column, Float value) {
+    public Sql gte(String addi, int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -958,7 +1038,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lt(String addi, int msk, String column, String value) {
+    public Sql lt(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " < '"
@@ -971,7 +1051,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lt(String addi, int msk, String column, Integer value) {
+    public Sql lt(String addi, int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -984,7 +1064,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lt(String addi, int msk, String column, Float value) {
+    public Sql lt(String addi, int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -997,7 +1077,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lte(String addi, int msk, String column, String value) {
+    public Sql lte(String addi, int msk, String column, String value) {
         if (!isEmpty(value)) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column)
@@ -1010,7 +1090,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lte(String addi, int msk, String column, Integer value) {
+    public Sql lte(String addi, int msk, String column, Integer value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -1023,7 +1103,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper lte(String addi, int msk, String column, Float value) {
+    public Sql lte(String addi, int msk, String column, Float value) {
         if (value!=null) {
             if ( msk < 0 ) {
                 whereAddition.append(" OR " + EntityUtil.toUnderScoreName(column) + " > "
@@ -1036,7 +1116,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper between(String addi, int msk, String column, String from, String to) {
+    public Sql between(String addi, int msk, String column, String from, String to) {
         if (isEmpty(from) && isEmpty(to)) {
             return this;
         }
@@ -1068,7 +1148,7 @@ public class SqlHelper {
         return this;
     }
  
-    public SqlHelper between(String addi, int msk, String column, Integer from, Integer to) {
+    public Sql between(String addi, int msk, String column, Integer from, Integer to) {
         if (from==null && to==null) {
             return this;
         }
@@ -1098,7 +1178,7 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper between(String addi, int msk, String column, Float from, Float to) {
+    public Sql between(String addi, int msk, String column, Float from, Float to) {
         if (from==null && to==null) {
             return this;
         }
@@ -1135,11 +1215,11 @@ public class SqlHelper {
         StringBuilder sql = new StringBuilder("");
         final int a = 4;
         final int b = 5;
-        if (where.length() > a) {
-        	if ( whereAddition.length()>0 ) {
-                sql.append(" (" + where.substring(b) + ") AND ( 1=1 AND "+ whereAddition +")");
+        if (where.toString().length() > a) {
+        	if ( whereAddition.toString().length()>a ) {
+                sql.append(" @@@" + where.substring(b) + "### AND @@@"+ whereAddition.substring(b) +"###");
         	}else{
-                sql.append(" " + where.substring(b) + " ");
+                sql.append(" @@@" + where.substring(b) + "### ");
         	}
         }
         if (!isEmpty(groupBy)) {
@@ -1151,7 +1231,41 @@ public class SqlHelper {
         if (!isEmpty(orderBy)) {
             sql.append(" ORDER BY " + orderBy + " ");
         }
-        return sql.toString();
+        String res = sql.toString().replaceAll("@@@", "(").replaceAll("###", ")");
+        System.out.println("--- [####] SQL CONDITON ---> " + res);
+        return res;
+    }
+
+    
+    public HashMap<String, String> sqlMap() {
+    	HashMap<String, String> res = new HashMap<String, String>();
+        StringBuilder sql = new StringBuilder("");
+        final int a = 4;
+        final int b = 5;
+        if (where.toString().length() > a) {
+        	if ( whereAddition.toString().length()>a ) {
+                sql.append(" @@@" + where.substring(b) + "### AND @@@"+ whereAddition.substring(b) +"###");
+        	}else{
+                sql.append(" @@@" + where.substring(b) + "### ");
+        	}
+            String sqlStr = sql.toString().replaceAll("@@@", "(").replaceAll("###", ")");
+            res.put("conditions", sqlStr);
+        }
+        if (!isEmpty(groupBy)) {
+//            sql.append(" GROUP BY " + groupBy + " ");
+            res.put("groupBy", " GROUP BY " + groupBy + " ");
+        }
+        if (!isEmpty(having)) {
+//            sql.append(" HAVING " + having + " ");
+            res.put("having", " HAVING " + having + " ");
+        }
+        if (!isEmpty(orderBy)) {
+//            sql.append(" ORDER BY " + orderBy + " ");
+            res.put("orderBy", " ORDER BY " + orderBy + " ");
+        }
+//        String res = sql.toString().replaceAll("@@@", "(").replaceAll("###", ")");
+        System.out.println("--- [####] SQL MAP ---> " + res);
+        return res;
     }
  
     public String toString() {
@@ -1220,7 +1334,7 @@ public class SqlHelper {
     }
     
     public static String generate(ArrayList<HashMap> conditions, ArrayList<HashMap> additions) {
-    	SqlHelper sp = new SqlHelper();
+    	Sql sp = new Sql();
 		for(HashMap condi : conditions){
 			generatorCondition(sp, condi);
 		}
@@ -1231,55 +1345,80 @@ public class SqlHelper {
 		}
     	return sp.sql();
     }
+    
+    public static HashMap<String, String> generateMap(ArrayList<HashMap> conditions, ArrayList<HashMap> additions) {
+    	Sql sp = new Sql();
+		for(HashMap condi : conditions){
+			generatorCondition(sp, condi);
+		}
+		if(additions!=null){
+			for(HashMap addi : additions){
+				generatorAddition(sp, addi);
+			}
+		}
+    	return sp.sqlMap();
+    }
+    
+    public static HashMap<String, Object> newSqlBox() {
+    	return new HashMap<String, Object>();
+    }
+    
+    public static ArrayList<HashMap> newSqlExp() {
+    	return new ArrayList<HashMap>(0);
+    }
 
-	private static void generatorCondition(SqlHelper sp, HashMap condi) {
+	private static void generatorCondition(Sql sp, HashMap condi) {
 		String key = (String)condi.get("key");
 		String op = (String)condi.get("op");
 		int msk = ((Integer)condi.get("msk")).intValue();
 		int mskAbs = Math.abs(msk);
-		if ( op.equalsIgnoreCase("ORLIKE") ) {
+		if ( op.equalsIgnoreCase("OL") ) {			//----------------OR LIKE
 			sp.orLike(msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("EQ") ) {
+		} else if ( op.equalsIgnoreCase("S") || op.equalsIgnoreCase("C") || op.equalsIgnoreCase("X") || op.equalsIgnoreCase("E") ) {			//----------------EQ
 			if ( mskAbs == 18 ) {		// integer
 				sp.eq(msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
 				sp.eq(msk, key, (Float)condi.get("val"));
+			} else if ( mskAbs == 35 ) {		// boolean
+				sp.eq(msk, key, (Boolean)condi.get("val"));
 			} else {	// string
 				sp.eq(msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("NE") ) {
+		} else if ( op.equalsIgnoreCase("NS") || op.equalsIgnoreCase("NC") || op.equalsIgnoreCase("NX") || op.equalsIgnoreCase("NE") ) {			//----------------NE
 			if ( mskAbs == 18 ) {		// integer
 				sp.ne(msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
 				sp.ne(msk, key, (Float)condi.get("val"));
+			} else if ( mskAbs == 35 ) {		// boolean
+				sp.ne(msk, key, (Boolean)condi.get("val"));
 			} else {	// string
 				sp.ne(msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("LIKE") ) {
+		} else if ( op.equalsIgnoreCase("LK") ) {			//----------------LIKE
 			sp.like(msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("NOTLIKE") ) {
+		} else if ( op.equalsIgnoreCase("NLK") ) {			//----------------NOT LIKE
 			sp.notLike(msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("ORLIKE") ) {
+		} else if ( op.equalsIgnoreCase("OLK") ) {			//----------------OR LIKE
 			String[] valstr = ((String)condi.get("val")).split(",");
 			sp.orLike(msk, key, (String)condi.get("val"));
 			
-		} else if ( op.equalsIgnoreCase("MIKE") ) {
+		} else if ( op.equalsIgnoreCase("MK") ) {			//----------------MIKE
 			sp.mike(msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("NOTMIKE") ) {
+		} else if ( op.equalsIgnoreCase("NMK") ) {			//----------------NOT MIKE
 			sp.notMike(msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("ORMIKE") ) {
+		} else if ( op.equalsIgnoreCase("OMK") ) {			//----------------OR MIKE
 			String[] valstr = ((String)condi.get("val")).split(",");
 			sp.orMike(msk, key, (String)condi.get("val"));
 			
-		} else if ( op.equalsIgnoreCase("NIKE") ) {
+		} else if ( op.equalsIgnoreCase("NK") ) {			//----------------NIKE
 			sp.nike(msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("NOTNIKE") ) {
+		} else if ( op.equalsIgnoreCase("NNK") ) {			//----------------NOT NIKE
 			sp.notNike(msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("ORNIKE") ) {
+		} else if ( op.equalsIgnoreCase("ONK") ) {			//----------------OR NIKE
 			String[] valstr = ((String)condi.get("val")).split(",");
 			sp.orNike(msk, key, (String)condi.get("val"));
 			
-		} else if ( op.equalsIgnoreCase("IN") ) {
+		} else if ( op.equalsIgnoreCase("I") ) {			//----------------IN
 			String[] valstr = ((String)condi.get("val")).split(",");
 			if ( mskAbs == 18 ) {		// integer
 				Integer[] vals = new Integer[valstr.length];
@@ -1296,7 +1435,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.in(msk, key, valstr);	
 			}
-		} else if ( op.equalsIgnoreCase("NOTIN") ) {
+		} else if ( op.equalsIgnoreCase("NI") ) {			//----------------NOT IN
 			String[] valstr = ((String)condi.get("val")).split(",");
 			if ( mskAbs == 18 ) {		// integer
 				Integer[] vals = new Integer[valstr.length];
@@ -1313,7 +1452,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.notIn(msk, key, valstr);	
 			}
-		} else if ( op.equalsIgnoreCase("GT") ) {
+		} else if ( op.equalsIgnoreCase("G") ) {			//----------------GT
 			if ( mskAbs == 18 ) {		// integer
 				sp.gt(msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1321,7 +1460,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.gt(msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("GTE") ) {
+		} else if ( op.equalsIgnoreCase("GS") || op.equalsIgnoreCase("GC") || op.equalsIgnoreCase("GX") || op.equalsIgnoreCase("GE") ) {			//----------------GTE
 			if ( mskAbs == 18 ) {		// integer
 				sp.gte(msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1329,7 +1468,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.gte(msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("LT") ) {
+		} else if ( op.equalsIgnoreCase("L") ) {			//----------------LT
 			if ( mskAbs == 18 ) {		// integer
 				sp.lt(msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1337,7 +1476,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.lt(msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("LTE") ) {
+		} else if ( op.equalsIgnoreCase("LS") || op.equalsIgnoreCase("LC") || op.equalsIgnoreCase("LX") || op.equalsIgnoreCase("LE") ) {			//----------------LTE
 			if ( mskAbs == 18 ) {		// integer
 				sp.lte(msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1345,7 +1484,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.lte(msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("BETWEEN") ) {
+		} else if ( op.equalsIgnoreCase("B") || op.equalsIgnoreCase("BTN") ) {			//----------------BETWEEN
 			String[] valstr = ((String)condi.get("val")).split(",");
 			if ( mskAbs == 18 ) {		// integer
 				Integer[] vals = new Integer[valstr.length];
@@ -1362,7 +1501,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.between(msk, key, valstr[0], valstr[1]);
 			}
-		} else if ( op.equalsIgnoreCase("OD") ) {
+		} else if ( op.equalsIgnoreCase("O") || op.equalsIgnoreCase("OD") ) {			//----------------ORDER BY
 			if ( msk > 0 ) {
 				sp.addOrderBy(key, "ASC");
 			} else {
@@ -1371,54 +1510,58 @@ public class SqlHelper {
 		}
 	}
 
-	private static void generatorAddition(SqlHelper sp, HashMap condi) {
+	private static void generatorAddition(Sql sp, HashMap condi) {
 		String key = (String)condi.get("key");
 		String op = (String)condi.get("op");
 		int msk = ((Integer)condi.get("msk")).intValue();
 		int mskAbs = Math.abs(msk);
-		if ( op.equalsIgnoreCase("ORLIKE") ) {
+		if ( op.equalsIgnoreCase("OL") ) {			//----------------OR LIKE
 			sp.orLike("Addi", msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("EQ") ) {
+		} else if ( op.equalsIgnoreCase("S") || op.equalsIgnoreCase("C") || op.equalsIgnoreCase("X") || op.equalsIgnoreCase("E") ) {			//----------------EQ
 			if ( mskAbs == 18 ) {		// integer
 				sp.eq("Addi", msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
 				sp.eq("Addi", msk, key, (Float)condi.get("val"));
+			} else if ( mskAbs == 35 ) {		// boolean
+				sp.eq("Addi", msk, key, (Boolean)condi.get("val"));
 			} else {	// string
 				sp.eq("Addi", msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("NE") ) {
+		} else if ( op.equalsIgnoreCase("NS") || op.equalsIgnoreCase("NC") || op.equalsIgnoreCase("NX") || op.equalsIgnoreCase("NE") ) {			//----------------NE
 			if ( mskAbs == 18 ) {		// integer
 				sp.ne("Addi", msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
 				sp.ne("Addi", msk, key, (Float)condi.get("val"));
+			} else if ( mskAbs == 35 ) {		// boolean
+				sp.ne("Addi", msk, key, (Boolean)condi.get("val"));
 			} else {	// string
 				sp.ne("Addi", msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("LIKE") ) {
+		} else if ( op.equalsIgnoreCase("LK") ) {			//----------------LIKE
 			sp.like("Addi", msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("NOTLIKE") ) {
+		} else if ( op.equalsIgnoreCase("NLK") ) {			//----------------NOT LIKE
 			sp.notLike("Addi", msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("ORLIKE") ) {
+		} else if ( op.equalsIgnoreCase("OLK") ) {			//----------------OR LIKE
 			String[] valstr = ((String)condi.get("val")).split(",");
 			sp.orLike("Addi", msk, key, (String)condi.get("val"));
 			
-		} else if ( op.equalsIgnoreCase("MIKE") ) {
+		} else if ( op.equalsIgnoreCase("MK") ) {			//----------------MIKE
 			sp.mike("Addi", msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("NOTMIKE") ) {
+		} else if ( op.equalsIgnoreCase("NMK") ) {			//----------------NOT MIKE
 			sp.notMike("Addi", msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("ORMIKE") ) {
+		} else if ( op.equalsIgnoreCase("OMK") ) {			//----------------OR MIKE
 			String[] valstr = ((String)condi.get("val")).split(",");
 			sp.orMike("Addi", msk, key, (String)condi.get("val"));
 			
-		} else if ( op.equalsIgnoreCase("NIKE") ) {
+		} else if ( op.equalsIgnoreCase("NK") ) {			//----------------NIKE
 			sp.nike("Addi", msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("NOTNIKE") ) {
+		} else if ( op.equalsIgnoreCase("NNK") ) {			//----------------NOT NIKE
 			sp.notNike("Addi", msk, key, (String)condi.get("val"));
-		} else if ( op.equalsIgnoreCase("ORNIKE") ) {
+		} else if ( op.equalsIgnoreCase("ONK") ) {			//----------------OR NIKE
 			String[] valstr = ((String)condi.get("val")).split(",");
 			sp.orNike("Addi", msk, key, (String)condi.get("val"));
 			
-		} else if ( op.equalsIgnoreCase("IN") ) {
+		} else if ( op.equalsIgnoreCase("I") ) {			//----------------IN
 			String[] valstr = ((String)condi.get("val")).split(",");
 			if ( mskAbs == 18 ) {		// integer
 				Integer[] vals = new Integer[valstr.length];
@@ -1435,7 +1578,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.in("Addi", msk, key, valstr);	
 			}
-		} else if ( op.equalsIgnoreCase("NOTIN") ) {
+		} else if ( op.equalsIgnoreCase("NI") ) {			//----------------NOT IN
 			String[] valstr = ((String)condi.get("val")).split(",");
 			if ( mskAbs == 18 ) {		// integer
 				Integer[] vals = new Integer[valstr.length];
@@ -1452,7 +1595,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.notIn("Addi", msk, key, valstr);	
 			}
-		} else if ( op.equalsIgnoreCase("GT") ) {
+		} else if ( op.equalsIgnoreCase("G") ) {			//----------------GT
 			if ( mskAbs == 18 ) {		// integer
 				sp.gt("Addi", msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1460,7 +1603,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.gt("Addi", msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("GTE") ) {
+		} else if ( op.equalsIgnoreCase("GS") || op.equalsIgnoreCase("GC") || op.equalsIgnoreCase("GX") || op.equalsIgnoreCase("GE") ) {			//----------------GTE
 			if ( mskAbs == 18 ) {		// integer
 				sp.gte("Addi", msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1468,7 +1611,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.gte("Addi", msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("LT") ) {
+		} else if ( op.equalsIgnoreCase("L") ) {			//----------------LT
 			if ( mskAbs == 18 ) {		// integer
 				sp.lt("Addi", msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1476,7 +1619,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.lt("Addi", msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("LTE") ) {
+		} else if ( op.equalsIgnoreCase("LS") || op.equalsIgnoreCase("LC") || op.equalsIgnoreCase("LX") || op.equalsIgnoreCase("LE") ) {			//----------------LET
 			if ( mskAbs == 18 ) {		// integer
 				sp.lte("Addi", msk, key, (Integer)condi.get("val"));
 			} else if ( mskAbs == 24 ) {		// float
@@ -1484,7 +1627,7 @@ public class SqlHelper {
 			} else {	// string
 				sp.lte("Addi", msk, key, (String)condi.get("val"));	
 			}
-		} else if ( op.equalsIgnoreCase("BETWEEN") ) {
+		} else if ( op.equalsIgnoreCase("B") || op.equalsIgnoreCase("BTN") ) {			//----------------BETWEEN
 			String[] valstr = ((String)condi.get("val")).split(",");
 			if ( mskAbs == 18 ) {		// integer
 				Integer[] vals = new Integer[valstr.length];
@@ -1501,13 +1644,67 @@ public class SqlHelper {
 			} else {	// string
 				sp.between("Addi", msk, key, valstr[0], valstr[1]);
 			}
-		} else if ( op.equalsIgnoreCase("OD") ) {
+		} else if ( op.equalsIgnoreCase("O") || op.equalsIgnoreCase("OD") ) {			//----------------ORDER BY
 			if ( msk > 0 ) {
 				sp.addOrderBy(key, "ASC");
 			} else {
 				sp.addOrderBy(key, "DESC");
 			}
 		}
+	}
+	
+	public static void addCondi(ArrayList<HashMap> conditionList, String key, String operate, String value, Integer msk) {
+		HashMap condi = new HashMap();
+		condi.put("key", key);
+		condi.put("op", operate);
+		condi.put("val", value);
+		condi.put("msk", msk);
+		conditionList.add(condi);
+	}
+	
+	public static void addCondi(ArrayList<HashMap> conditionList, String key, String operate, Integer value, Integer msk) {
+		HashMap condi = new HashMap();
+		condi.put("key", key);
+		condi.put("op", operate);
+		condi.put("val", value);
+		condi.put("msk", msk);
+		conditionList.add(condi);
+	}
+	
+	public static void addCondi(ArrayList<HashMap> conditionList, String key, String operate, Float value, Integer msk) {
+		HashMap condi = new HashMap();
+		condi.put("key", key);
+		condi.put("op", operate);
+		condi.put("val", value);
+		condi.put("msk", msk);
+		conditionList.add(condi);
+	}
+	
+	public static void newAddi(ArrayList<HashMap> additionList, String key, String operate, String value, Integer msk) {
+		HashMap addi = new HashMap();
+		addi.put("key", key);
+		addi.put("op", operate);
+		addi.put("val", value);
+		addi.put("msk", msk);
+		additionList.add(addi);
+	}
+	
+	public static void newAddi(ArrayList<HashMap> additionList, String key, String operate, Integer value, Integer msk) {
+		HashMap addi = new HashMap();
+		addi.put("key", key);
+		addi.put("op", operate);
+		addi.put("val", value);
+		addi.put("msk", msk);
+		additionList.add(addi);
+	}
+	
+	public static void newAddi(ArrayList<HashMap> additionList, String key, String operate, Float value, Integer msk) {
+		HashMap addi = new HashMap();
+		addi.put("key", key);
+		addi.put("op", operate);
+		addi.put("val", value);
+		addi.put("msk", msk);
+		additionList.add(addi);
 	}
     
     public static void main(String[] args){
@@ -1518,19 +1715,19 @@ public class SqlHelper {
     	ArrayList<HashMap> conditions = new ArrayList<HashMap>(0);
     	HashMap<String, Object> condi01 = new HashMap<String, Object>();
     	condi01.put("key", "Xqqqname");
-    	condi01.put("op", "mike");
+    	condi01.put("op", "mk");
     	condi01.put("val", "superman");
     	condi01.put("msk", 1);
 
     	HashMap<String, Object> condi02 = new HashMap<String, Object>();
     	condi02.put("key", "level");
-    	condi02.put("op", "gt");
+    	condi02.put("op", "g");
     	condi02.put("val", 300);
     	condi02.put("msk", -18);
 
     	HashMap<String, Object> condi03 = new HashMap<String, Object>();
     	condi03.put("key", "range");
-    	condi03.put("op", "in");
+    	condi03.put("op", "i");
     	condi03.put("val", "1,3,4,6,7");
     	condi03.put("msk", 18);
 
@@ -1556,20 +1753,20 @@ public class SqlHelper {
     	ArrayList<HashMap> additions = new ArrayList<HashMap>(0);
     	HashMap<String, Object> addi01 = new HashMap<String, Object>();
     	addi01.put("key", "xxv");
-    	addi01.put("op", "eq");
+    	addi01.put("op", "e");
     	addi01.put("val", "wuke");
     	addi01.put("msk", 1);
     	
     	HashMap<String, Object> addi02 = new HashMap<String, Object>();
     	addi02.put("key", "vsee");
-    	addi02.put("op", "in");
+    	addi02.put("op", "i");
     	addi02.put("val", "112,334,556,67");
     	addi02.put("msk", 1);
     	
     	additions.add(addi01);
     	additions.add(addi02);
     	
-    	System.out.println("SQL: " + SqlHelper.generate(conditions, additions));
-    	System.out.println("SQL: " + SqlHelper.generate(conditions, null));
+    	System.out.println("SQL: " + Sql.generate(conditions, additions));
+    	System.out.println("SQL: " + Sql.generate(conditions, null));
     }
 }

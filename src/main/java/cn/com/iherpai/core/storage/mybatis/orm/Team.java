@@ -3,63 +3,51 @@ package cn.com.iherpai.core.storage.mybatis.orm;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Organize extends Orm implements Serializable {
-	private static final long serialVersionUID = -4113474425569807163L;
-	
-	public static final int 		CHILDCOUNT_MAX 			= 10;				//拒绝使用
-	
+public class Team extends Orm implements Serializable {
+	private static final long serialVersionUID = -6492554219503830L;
+
 	public static final int 		STATUS_CREATED 			= 0;				//已创建，未使用
 	public static final String 		STATUS_CREATED_TXT 		= "待使用";			//已创建，未使用
 	
 	public static final int 		STATUS_ENABLED 			= 1;				//正常，可使用
 	public static final String 		STATUS_ENABLED_TXT 		= "可使用";			//正常，可使用
 	
-	public static final int 		STATUS_LOCKED_CHILD 	= -1;				//禁止添加任何子节点
-	public static final String 		STATUS_LOCKED_CHILD_TXT = "子节点锁";			//禁止添加任何子节点
-	
-	public static final int 		STATUS_LOCKED_SUB 		= -2;				//禁止添加子字典组
-	public static final String 		STATUS_LOCKED_SUB_TXT 	= "子组锁";			//禁止添加子字典组
-	
-	public static final int 		STATUS_LOCKED_LEAF 		= -3;				//禁止添加子字典
-	public static final String 		STATUS_LOCKED_LEAF_TXT 	= "叶子锁";			//禁止添加子字典
-	
 	public static final int 		STATUS_DISABLED 		= -99;				//拒绝使用
 	public static final String 		STATUS_DISABLED_TXT 	= "已禁用";			//拒绝使用
 	
-	public static final String fieldsAll = "id, nid, sid, parent_id, parent_nid, parent_sid, is_valid, child_count, "
+	public static final String fieldsAll = "id, nid, sid, organize_id, organize_nid, organize_sid, "
 			+ "name, code, type, icon, intro, grade, gradeTitle, total, "
-			+ "settingMessage, settingTop, settingJoin, settingVisit, settingSpeak, "
+			+ "settingMessage, settingTop, settingJoin, settingVisit, settingSpeak, settingAlias, "
 			+ "level, createTime, status";
 	
-	public static final String fieldsDefault = "sid, parent_sid, is_valid, child_count, "
+	public static final String fieldsDefault = "sid, organize_sid, "
 			+ "name, code, type, icon, intro, grade, gradeTitle, total, "
-			+ "settingMessage, settingTop, settingJoin, settingVisit, settingSpeak, "
+			+ "settingMessage, settingTop, settingJoin, settingVisit, settingSpeak, settingAlias, "
 			+ "level, createTime, status";
 	
-	private Long		id;
-	private Integer		nid;
-	private String		sid;
-	private Long		parentId;
-	private Integer		parentNid;
-	private String		parentSid;
-	private Boolean		isValid;
-	private Integer		childCount;
-	private String		name;
-	private String		code;
-	private Integer		type;
-	private String		icon;
-	private String		intro;
-	private Integer		grade;
-	private String		gradeTitle;
-	private Integer		total;
-	private Integer		settingMessage;
-	private Boolean		settingTop;
-	private Integer		settingJoin;
-	private Integer		settingVisit;
-	private Integer		settingSpeak;
-	private Integer		level;
-	private Date		createTime;
-	private Integer		status;
+	private Long			id;
+	private Integer			nid;
+	private String			sid;
+	private Long			organizeId;
+	private Integer			organizeNid;
+	private String			organizeSid;
+	private	String			name;
+	private String			code;
+	private Integer			type;
+	private String			icon;
+	private String			intro;
+	private Integer			grade;
+	private String			gradeTitle;
+	private Integer			total;
+	private Integer			settingMessage;
+	private Boolean			settingTop;
+	private Integer			settingJoin;
+	private Integer			settingVisit;
+	private Integer			settingSpeak;
+	private Integer			settingAlias;
+	private Integer			level;
+	private Date			createTime;
+	private Integer			status;
 	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -89,44 +77,28 @@ public class Organize extends Orm implements Serializable {
 		this.sid = sid;
 	}
 
-	public Long getParentId() {
-		return parentId;
+	public Long getOrganizeId() {
+		return organizeId;
 	}
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
+	public void setOrganizeId(Long organizeId) {
+		this.organizeId = organizeId;
 	}
 
-	public Integer getParentNid() {
-		return parentNid;
+	public Integer getOrganizeNid() {
+		return organizeNid;
 	}
 
-	public void setParentNid(Integer parentNid) {
-		this.parentNid = parentNid;
+	public void setOrganizeNid(Integer organizeNid) {
+		this.organizeNid = organizeNid;
 	}
 
-	public String getParentSid() {
-		return parentSid;
+	public String getOrganizeSid() {
+		return organizeSid;
 	}
 
-	public void setParentSid(String parentSid) {
-		this.parentSid = parentSid;
-	}
-
-	public Boolean getIsValid() {
-		return isValid;
-	}
-
-	public void setIsValid(Boolean isValid) {
-		this.isValid = isValid;
-	}
-
-	public Integer getChildCount() {
-		return childCount;
-	}
-
-	public void setChildCount(Integer childCount) {
-		this.childCount = childCount;
+	public void setOrganizeSid(String organizeSid) {
+		this.organizeSid = organizeSid;
 	}
 
 	public String getName() {
@@ -233,6 +205,14 @@ public class Organize extends Orm implements Serializable {
 		this.settingSpeak = settingSpeak;
 	}
 
+	public Integer getSettingAlias() {
+		return settingAlias;
+	}
+
+	public void setSettingAlias(Integer settingAlias) {
+		this.settingAlias = settingAlias;
+	}
+
 	public Integer getLevel() {
 		return level;
 	}
@@ -256,4 +236,5 @@ public class Organize extends Orm implements Serializable {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+	
 }

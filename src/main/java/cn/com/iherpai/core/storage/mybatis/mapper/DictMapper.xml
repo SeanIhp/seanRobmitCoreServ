@@ -88,32 +88,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	<sql id="updateFields">
-		<if test="_name != null">
-			name = #{_name} ,
+		<if test="name != null">
+			name = #{name} ,
 		</if>
-		<if test="_code != null">
-			code = #{_code} ,
+		<if test="code != null">
+			code = #{code} ,
 		</if>
-		<if test="_constCode != null">
-			const_code = #{_constCode} ,
+		<if test="constCode != null">
+			const_code = #{constCode} ,
 		</if>
-		<if test="_constType != null">
-			const_type = #{_constType} ,
+		<if test="constType != null">
+			const_type = #{constType} ,
 		</if>
-		<if test="_constValue != null">
-			const_value = #{_constValue} ,
+		<if test="constValue != null">
+			const_value = #{constValue} ,
 		</if>
-		<if test="_constText != null">
-			const_text = #{_constText} ,
+		<if test="constText != null">
+			const_text = #{constText} ,
 		</if>
-		<if test="_sortno != null">
-			sortno = #{_sortno} ,
+		<if test="sortno != null">
+			sortno = #{sortno} ,
 		</if>
-		<if test="_description != null">
-			description = #{_description} ,
+		<if test="description != null">
+			description = #{description} ,
 		</if>
-		<if test="_status != null">
-			status = #{_status} , 
+		<if test="status != null">
+			status = #{status} , 
 		</if>
 	</sql>
 	
@@ -125,14 +125,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			nid, sid, 
 			dict_group_id, dict_group_nid, dict_group_sid, 
 			code, name, 			
-			const_code,	const_type, const_value, const_text, sortno, description, 
-			create_time, status
+			const_code,	const_type, const_value, const_text, sortno, 
+			description, create_time, status
 		) VALUES (
 			#{nid},	#{sid},
-			#{dict_group_id}, #{dict_group_nid}, #{dict_group_sid}, 
+			#{dictGroupId}, #{dictGroupNid}, #{dictGroupSid}, 
 			#{code}, #{name}, 
-			#{const_code}, #{const_type}, #{const_value}, #{const_text}, #{sortno},	#{description}, 
-			#{create_time}, #{status}
+			#{constCode}, #{constType}, #{constValue}, #{constText}, #{sortno},	
+			#{description}, #{createTime}, #{status}
 		)
 	</insert>
 		
@@ -142,33 +142,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE 
 		FROM 
 			dict 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
-	</delete>
-		
-	
-	
-	<delete id="removeIn" parameterType="java.util.HashMap">
-		DELETE 
-		FROM 
-			dict 
-		<where>
-			sid IN (#{sids}) 
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</delete>
 	
 	
 	
 	<update id="update" parameterType="java.util.HashMap">
 		UPDATE 
-			dict
+			dict 
 		<set>
 			<include refid="updateFields"/>
 		</set>
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</update>
 	
 	
@@ -178,43 +167,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			${fields} 
 		FROM 
 			dict 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
+		WHERE
+			1=1 AND 
+			${conditions}
 	</select>
 	
 	
 	
 	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT 
-			count(id)
-		FROM 
-			dict 
-		<where>
-			<include refid="queryCommon"/>
-		</where>
-	</select>
-	
-	
-	<select id="list" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Dict">
-		SELECT 
-			${fields}
-		FROM
-			dict
-		<where>
-			<include refid="queryCommon"/>
-		</where>
-	</select>
-	
-	
-	
-	<select id="listByDictGroupId" parameterType="java.util.HashMap" resultType="cn.com.iherpai.core.storage.mybatis.orm.Dict">
-		SELECT 
-			* 
+			count(sid)
 		FROM 
 			dict 
 		WHERE
-			dict_group_id = #{dictGroupId}
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getMaxSortno" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			max(sortno)
+		FROM 
+			dict 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="DictFldsDefault">
+		SELECT 
+			t.${fields}
+		FROM
+			dict t 
+		INNER JOIN 
+			(
+				SELECT x.sid from dict x 
+				WHERE 1=1 AND ${conditions} 
+				LIMIT #{pageOff}, #{pageSize}
+			) 
+			AS p 
+			ON t.sid = p.sid 
+			${orderBy}
 	</select>
 	
 	

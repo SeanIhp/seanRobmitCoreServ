@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.ViewTeamAccountMapper">
+
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.ViewTeamAccount" id="ViewTeamAccountFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="sid" />
+	    <result property="organizeId" 		column="organize_id" />
+	    <result property="organizeNid" 		column="organize_nid" />
+	    <result property="organizeSid" 		column="organize_sid" />
+	    <result property="teamId" 			column="team_id" />
+	    <result property="teamNid" 			column="team_nid" />
+	    <result property="teamSid" 			column="team_sid" />
+	    <result property="accountId" 		column="account_id" />
+	    <result property="accountNid" 		column="account_nid" />
+	    <result property="accountSid" 		column="account_sid" />
+	    <result property="mapNickname" 		column="map_nickname" />
+	    <result property="mapType" 			column="map_type" />
+	    <result property="mapGrade" 		column="map_grade" />
+	    <result property="mapScore" 		column="map_score" />
+	    <result property="mapRole" 			column="map_role" />
+	    <result property="mapCreateTime" 	column="map_create_time" />
+	    <result property="mapStatus" 		column="map_status" />
+	    <result property="accoUsername" 	column="acco_username" />
+	    <result property="accoType" 		column="acco_type" />
+	    <result property="accoGrade" 		column="acco_grade" />
+	    <result property="accoPhone" 		column="acco_phone" />
+	    <result property="accoScore" 		column="acco_score" />
+	    <result property="accoLevel" 		column="acco_level" />
+	    <result property="accoStatus" 		column="acco_status" />
+	    <result property="teamName" 		column="team_name" />
+	    <result property="teamCode" 		column="team_code" />
+	    <result property="teamType" 		column="team_type" />
+	    <result property="teamGrade" 		column="team_grade" />
+	    <result property="teamTotal" 		column="team_total" />
+	    <result property="teamLevel" 		column="team_level" />
+	    <result property="teamStatus" 		column="team_status" />
+	</resultMap>
+	
+	
+	
+	<select id="get" parameterType="java.util.HashMap" resultMap="OrganizeFldsDefault">
+		SELECT 
+			${fields} 
+		FROM 
+			view_team_acco 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			count(sid)
+		FROM 
+			view_team_acco 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getMaxSortno" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			max(sortno)
+		FROM 
+			view_team_acco 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="ViewTeamAccountFldsDefault">
+		SELECT 
+			t.${fields}
+		FROM
+			view_team_acco t 
+		INNER JOIN 
+			(
+				SELECT x.sid from view_team_acco x 
+				WHERE 1=1 AND ${conditions} 
+				LIMIT #{pageOff}, #{pageSize}
+			) 
+			AS p 
+			ON t.sid = p.sid 
+			${orderBy}
+	</select>
+	
+	
+	
+</mapper>

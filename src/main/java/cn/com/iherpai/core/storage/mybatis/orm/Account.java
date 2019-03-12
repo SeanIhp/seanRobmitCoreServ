@@ -7,7 +7,7 @@ import cn.com.iherpai.common.underware.DataValidator;
 
 import java.sql.Timestamp;
 
-public class Account extends Entity implements Serializable {
+public class Account extends Orm implements Serializable {
 	private static final long serialVersionUID = -7450117829974407869L;
 
 	public static final Integer		TYPE_USER = 1;
@@ -18,6 +18,22 @@ public class Account extends Entity implements Serializable {
 	public static final Integer 	STATUS_LOCK = 2;					//交互锁
 	public static final Integer 	STATUS_DENY = 3;					//拒绝服务
 	public static final String 		HOST_SITE_ID_DEFAULT = "11";		//Iherpai.com.cn
+	
+	public static final String fieldsAll = "id, nid, sid, username, password, question, answer, mailbox, "
+			+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, wxCity, wxCountry, wxProvince, wxLanguage, "
+			+ "type, grade, phone, score, level, createTime, status";
+	
+	public static final String fieldsDefault = "sid, username, mailbox, "
+			+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, wxCity, wxCountry, wxProvince, wxLanguage, "
+			+ "type, grade, phone, score, level, createTime, status";
+	
+	public static final String fieldsDefaultWithPassword = "sid, username, password, mailbox, "
+			+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, wxCity, wxCountry, wxProvince, wxLanguage, "
+			+ "type, grade, phone, score, level, createTime, status";
+	
+	public static final String fieldsDefaultWithQuestion = "sid, username, question, mailbox, "
+			+ "wxOpenid, wxSessionkey, wxUnionid, wxNickname, wxAvatar, wxGender, wxCity, wxCountry, wxProvince, wxLanguage, "
+			+ "type, grade, phone, score, level, createTime, status";
 	
 	private Long			id;						//
 	private Integer			nid;				//

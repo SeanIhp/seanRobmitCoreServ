@@ -138,7 +138,7 @@ public class Orm implements Serializable {
     	condition.put("op", operater);
     	condition.put("val", value);
     	condition.put("msk", msk);
-		this.maz.add(condition);
+		this.mazAddition.add(condition);
 	}
 	
 	public void addAddition(String key, String operater, Integer value, Integer msk) {
@@ -150,7 +150,7 @@ public class Orm implements Serializable {
     	condition.put("op", operater);
     	condition.put("val", value);
     	condition.put("msk", msk);
-		this.maz.add(condition);
+		this.mazAddition.add(condition);
 	}
 	
 	public void addAddition(String key, String operater, Float value, Integer msk) {
@@ -162,7 +162,7 @@ public class Orm implements Serializable {
     	condition.put("op", operater);
     	condition.put("val", value);
     	condition.put("msk", msk);
-		this.maz.add(condition);
+		this.mazAddition.add(condition);
 	}
 
 }

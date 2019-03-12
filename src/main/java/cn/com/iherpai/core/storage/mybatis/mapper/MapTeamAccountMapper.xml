@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
+注意：使用mapper代理方法开发，namespace有特殊重要的作用，namespace等于mapper接口地址
+-->
+<mapper namespace="cn.com.iherpai.core.storage.mybatis.mapper.MapTeamAccountMapper">
+
+	<resultMap type="cn.com.iherpai.core.storage.mybatis.orm.MapTeamAccount" id="MapTeamAccountFldsDefault">
+		<id property="id" 					column="id" />
+	    <result property="nid" 				column="nid" />
+	    <result property="sid" 				column="sid" />
+	    <result property="organizeId" 		column="organize_id" />
+	    <result property="organizeNid" 		column="organize_nid" />
+	    <result property="organizeSid" 		column="organize_sid" />
+	    <result property="teamId" 			column="team_id" />
+	    <result property="teamNid" 			column="team_nid" />
+	    <result property="teamSid" 			column="team_sid" />
+	    <result property="accountId" 		column="account_id" />
+	    <result property="accountNid" 		column="account_nid" />
+	    <result property="accountSid" 		column="account_sid" />
+	    <result property="nickname" 		column="nickname" />
+	    <result property="type" 			column="type" />
+	    <result property="grade" 			column="grade" />
+	    <result property="score" 			column="score" />
+	    <result property="role" 			column="role" />
+	    <result property="createTime" 		column="create_time" />
+	    <result property="status" 			column="status" />
+	</resultMap>
+	
+	
+	
+	<sql id="updateFields">
+		<if test="nickname != null">
+			nickname = #{nickname} ,
+		</if>
+		<if test="type != null">
+			type = #{type} ,
+		</if>
+		<if test="grade != null">
+			grade = #{grade} ,
+		</if>
+		<if test="gradeAccu != null">
+			grade = grade + #{gradeAccu} ,
+		</if>
+		<if test="gradeDeeg != null">
+			grade = grade - #{gradeDeeg} ,
+		</if>
+		<if test="score != null">
+			score = #{score} ,
+		</if>
+		<if test="role != null">
+			role = #{role} ,
+		</if>
+		<if test="status != null">
+			status = #{status} , 
+		</if>
+	</sql>
+	
+
+
+	<insert id="add" parameterType="cn.com.iherpai.core.storage.mybatis.orm.MapTeamAccount">
+		INSERT INTO map_team_acco(
+			nid, sid, organize_id, organize_nid, organize_sid, team_id, team_nid, team_sid, account_id, account_nid, account_sid, 
+			nickname, type, grade, score, role, create_time, status
+		) VALUES (
+			#{nid},	#{sid}, #{organizeId}, #{organizeNid}, #{organizeSid}, #{teamId}, #{teamNid}, #{teamSid}, #{accountId}, #{accountNid}, #{accountSid},    
+			#{nickname}, #{type}, #{grade}, #{score}, #{role}, #{createTime}, #{status}
+		)
+	</insert>
+		
+	
+	
+	<delete id="remove" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			map_team_acco 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</delete>
+	
+	
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE 
+			map_team_acco 
+		<set>
+			<include refid="updateFields"/>
+		</set>
+		WHERE
+			1=1 AND 
+			${conditions}
+	</update>
+	
+	
+	
+	<select id="get" parameterType="java.util.HashMap" resultMap="OrganizeFldsDefault">
+		SELECT 
+			${fields} 
+		FROM 
+			map_team_acco 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			count(sid)
+		FROM 
+			map_team_acco 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	
+	<select id="getMaxSortno" parameterType="java.util.HashMap" resultType="int">
+		SELECT 
+			max(sortno)
+		FROM 
+			map_team_acco 
+		WHERE
+			1=1 AND 
+			${conditions}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="MapTeamAccountFldsDefault">
+		SELECT 
+			t.${fields}
+		FROM
+			map_team_acco t 
+		INNER JOIN 
+			(
+				SELECT x.sid from map_team_acco x 
+				WHERE 1=1 AND ${conditions} 
+				LIMIT #{pageOff}, #{pageSize}
+			) 
+			AS p 
+			ON t.sid = p.sid 
+			${orderBy}
+	</select>
+	
+	
+	
+</mapper>

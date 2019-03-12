@@ -3,8 +3,24 @@ package cn.com.iherpai.core.storage.mybatis.orm;
 import java.io.Serializable;
 import java.util.Date;
 
-public class MappingTeamAccount extends Entity implements Serializable {
-	private static final long serialVersionUID = -3585588225496650439L;
+public class MapOrganizeTeam extends Entity implements Serializable {
+	private static final long serialVersionUID = -6278126117831350069L;
+
+	public static final int 		STATUS_CREATED 			= 0;				//已创建，未使用
+	public static final String 		STATUS_CREATED_TXT 		= "待使用";			//已创建，未使用
+	
+	public static final int 		STATUS_ENABLED 			= 1;				//正常，可使用
+	public static final String 		STATUS_ENABLED_TXT 		= "可使用";			//正常，可使用
+	
+	public static final int 		STATUS_DISABLED 		= -99;				//拒绝使用
+	public static final String 		STATUS_DISABLED_TXT 	= "已禁用";			//拒绝使用
+	
+	public static final String fieldsAll = "id, nid, sid, organizeId, organizeNid, organizeSid, "
+			+ "teamId, teamNid, teamSid, accountId, accountNid, accountSid, "
+			+ "nickname, createTime, status";
+	
+	public static final String fieldsDefault = "sid, organizeSid, teamSid, accountSid, "
+			+ "nickname, createTime, status";
 	
 	private Long		id;
 	private Integer		nid;
@@ -145,5 +161,4 @@ public class MappingTeamAccount extends Entity implements Serializable {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
 }

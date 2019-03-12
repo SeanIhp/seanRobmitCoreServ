@@ -10,7 +10,7 @@ import cn.com.iherpai.core.storage.mybatis.orm.DictGroup;
 public class DictGroupVo extends DictGroup implements Serializable {
 	private static final long serialVersionUID = -8181070496651620541L;
 	
-	private DictGroup selfObj = new DictGroup();
+//	private DictGroup selfObj = new DictGroup();
 
 //	private Integer			sortnoMin;
 //	private Integer			sortnoMax;
@@ -77,13 +77,13 @@ public class DictGroupVo extends DictGroup implements Serializable {
 		}	
 	}
 
-	public DictGroup getSelfObj() {
-		return selfObj;
-	}
-
-	public void setSelfObj(DictGroup selfObj) {
-		this.selfObj = selfObj;
-	}
+//	public DictGroup getSelfObj() {
+//		return selfObj;
+//	}
+//
+//	public void setSelfObj(DictGroup selfObj) {
+//		this.selfObj = selfObj;
+//	}
 
 //	public Integer getLevelMin() {
 //		return levelMin;

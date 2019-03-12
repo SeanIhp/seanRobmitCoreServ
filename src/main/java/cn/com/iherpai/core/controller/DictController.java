@@ -55,19 +55,12 @@ public class DictController {
 	public @ResponseBody ResultObject add(@RequestBody DictVo dictVo){
 		ResultObject ro = new ResultObject();
 		try{
-			JSONObject jsonObject=new JSONObject(dictVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Dict__add.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
+			ControllerHelper.voValidate(dictVo, "/cn/com/iherpai/core/vo/schema/Dict__add.json");
 			//校验字典code/name/description规则
 			//校验指定dictGroupSid中code/name/sortno是否冲突
-			String returnFieldsDefine = "sid, dict_group_sid, code, name, "
-					+ "const_code, const_type, const_value, const_text, sortno, "
-					+ "description, createTime, status";
-	        Dict res = dictService.add(dictVo, returnFieldsDefine);
+	        Dict res = dictService.add(dictVo, Dict.fieldsDefault);
 	        if(res!=null){
-	        	ArrayList<String> returnFields = ValueObject.returnFieldsBuild(returnFieldsDefine);
+	        	ArrayList<String> returnFields = ValueObject.returnFieldsBuild(Dict.fieldsDefault);
 	        	DictVo dVo = new DictVo(res, returnFields);
 	        	ro.addData("dict", dVo);
 	        }
@@ -82,7 +75,32 @@ public class DictController {
 		return ro;
 	}
 	// END: [1] 新建字典 [add]
-		
+	
+
+	
+	// START: [3] 删除字典 [remove]
+	@RequestMapping(value="remove", method=RequestMethod.POST)
+	public @ResponseBody ResultObject remove(@RequestBody DictVo dictVo){
+		ResultObject ro = new ResultObject();
+		try{
+	//		ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/Dict.json");
+			dictVo.addAddition("status", "e", 0, 18);
+			int res = dictService.remove(dictVo);
+			if(res>0){
+				ro.addData("sid", dictVo.getSid());	
+			}
+			ro.setReturnCode(100);
+		} catch (ValidationException ve) {
+			ve.printStackTrace();
+			ro.setReturnCode(-100);
+			ro.addData("resultTip", "字典不存在！");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return ro;
+	}
+	// END: [3] 删除字典 [remove]
+	
 
 	
 	// START: [2] 修改字典 [update]
@@ -90,14 +108,10 @@ public class DictController {
 	public @ResponseBody ResultObject update(@RequestBody DictVo dictVo){
 		ResultObject ro = new ResultObject();
 		try{
-			JSONObject jsonObject=new JSONObject(dictVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Dict.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/Dict.json");
 			//校验字典组code/name/description规则
 			int res = dictService.update(dictVo);
-			if(res>0){
+			if( res > 0 ){
 				ro.addData("sid", dictVo.getSid());	
 			}
 			ro.setReturnCode(100);
@@ -114,80 +128,17 @@ public class DictController {
 	
 
 	
-	// START: [3] 删除字典 [remove]
-	@RequestMapping(value="remove", method=RequestMethod.POST)
-	public @ResponseBody ResultObject remove(@RequestBody DictVo dictVo){
-		ResultObject ro = new ResultObject();
-		try{
-			JSONObject jsonObject=new JSONObject(dictVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Dict.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
-			int res = dictService.remove(dictVo);
-			if(res>0){
-				ro.addData("sid", dictVo.getSid());	
-			}
-			ro.setReturnCode(100);
-		} catch (ValidationException ve) {
-			ve.printStackTrace();
-			ro.setReturnCode(-100);
-			ro.addData("resultTip", "字典组定义填写有误！");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return ro;
-	}
-	// END: [3] 删除字典 [remove]
-	
-
-	
-	// START: [4] 删除字典(批量in范围) [removeIn]
-	@RequestMapping(value="removeIn", method=RequestMethod.POST)
-	public @ResponseBody ResultObject removeIn(@RequestBody DictVo dictVo){
-		ResultObject ro = new ResultObject();
-		try{
-			JSONObject jsonObject=new JSONObject(dictVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Dict.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
-			int res = dictService.remove(dictVo);
-			if(res>0){
-				ro.addData("sids", dictVo.getSids());	
-			}
-			ro.setReturnCode(100);
-		} catch (ValidationException ve) {
-			ve.printStackTrace();
-			ro.setReturnCode(-100);
-			ro.addData("resultTip", "字典组定义填写有误！");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return ro;
-	}
-	// END: [4] 删除字典(批量in范围) [removeIn]
-	
-
-	
 	// START: [5] 获取字典 [get]
 	@RequestMapping(value="get", method=RequestMethod.POST)
 	public @ResponseBody ResultObject get(@RequestBody DictVo dictVo){
 		ResultObject ro = new ResultObject();
 		try{
-			JSONObject jsonObject=new JSONObject(dictVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/Dict.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
-			String returnFieldsDefine = "sid, dict_group_sid, code, name, "
-					+ "const_code, const_type, const_value, const_text, sortno, "
-					+ "description, createTime, status";
-			Dict res = dictService.get(dictVo, returnFieldsDefine);
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/Dict.json");
+			Dict res = dictService.get(dictVo, Dict.fieldsDefault);
 			if(res!=null){
-				ArrayList<String> returnFields = ValueObject.returnFieldsBuild(returnFieldsDefine);
-				DictVo dgVo = new DictVo(res, returnFields);
-				ro.addData("dictGroup", dgVo);
+				ArrayList<String> returnFields = ValueObject.returnFieldsBuild(Dict.fieldsDefault);
+				DictVo dVo = new DictVo(res, returnFields);
+				ro.addData("dict", dVo);
 			}
 			ro.setReturnCode(100);
 		} catch (ValidationException ve) {
@@ -204,6 +155,30 @@ public class DictController {
 
 	
 	// START: [6] 查询字典 [list]
+	@RequestMapping(value="list", method=RequestMethod.POST)
+	public @ResponseBody ResultObject list(@RequestBody DictVo dictVo){
+		ResultObject ro = new ResultObject();
+		try{
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/DictGroup.json");
+			HashMap<String, Object> res = dictService.list(dictVo, Dict.fieldsDefault);
+			ArrayList<Dict> resList = (ArrayList<Dict>)res.get("list");
+			ArrayList<String> returnFields = ValueObject.returnFieldsBuild(Dict.fieldsDefault);
+			ArrayList<DictVo> resVoList = ValueObject.getDictVos(resList, returnFields);
+			ro.addData("dictList", resVoList);
+			ro.addData("totalAll", (Integer)res.get("totalAll"));
+			ro.addData("totalPage", (Integer)res.get("totalPage"));
+			ro.addData("pageSize", (Integer)res.get("pageSize"));
+			ro.addData("pageNo", (Integer)res.get("pageNo"));
+			ro.setReturnCode(100);
+		} catch (ValidationException ve) {
+			ve.printStackTrace();
+			ro.setReturnCode(-100);
+			ro.addData("resultTip", "查询条件有误！");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return ro;
+	}
 	// END: [6] 查询字典 [list]
 	
 
@@ -213,11 +188,7 @@ public class DictController {
 	public @ResponseBody ResultObject add(@RequestBody DictGroupVo dictGroupVo){
 		ResultObject ro = new ResultObject();
 		try{
-			JSONObject jsonObject=new JSONObject(dictGroupVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/DictGroup__add.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/DictGroup__add.json");
 			//校验字典组code/name/description规则
 			dictGroupVo.setNid(1);
 			dictGroupVo.setSid(ID.newId(IhpConfig.SID_$DICTGROUP, IhpConfig.ID_DATA_DATABASE_CODE, IhpConfig.ID_DATA_TABLE_CODE));
@@ -251,16 +222,41 @@ public class DictController {
 	
 
 	
+	// START: [103] 删除字典组 [group/remove]
+	@RequestMapping(value="group/remove", method=RequestMethod.POST)
+	public @ResponseBody ResultObject remove(@RequestBody DictGroupVo dictGroupVo){
+		ResultObject ro = new ResultObject();
+		try{
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/DictGroup.json");
+//	        dictGroupVo.absMsk(3, false);	//栓查糁数数量，禁用“or”运算
+//	        dictGroupVo.addCondition("status", "e", 0, 18);	//增加where条件
+//			dictGroupVo.addAddition("xxbb", "e", "vs11", 1);	//增加whereAddition附加条件
+			dictGroupVo.addAddition("status", "e", 0, 18);
+//			dictGroupVo.addAddition("code", "e", "avvs", 31);
+			int res = dictService.remove(dictGroupVo);
+			if(res>0){
+				ro.addData("sid", dictGroupVo.getSid());	
+			}
+			ro.setReturnCode(100);
+		} catch (ValidationException ve) {
+			ve.printStackTrace();
+			ro.setReturnCode(-100);
+			ro.addData("resultTip", "字典组定义填写有误！");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return ro;
+	}
+	// END: [103] 删除字典组 [group/remove]
+	
+
+	
 	// START: [102] 修改字典组 [group/update]
 	@RequestMapping(value="group/update", method=RequestMethod.POST)
 	public @ResponseBody ResultObject update(@RequestBody DictGroupVo dictGroupVo){
 		ResultObject ro = new ResultObject();
 		try{
-			JSONObject jsonObject=new JSONObject(dictGroupVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/DictGroup.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/DictGroup.json");
 			//校验字典组code/name/description规则
 			int res = dictService.update(dictGroupVo);
 			if(res>0){
@@ -280,46 +276,12 @@ public class DictController {
 	
 
 	
-	// START: [103] 删除字典组 [group/remove]
-	@RequestMapping(value="group/remove", method=RequestMethod.POST)
-	public @ResponseBody ResultObject remove(@RequestBody DictGroupVo dictGroupVo){
-		ResultObject ro = new ResultObject();
-		try{
-			JSONObject jsonObject=new JSONObject(dictGroupVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/DictGroup.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
-//	        dictGroupVo.absMsk(3, false);
-	        dictGroupVo.addCondition("status", "eq", 0, 18);
-			int res = dictService.remove(dictGroupVo);
-			if(res>0){
-				ro.addData("sid", dictGroupVo.getSid());	
-			}
-			ro.setReturnCode(100);
-		} catch (ValidationException ve) {
-			ve.printStackTrace();
-			ro.setReturnCode(-100);
-			ro.addData("resultTip", "字典组定义填写有误！");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return ro;
-	}
-	// END: [103] 删除字典组 [group/remove]
-	
-
-	
 	// START: [106] 获取字典组 [group/get]
 	@RequestMapping(value="group/get", method=RequestMethod.POST)
 	public @ResponseBody ResultObject get(@RequestBody DictGroupVo dictGroupVo){
 		ResultObject ro = new ResultObject();
 		try{
-			JSONObject jsonObject=new JSONObject(dictGroupVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/DictGroup.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/DictGroup.json");
 			DictGroup res = dictService.get(dictGroupVo, DictGroup.fieldsDefault);
 			if(res!=null){
 				ArrayList<String> returnFields = ValueObject.returnFieldsBuild(DictGroup.fieldsDefault);
@@ -342,14 +304,10 @@ public class DictController {
 	
 	// START: [107] 查询字典组 [group/list]
 	@RequestMapping(value="group/list", method=RequestMethod.POST)
-	public @ResponseBody ResultObject search(@RequestBody DictGroupVo dictGroupVo){
+	public @ResponseBody ResultObject list(@RequestBody DictGroupVo dictGroupVo){
 		ResultObject ro = new ResultObject();
 		try{
-			JSONObject jsonObject=new JSONObject(dictGroupVo);
-	        InputStream inputStream = getClass().getResourceAsStream("/cn/com/iherpai/core/vo/schema/DictGroup.json");
-	        JSONObject Schema = new JSONObject(new JSONTokener(inputStream));
-	        Schema schema = SchemaLoader.load(Schema);
-	        schema.validate(jsonObject);
+//			ControllerHelper.voValidate(dictGroupVo, "/cn/com/iherpai/core/vo/schema/DictGroup.json");
 			HashMap<String, Object> res = dictService.list(dictGroupVo, DictGroup.fieldsDefault);
 			ArrayList<DictGroup> resList = (ArrayList<DictGroup>)res.get("list");
 			ArrayList<String> returnFields = ValueObject.returnFieldsBuild(DictGroup.fieldsDefault);

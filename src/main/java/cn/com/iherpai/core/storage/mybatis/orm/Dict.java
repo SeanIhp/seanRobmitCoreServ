@@ -3,7 +3,7 @@ package cn.com.iherpai.core.storage.mybatis.orm;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Dict extends Entity implements Serializable {
+public class Dict extends Orm implements Serializable {
 	private static final long serialVersionUID = -602934776952939772L;
 
 	public static final int 		STATUS_CREATED 			= 0;				//已创建，未使用
@@ -14,6 +14,13 @@ public class Dict extends Entity implements Serializable {
 	
 	public static final int 		STATUS_DISABLED 		= -99;				//拒绝使用
 	public static final String 		STATUS_DISABLED_TXT 	= "已禁用";			//拒绝使用
+	
+	public static final String fieldsAll = "id, nid, sid, dictGroupId, dictGroupNid, dictGroupSid, "
+			+ "code, name, constCode, constType, constValue, constText, sortno, "
+			+ "description, createTime, status";
+	
+	public static final String fieldsDefault = "sid, dictGroupSid, code, name, "
+			+ "sortno, description, createTime, status";
 	
 	private Long			id;
 	private Integer			nid;

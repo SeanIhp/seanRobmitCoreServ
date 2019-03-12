@@ -2,13 +2,13 @@ package cn.com.iherpai.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.com.iherpai.common.utils.SqlHelper;
+import cn.com.iherpai.common.utils.EntityUtil;
+import cn.com.iherpai.common.utils.Sql;
 import cn.com.iherpai.core.service.DictService;
 import cn.com.iherpai.core.storage.mybatis.exception.DaoException;
 import cn.com.iherpai.core.storage.mybatis.mapper.DictGroupMapper;
@@ -17,7 +17,6 @@ import cn.com.iherpai.core.storage.mybatis.orm.Dict;
 import cn.com.iherpai.core.storage.mybatis.orm.DictGroup;
 import cn.com.iherpai.core.vo.DictGroupVo;
 import cn.com.iherpai.core.vo.DictVo;
-import cn.com.iherpai.core.vo.ValueObject;
 
 @Service
 @Transactional
@@ -31,40 +30,46 @@ public class DictServiceImpl implements DictService {
 	@Override
 	public Dict add(DictVo dictVo, String fields) throws DaoException {
 		Dict res = null;
-		//字段列表转下划线分隔
-		String the_fields = ValueObject.dictOrmKeys(fields);
-		//校验指定parentSid是否存在
-		Map<String, Object> p1 = new HashMap<String, Object>();
-		p1.put("fields", "*");
-		p1.put("sid", dictVo.getDictGroupSid());		
-		DictGroup r1 = dictGroupMapper.get(p1);	
+		//校验指定parentSid是否存在	
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		ArrayList<HashMap> __alphaCondi = Sql.newSqlExp();
+		Sql.addCondi(__alphaCondi, "sid", "e", dictVo.getDictGroupSid(), 1);
+		__alpha.put("conditions", Sql.generate(__alphaCondi, null));
+		__alpha.put("fields", EntityUtil.toUnderScoreName(DictGroup.fieldsAll));		
+		DictGroup r1 = dictGroupMapper.get(__alpha);	
 		//检查所属字典组是否可用、是否允许添加子节点
 		if (r1 != null 
 			&& r1.getStatus() != DictGroup.STATUS_DISABLED
 			&& r1.getStatus().intValue() != DictGroup.STATUS_LOCKED_CHILD
 			&& r1.getStatus().intValue() != DictGroup.STATUS_LOCKED_LEAF
 		  ) {
-			Map<String, Object> p2 = new HashMap<String, Object>();
-			p2.put("fields", the_fields);
-			p2.put("dictGroupSid", r1.getSid());
-			p2.put("code", dictVo.getCode());
-			p2.put("sortno", dictVo.getSortno());
-			Dict r2 = dictMapper.get(p2);
+			HashMap<String, Object> __bravo = Sql.newSqlBox();
+			ArrayList<HashMap> __bravoCondi = new ArrayList<HashMap>(0);
+			Sql.addCondi(__bravoCondi, "dictGroupSid", "e", r1.getSid(), 1);
+			Sql.addCondi(__bravoCondi, "code", "e", dictVo.getCode(), 1);
+			Sql.addCondi(__bravoCondi, "sortno", "e", dictVo.getSortno(), 18);
+			__bravo.put("conditions", Sql.generate(__bravoCondi, null));
+			__bravo.put("fields", EntityUtil.toUnderScoreName(fields));
+			Dict r2 = dictMapper.get(__bravo);
 			if (r2 != null) {
 				throw new DaoException("字典数据冲突！");
-			} else {
-				Map<String, Object> p3 = new HashMap<String, Object>();
-				p3.put("dictGroupSid", r1.getSid());
-				int r3 = dictMapper.getCount(p3);
+			} else {	
+				HashMap<String, Object> __chork = Sql.newSqlBox();
+				ArrayList<HashMap> __chorkCondi = Sql.newSqlExp();
+				Sql.addCondi(__chorkCondi, "dictGroupSid", "e", r1.getSid(), 1);			
+				__chork.put("conditions", Sql.generate(__chorkCondi, null));
+				int r3 = dictMapper.getMaxSortno(__chork);
 				dictVo.setSortno(r3 + 1);
 				int result = dictMapper.add(dictVo);
 				if (result > 0) {
 					if(!r1.getHasChild()){
 						//更新父节点hasChild为true
-						Map<String, Object> p4 = new HashMap<String, Object>();
-						p4.put("hasChild", true);
-						p4.put("sid", r1.getSid());
-						dictGroupMapper.update(p4);
+						HashMap<String, Object> __delta = Sql.newSqlBox();
+						ArrayList<HashMap> __deltaCondi = new ArrayList<HashMap>(0);
+						Sql.addCondi(__deltaCondi, "sid", "e", r1.getSid(), 1);
+						__delta.put("conditions", Sql.generate(__deltaCondi, null));
+						__delta.put("hasChild", true);
+						dictGroupMapper.update(__delta);
 					}
 					res = dictVo;					
 				}
@@ -78,24 +83,24 @@ public class DictServiceImpl implements DictService {
 	@Override
 	public int remove(DictVo dictVo) throws DaoException {
 		int res = -1;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("sid", dictVo.getSid());
-		params.put("hasChild", false);
-		res = dictMapper.remove(params);
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		__alpha.put("conditions", Sql.generate(dictVo.getMaz(), dictVo.getMazAddition()));
+		res = dictMapper.remove(__alpha);
 		if( res > 0 ) {
-			String fields = "sid";
-			String the_fields = ValueObject.dictOrmKeys(fields);
 			// 查询尚存的同级字典组数量
-			Map<String, Object> p1 = new HashMap<String, Object>();
-			p1.put("fields", the_fields);
-			p1.put("dictGroupSid", dictVo.getDictGroupSid());
-			int r1 = dictMapper.getCount(p1);
+			HashMap<String, Object> __bravo = Sql.newSqlBox();
+			ArrayList<HashMap> __bravoCondi = Sql.newSqlExp();
+			Sql.addCondi(__bravoCondi, "dictGroupSid", "e", dictVo.getDictGroupSid(), 1);
+			__bravo.put("conditions", Sql.generate(__bravoCondi, null));
+			int r1 = dictMapper.getCount(__bravo);
 			if( r1 <= 0 ) {
 				// 上级字典组hasChild改为false
-				Map<String, Object> p2 = new HashMap<String, Object>();
-				p2.put("hasChild", false);
-				p2.put("dictGroupSid", dictVo.getDictGroupSid());
-				dictGroupMapper.update(p2);
+				HashMap<String, Object> __chork = Sql.newSqlBox();
+				ArrayList<HashMap> __chorkCondi = Sql.newSqlExp();
+				Sql.addCondi(__chorkCondi, "sid", "e", dictVo.getDictGroupSid(), 1);
+				__chork.put("conditions", Sql.generate(__chorkCondi, null));
+				__chork.put("hasChild", false);
+				dictGroupMapper.update(__chork);
 			}
 		}
 		return res;
@@ -104,111 +109,60 @@ public class DictServiceImpl implements DictService {
 	@Override
 	public int update(DictVo dictVo) throws DaoException {
 		int res = -1;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("_code", dictVo.getCode());
-		params.put("_name", dictVo.getCode());
-		params.put("_constCode", dictVo.getConstCode());
-		params.put("_constType", dictVo.getConstType());
-		params.put("_constValue", dictVo.getConstValue());
-		params.put("_constText", dictVo.getConstText());
-		params.put("_sortno", dictVo.getSortno());		
-		params.put("_description", dictVo.getDescription());
-		params.put("_status", dictVo.getStatus());
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		String sql = Sql.generate(dictVo.getMaz(), dictVo.getMazAddition());
+		__alpha.put("conditions", sql);
+		__alpha.put("code", dictVo.getCode());
+		__alpha.put("name", dictVo.getName());
+		__alpha.put("constCode", dictVo.getConstCode());
+		__alpha.put("constType", dictVo.getConstType());
+		__alpha.put("constValue", dictVo.getConstValue());
+		__alpha.put("constText", dictVo.getConstText());
+		__alpha.put("sortno", dictVo.getSortno());		
+		__alpha.put("description", dictVo.getDescription());
+		__alpha.put("status", dictVo.getStatus());
 		/* memo[19-02-25:Sean]: 暂不支持字黄在节点树上的移动（修改所属字典组）功能  */
-//		params.put("_dictGroupId", dictVo.getParentId());
-//		params.put("_dictGroupNid", dictVo.getParentNid());
-//		params.put("_dictGroupSid", dictVo.getParentSid());
-
-		params.put("id", dictVo.getId());
-		params.put("nid", dictVo.getNid());
-		params.put("sid", dictVo.getSid());
-		params.put("code", dictVo.getCode());
-		params.put("name", dictVo.getCode());
-		params.put("constCode", dictVo.getConstCode());
-		params.put("constType", dictVo.getConstType());
-		params.put("constValue", dictVo.getConstValue());
-		params.put("constText", dictVo.getConstText());
-		params.put("sortno", dictVo.getSortno());
-		params.put("sortnoMin", dictVo.getSortnoMin());
-		params.put("sortnoMax", dictVo.getSortnoMax());
-		params.put("description", dictVo.getDescription());
-		params.put("status", dictVo.getStatus());
-		params.put("statusMin", dictVo.getStatusMin());
-		params.put("statusMax", dictVo.getStatusMax());
-		res = dictGroupMapper.update(params);
+//		__alpha.put("_dictGroupId", dictVo.getParentId());
+//		__alpha.put("_dictGroupNid", dictVo.getParentNid());
+//		__alpha.put("_dictGroupSid", dictVo.getParentSid());
+		res = dictMapper.update(__alpha);
 		return res;
 	}
 
 	@Override
 	public Dict get(DictVo dictVo, String fields) throws DaoException {
 		Dict res = null;
-		//字段列表转下划线分隔
-		String the_fields = ValueObject.dictGroupOrmKeys(fields);
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("fields", the_fields);
-		params.put("sid", dictVo.getSid());
-		res = dictMapper.get(params);
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		ArrayList<HashMap> __alphaCondi = Sql.newSqlExp();
+		Sql.addCondi(__alphaCondi, "sid", "e", dictVo.getSid(), 1);
+		__alpha.put("conditions", Sql.generate(__alphaCondi, null));
+		__alpha.put("fields", EntityUtil.toUnderScoreName(fields));
+		res = dictMapper.get(__alpha);
 		return res;
 	}
 
 	@Override
 	public HashMap<String, Object> list(DictVo dictVo, String fields) throws DaoException {
 		HashMap<String, Object> res = new HashMap<String, Object>();
-		ArrayList<DictGroup> list = new ArrayList<DictGroup>(0);
-		res.put("totalAll", 0);
-		res.put("totalPage", 0);
+		ArrayList<Dict> list = new ArrayList<Dict>(0);
 		res.put("pageSize", dictVo.getPageSize());
 		res.put("pageNo", dictVo.getPageNo());
+		res.put("totalAll", 0);
+		res.put("totalPage", 0);
 		// 查询符合条件的记录数量
-		Map<String, Object> p1 = new HashMap<String, Object>();
-		p1.put("id", dictVo.getId());
-		p1.put("nid", dictVo.getNid());
-		p1.put("sid", dictVo.getSid());
-		p1.put("code", dictVo.getCode());
-		p1.put("name", dictVo.getName());
-		p1.put("dictGroupId", dictVo.getDictGroupId());
-		p1.put("dictGroupNid", dictVo.getDictGroupNid());
-		p1.put("dictGroupSid", dictVo.getDictGroupSid());
-		p1.put("constCode", dictVo.getConstCode());
-		p1.put("constType", dictVo.getConstType());
-		p1.put("constValue", dictVo.getConstValue());
-		p1.put("constText", dictVo.getConstText());
-		p1.put("sortno", dictVo.getSortno());
-		p1.put("sortnoMin", dictVo.getSortnoMin());
-		p1.put("sortnoMax", dictVo.getSortnoMax());
-		p1.put("description", dictVo.getDescription());
-		p1.put("status", dictVo.getStatus());
-		p1.put("statusMin", dictVo.getStatusMin());
-		p1.put("statusMax", dictVo.getStatusMax());
-		int r1 = dictGroupMapper.getCount(p1);
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		HashMap<String, String> __alphaSqlMap = Sql.generateMap(dictVo.getMaz(), dictVo.getMazAddition());
+		__alpha.put("conditions", __alphaSqlMap.get("conditions"));
+		int r1 = dictMapper.getCount(__alpha);
 		res.put("totalAll", r1);
 		if(r1>0){
 			//字段列表转下划线分隔
-			String the_fields = ValueObject.dictGroupOrmKeys(fields);
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("fields", the_fields);
-			params.put("id", dictVo.getId());
-			params.put("nid", dictVo.getNid());
-			params.put("sid", dictVo.getSid());
-			params.put("code", dictVo.getCode());
-			params.put("name", dictVo.getName());
-			params.put("dictGroupId", dictVo.getDictGroupId());
-			params.put("dictGroupNid", dictVo.getDictGroupNid());
-			params.put("dictGroupSid", dictVo.getDictGroupSid());
-			params.put("constCode", dictVo.getConstCode());
-			params.put("constType", dictVo.getConstType());
-			params.put("constValue", dictVo.getConstValue());
-			params.put("constText", dictVo.getConstText());
-			params.put("sortno", dictVo.getSortno());
-			params.put("sortnoMin", dictVo.getSortnoMin());
-			params.put("sortnoMax", dictVo.getSortnoMax());
-			params.put("description", dictVo.getDescription());
-			params.put("status", dictVo.getStatus());
-			params.put("statusMin", dictVo.getStatusMin());
-			params.put("statusMax", dictVo.getStatusMax());
-			params.put("pageSize", dictVo.getPageSize());
-			params.put("pageOff", (dictVo.getPageNo() - 1) * dictVo.getPageSize());
-			list = dictGroupMapper.list(params);
+			HashMap<String, Object> __beta = Sql.newSqlBox();
+			__beta.put("fields", EntityUtil.toUnderScoreName(fields));
+			__beta.put("pageOff", dictVo.getPageNo()>1 ? (dictVo.getPageNo()-1) * dictVo.getPageSize(): 1);
+			__beta.put("conditions", __alphaSqlMap.get("conditions"));
+			__beta.put("orderBy", __alphaSqlMap.get("orderBy"));
+			list = dictMapper.list(__beta);
 			res.put("totalPage", (r1-dictVo.getPageSize())/dictVo.getPageSize() );
 		}
 		res.put("list", list );
@@ -218,13 +172,13 @@ public class DictServiceImpl implements DictService {
 	@Override
 	public DictGroup add(DictGroupVo dictGroupVo, String fields) throws DaoException {
 		DictGroup res = null;
-		//字段列表转下划线分隔
-		String the_fields = ValueObject.dictGroupOrmKeys(fields);
 		//校验指定parentSid是否存在
-		Map<String, Object> p1 = new HashMap<String, Object>();
-		p1.put("fields", the_fields);
-		p1.put("sid", dictGroupVo.getParentSid());		
-		DictGroup r1 = dictGroupMapper.get(p1);	
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		ArrayList<HashMap> __alphaCondi = Sql.newSqlExp();
+		Sql.newAddi(__alphaCondi, "sid", "e", dictGroupVo.getParentSid(), 1);
+		__alpha.put("conditions", Sql.generate(__alphaCondi, null));
+		__alpha.put("fields", EntityUtil.toUnderScoreName(DictGroup.fieldsAll));
+		DictGroup r1 = dictGroupMapper.get(__alpha);	
 		//检查parent是否可用、是否允许添加子节点，是否符合层级要求
 		if (r1 != null 
 			&& r1.getStatus().intValue() != DictGroup.STATUS_LOCKED_CHILD
@@ -236,26 +190,32 @@ public class DictServiceImpl implements DictService {
 			dictGroupVo.setParentId( r1.getId() );
 			dictGroupVo.setParentNid( r1.getNid() );
 			//校验指定parentSid中code/sortno是否冲突
-			Map<String, Object> p2 = new HashMap<String, Object>();
-			p2.put("fields", the_fields);
-			p2.put("parentSid", r1.getSid());
-			p2.put("code", dictGroupVo.getCode());
-			p2.put("sortno", dictGroupVo.getSortno());
-			DictGroup r2 = dictGroupMapper.get(p2);
+			HashMap<String, Object> __beta = Sql.newSqlBox();
+			ArrayList<HashMap> __betaCondi = Sql.newSqlExp();
+			Sql.addCondi(__betaCondi, "parentSid", "e", r1.getSid(), 1);
+			Sql.addCondi(__betaCondi, "code", "e", r1.getCode(), 1);
+			Sql.addCondi(__betaCondi, "sortno", "e", r1.getSortno(), 18);
+			__beta.put("conditions", Sql.generate(__betaCondi, null));
+			__beta.put("fields", EntityUtil.toUnderScoreName(fields));
+			DictGroup r2 = dictGroupMapper.get(__beta);
 			if (r2 != null) {
 				throw new DaoException("字典组数据冲突！");
 			} else {
-				Map<String, Object> p3 = new HashMap<String, Object>();
-				p3.put("parentSid", r1.getSid());
-				int r3 = dictGroupMapper.getCount(p3);
+				ArrayList<HashMap> c3 = new ArrayList<HashMap>(0);
+				Sql.addCondi(c3, "parentSid", "e", r1.getSid(), 1);
+				HashMap<String, Object> p3 = new HashMap<String, Object>();
+				p3.put("conditions", Sql.generate(c3, null));
+				int r3 = dictGroupMapper.getMaxSortno(p3);
 				dictGroupVo.setSortno(r3 + 1);
 				int result = dictGroupMapper.add(dictGroupVo);
 				if (result > 0) {
 					if(!r1.getHasChild()){
 						//更新父节点hasChild为true
-						Map<String, Object> p4 = new HashMap<String, Object>();
-						p4.put("_hasChild", true);
-						p4.put("sid", r1.getSid());
+						ArrayList<HashMap> c4 = new ArrayList<HashMap>(0);
+						Sql.addCondi(c4, "sid", "e", r1.getSid(), 1);
+						HashMap<String, Object> p4 = new HashMap<String, Object>();
+						p4.put("conditions", Sql.generate(c4, null));
+						p4.put("hasChild", true);
 						dictGroupMapper.update(p4);
 					}
 					res = dictGroupVo;					
@@ -269,80 +229,53 @@ public class DictServiceImpl implements DictService {
 
 	@Override
 	public int remove(DictGroupVo dictGroupVo) throws DaoException {
-		int res = -1;
-		ArrayList<HashMap> maz = dictGroupVo.getMaz();
-		Map<String, Object> params = new HashMap<String, Object>();
-		dictGroupVo.addAddition("xxbb", "eq", "vs11", 1);
-		String sql = SqlHelper.generate(dictGroupVo.getMaz(), dictGroupVo.getMazAddition());
-		params.put("conditions", sql);
-		
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		params.put("sid", dictGroupVo.getSid());
-//		params.put("hasChild", false);
-		res = dictGroupMapper.remove(params);
-//		if( res > 0 ) {
-//			String fields = "sid";
-//			String the_fields = ValueObject.dictGroupOrmKeys(fields);
-//			// 查询尚存的同级字典组数量
-//			Map<String, Object> p1 = new HashMap<String, Object>();
-//			p1.put("fields", the_fields);
-//			p1.put("paraentSid", dictGroupVo.getSid());
-//			int r1 = dictGroupMapper.getCount(p1);
-//			if( r1 <= 0 ) {
-//				// 上级字典组hasChild改为false
-//				Map<String, Object> p2 = new HashMap<String, Object>();
-//				p2.put("hasChild", false);
-//				p2.put("sid", dictGroupVo.getParentSid());
-//				dictGroupMapper.update(p2);
-//			}
-//		} else {
-//			// 字典组不存在/其不为空/status不为0
-//		}
+		int res = -1;		
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		__alpha.put("conditions", Sql.generate(dictGroupVo.getMaz(), dictGroupVo.getMazAddition()));
+		res = dictGroupMapper.remove(__alpha);
+		if( res > 0 ) {
+			// 查询尚存的同级字典组数量	
+			HashMap<String, Object> __bravo = Sql.newSqlBox();
+			ArrayList<HashMap> __bravoCondi = Sql.newSqlExp();
+			Sql.addCondi(__bravoCondi, "parentSid", "e", dictGroupVo.getSid(), 1);
+			__bravo.put("conditions", Sql.generate(__bravoCondi, null));
+			int r1 = dictGroupMapper.getCount(__bravo);
+			if( r1 <= 0 ) {
+				// 上级字典组hasChild改为false
+				HashMap<String, Object> __chork = Sql.newSqlBox();
+				ArrayList<HashMap> __chorkCondi = Sql.newSqlExp();
+				Sql.addCondi(__chorkCondi, "sid", "e", dictGroupVo.getParentSid(), 1);
+				__chork.put("conditions", Sql.generate(__chorkCondi, null));		
+				__chork.put("hasChild", false);		
+				dictGroupMapper.update(__chork);
+			}
+		} else {
+			// 字典组不存在/其不为空/status不为0
+		}
 		return res;
 	}
 
 	@Override
 	public int update(DictGroupVo dictGroupVo) throws DaoException {
 		int res = -1;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("_code", dictGroupVo.getCode());
-		params.put("_name", dictGroupVo.getCode());
-		params.put("_scode", dictGroupVo.getScode());
-		params.put("_sname", dictGroupVo.getSname());
-		params.put("_type", dictGroupVo.getType());
-		params.put("_hasChild", dictGroupVo.getHasChild());
-		params.put("_level", dictGroupVo.getLevel());
-		params.put("_sortno", dictGroupVo.getSortno());		
-		params.put("_description", dictGroupVo.getDescription());
-		params.put("_status", dictGroupVo.getStatus());
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		String sql = Sql.generate(dictGroupVo.getMaz(), dictGroupVo.getMazAddition());
+		__alpha.put("conditions", sql);
+		__alpha.put("code", dictGroupVo.getCode());
+		__alpha.put("name", dictGroupVo.getCode());
+		__alpha.put("scode", dictGroupVo.getScode());
+		__alpha.put("sname", dictGroupVo.getSname());
+		__alpha.put("type", dictGroupVo.getType());
+		__alpha.put("hasChild", dictGroupVo.getHasChild());
+		__alpha.put("level", dictGroupVo.getLevel());
+		__alpha.put("sortno", dictGroupVo.getSortno());		
+		__alpha.put("description", dictGroupVo.getDescription());
+		__alpha.put("status", dictGroupVo.getStatus());
 		/* memo[19-02-23:Sean]: 暂不支持字黄组在节点树上的移动（修改父节点）功能  */
-//		params.put("_parentId", dictGroupVo.getParentId());
-//		params.put("_parentNid", dictGroupVo.getParentNid());
-//		params.put("_parentSid", dictGroupVo.getParentSid());
-
-		params.put("id", dictGroupVo.getId());
-		params.put("nid", dictGroupVo.getNid());
-		params.put("sid", dictGroupVo.getSid());
-		params.put("code", dictGroupVo.getCode());
-		params.put("name", dictGroupVo.getCode());
-		params.put("scode", dictGroupVo.getScode());
-		params.put("sname", dictGroupVo.getSname());
-		params.put("type", dictGroupVo.getType());
-		params.put("hasChild", dictGroupVo.getHasChild());
-		params.put("level", dictGroupVo.getLevel());
-//		params.put("levelMin", dictGroupVo.getLevelMin());
-//		params.put("levelMax", dictGroupVo.getLevelMax());
-		params.put("sortno", dictGroupVo.getSortno());
-//		params.put("sortnoMin", dictGroupVo.getSortnoMin());
-//		params.put("sortnoMax", dictGroupVo.getSortnoMax());
-		params.put("parentId", dictGroupVo.getParentId());
-		params.put("parentNid", dictGroupVo.getParentNid());
-		params.put("parentSid", dictGroupVo.getParentSid());
-		params.put("description", dictGroupVo.getDescription());
-		params.put("status", dictGroupVo.getStatus());
-//		params.put("statusMin", dictGroupVo.getStatusMin());
-//		params.put("statusMax", dictGroupVo.getStatusMax());
-		res = dictGroupMapper.update(params);
+//		__alpha.put("parentId", dictGroupVo.getParentId());
+//		__alpha.put("parentNid", dictGroupVo.getParentNid());
+//		__alpha.put("parentSid", dictGroupVo.getParentSid());
+		res = dictGroupMapper.update(__alpha);
 		return res;
 	}
 
@@ -350,11 +283,10 @@ public class DictServiceImpl implements DictService {
 	public DictGroup get(DictGroupVo dictGroupVo, String fields) throws DaoException {
 		DictGroup res = null;
 		//字段列表转下划线分隔
-		String the_fields = ValueObject.dictGroupOrmKeys(fields);
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("fields", the_fields);
-		params.put("sid", dictGroupVo.getSid());
-		res = dictGroupMapper.get(params);
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		__alpha.put("fields", EntityUtil.toUnderScoreName(fields));
+		__alpha.put("conditions", Sql.generate(dictGroupVo.getMaz(), dictGroupVo.getMazAddition()));
+		res = dictGroupMapper.get(__alpha);
 		return res;
 	}
 
@@ -362,66 +294,24 @@ public class DictServiceImpl implements DictService {
 	public HashMap<String, Object> list(DictGroupVo dictGroupVo, String fields) throws DaoException {
 		HashMap<String, Object> res = new HashMap<String, Object>();
 		ArrayList<DictGroup> list = new ArrayList<DictGroup>(0);
-		res.put("totalAll", 0);
-		res.put("totalPage", 0);
 		res.put("pageSize", dictGroupVo.getPageSize());
 		res.put("pageNo", dictGroupVo.getPageNo());
+		res.put("totalAll", 0);
+		res.put("totalPage", 0);
 		// 查询符合条件的记录数量
-		Map<String, Object> p1 = new HashMap<String, Object>();
-		p1.put("id", dictGroupVo.getId());
-		p1.put("nid", dictGroupVo.getNid());
-		p1.put("sid", dictGroupVo.getSid());
-		p1.put("code", dictGroupVo.getCode());
-		p1.put("name", dictGroupVo.getName());
-		p1.put("scode", dictGroupVo.getScode());
-		p1.put("sname", dictGroupVo.getSname());
-		p1.put("type", dictGroupVo.getType());
-		p1.put("hasChild", dictGroupVo.getHasChild());
-		p1.put("level", dictGroupVo.getLevel());
-//		p1.put("levelMin", dictGroupVo.getLevelMin());
-//		p1.put("levelMax", dictGroupVo.getLevelMax());
-		p1.put("sortno", dictGroupVo.getSortno());
-//		p1.put("sortnoMin", dictGroupVo.getSortnoMin());
-//		p1.put("sortnoMax", dictGroupVo.getSortnoMax());
-		p1.put("parentId", dictGroupVo.getParentId());
-		p1.put("parentNid", dictGroupVo.getParentNid());
-		p1.put("parentSid", dictGroupVo.getParentSid());
-		p1.put("description", dictGroupVo.getDescription());
-		p1.put("status", dictGroupVo.getStatus());
-//		p1.put("statusMin", dictGroupVo.getStatusMin());
-//		p1.put("statusMax", dictGroupVo.getStatusMax());
-		int r1 = dictGroupMapper.getCount(p1);
+		HashMap<String, Object> __alpha = Sql.newSqlBox();
+		HashMap<String, String> __alphaSqlMap = Sql.generateMap(dictGroupVo.getMaz(), dictGroupVo.getMazAddition());
+		__alpha.put("conditions", __alphaSqlMap.get("conditions"));
+		int r1 = dictGroupMapper.getCount(__alpha);
 		res.put("totalAll", r1);
 		if(r1>0){
 			//字段列表转下划线分隔
-			String the_fields = ValueObject.dictGroupOrmKeys(fields);
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("fields", the_fields);
-			params.put("id", dictGroupVo.getId());
-			params.put("nid", dictGroupVo.getNid());
-			params.put("sid", dictGroupVo.getSid());
-			params.put("code", dictGroupVo.getCode());
-			params.put("name", dictGroupVo.getName());
-			params.put("scode", dictGroupVo.getScode());
-			params.put("sname", dictGroupVo.getSname());
-			params.put("type", dictGroupVo.getType());
-			params.put("hasChild", dictGroupVo.getHasChild());
-			params.put("level", dictGroupVo.getLevel());
-//			params.put("levelMin", dictGroupVo.getLevelMin());
-//			params.put("levelMax", dictGroupVo.getLevelMax());
-			params.put("sortno", dictGroupVo.getSortno());
-//			params.put("sortnoMin", dictGroupVo.getSortnoMin());
-//			params.put("sortnoMax", dictGroupVo.getSortnoMax());
-			params.put("parentId", dictGroupVo.getParentId());
-			params.put("parentNid", dictGroupVo.getParentNid());
-			params.put("parentSid", dictGroupVo.getParentSid());
-			params.put("description", dictGroupVo.getDescription());
-			params.put("status", dictGroupVo.getStatus());
-//			params.put("statusMin", dictGroupVo.getStatusMin());
-//			params.put("statusMax", dictGroupVo.getStatusMax());
-			params.put("pageSize", dictGroupVo.getPageSize());
-			params.put("pageOff", (dictGroupVo.getPageNo() - 1) * dictGroupVo.getPageSize());
-			list = dictGroupMapper.list(params);
+			HashMap<String, Object> __beta = Sql.newSqlBox();
+			__beta.put("fields", EntityUtil.toUnderScoreName(fields));
+			__beta.put("pageOff", dictGroupVo.getPageNo()>1 ? (dictGroupVo.getPageNo()-1) * dictGroupVo.getPageSize(): 1);
+			__beta.put("conditions", __alphaSqlMap.get("conditions"));
+			__beta.put("orderBy", __alphaSqlMap.get("orderBy"));
+			list = dictGroupMapper.list(__beta);
 			res.put("totalPage", (r1-dictGroupVo.getPageSize())/dictGroupVo.getPageSize() );
 		}
 		res.put("list", list );
